@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productImage = notificationMenu.querySelector('.cart-notification-menu__product-image');
                 const productTitle = notificationMenu.querySelector('.cart-notification-menu__product-title');
                 const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
+                const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
                 productImage.src = currentProduct.image.src;
                 productImage.alt = currentProduct.title;
@@ -69,10 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 notificationMenu.classList.add('visible');
 
-                // Hide notification after 3 seconds
-                setTimeout(() => {
+                // Close notification on X button click
+                closeButton.addEventListener('click', () => {
                     notificationMenu.classList.remove('visible');
-                }, 3000);
+                });
 
                 // Show feedback with black color scheme
                 const originalText = newAddToCartButton.textContent;
@@ -438,6 +439,7 @@ function displayProduct(product) {
             const productImage = notificationMenu.querySelector('.cart-notification-menu__product-image');
             const productTitle = notificationMenu.querySelector('.cart-notification-menu__product-title');
             const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
+            const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
             productImage.src = product.image.src;
             productImage.alt = product.title;
@@ -446,10 +448,10 @@ function displayProduct(product) {
 
             notificationMenu.classList.add('visible');
 
-            // Hide notification after 3 seconds
-            setTimeout(() => {
+            // Close notification on X button click
+            closeButton.addEventListener('click', () => {
                 notificationMenu.classList.remove('visible');
-            }, 3000);
+            });
 
             // Show feedback with black color scheme
             const originalText = newAddToCartBtn.textContent;
