@@ -25,7 +25,9 @@ function addToCart(product) {
     
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartUI();
-    showCartNotification(product);
+    if (!product.skipNotification) {
+        showCartNotification(product);
+    }
 }
 
 // Update cart UI elements

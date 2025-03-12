@@ -198,7 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: currentProduct.title,
                 price: currentProduct.variants[0].price,
                 image: currentProduct.image.src,
-                quantity
+                quantity,
+                skipNotification: true // Skip showing notification for direct checkout
             });
 
             // Then redirect to checkout
