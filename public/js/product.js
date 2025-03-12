@@ -57,22 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 // Update cart notification
-                const cartNotification = document.querySelector('.cart-notification');
-                const productImage = cartNotification.querySelector('#cart-notification-image');
-                const productTitle = cartNotification.querySelector('#cart-notification-title');
-                const productPrice = cartNotification.querySelector('#cart-notification-price');
-
-                productImage.src = currentProduct.image.src;
-                productImage.alt = currentProduct.title;
-                productTitle.textContent = currentProduct.title;
-                productPrice.textContent = formatPrice(currentProduct.variants[0].price);
-
-                cartNotification.classList.add('visible');
-                
-                // Hide notification after 3 seconds
-                setTimeout(() => {
-                    cartNotification.classList.remove('visible');
-                }, 3000);
+                window.showCartNotification({
+                    image: currentProduct.image.src,
+                    title: currentProduct.title,
+                    price: formatPrice(currentProduct.variants[0].price),
+                });
 
                 // Show feedback with black color scheme
                 const originalText = newAddToCartButton.textContent;
@@ -434,17 +423,11 @@ function displayProduct(product) {
             });
 
             // Show notification menu
-            const notificationMenu = document.querySelector('.cart-notification-menu');
-            const productImage = notificationMenu.querySelector('.cart-notification-menu__product-image');
-            const productTitle = notificationMenu.querySelector('.cart-notification-menu__product-title');
-            const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
-
-            productImage.src = product.image.src;
-            productImage.alt = product.title;
-            productTitle.textContent = product.title;
-            productPrice.textContent = formatPrice(product.variants[0].price);
-
-            notificationMenu.classList.add('visible');
+            window.showCartNotification({
+                image: product.image.src,
+                title: product.title,
+                price: formatPrice(product.variants[0].price),
+            });
 
             // Show feedback with black color scheme
             const originalText = newAddToCartBtn.textContent;
