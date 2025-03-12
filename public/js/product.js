@@ -188,11 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Get quantity
             const quantity = parseInt(document.getElementById('quantity')?.value || '1');
             
-            // Get product ID from the current product
+            // Get product ID and price from the current product
             const productId = currentProduct.handle;
+            const price = currentProduct.variants[0].price;
 
             // Redirect to checkout with product information
-            window.location.href = `/pages/checkout.html?productId=${productId}&quantity=${quantity}`;
+            window.location.href = `/pages/checkout.html?productId=${productId}&quantity=${quantity}&price=${price}`;
         });
     }
 });

@@ -15,12 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeCheckout() {
         const productId = getQueryParam('productId');
         const quantity = parseInt(getQueryParam('quantity')) || 1;
+        const price = parseFloat(getQueryParam('price'));
 
         if (productId) {
             // Direct product checkout
-            const product = window.shopifyProducts.find(p => p.handle === productId);
+            const product = window.shopifyProducts?.find(p => p.handle === productId);
             if (product) {
-                displaySingleProduct(product, quantity);
+                displaySingleProduct(product, quantity, price);
+            } else {
+                console.error('Product not found:', productId);
             }
         } else {
             // Cart checkout
@@ -28,8 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function displaySingleProduct(product, quantity) {
-        const itemTotal = product.variants[0].price * quantity;
+    function displaySingleProduct(product, quantity, price) {
+        // Use provided price if available, otherwise fallback to product price
+        const productPrice = price || parseFloat(product.variants[0].price);
+        const itemTotal = productPrice * quantity;
 
         checkoutItems.innerHTML = `
             <div class="checkout-item">
@@ -51,8 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Store single product data
         localStorage.setItem('checkoutItems', JSON.stringify([{
             handle: product.handle,
+            title: product.title,
             quantity: quantity,
-            price: product.variants[0].price
+            price: productPrice,
+            image: product.image.src
         }]));
     }
 
@@ -64,25 +71,22 @@ document.addEventListener('DOMContentLoaded', function() {
         checkoutItems.innerHTML = '';
 
         cart.forEach(item => {
-            const product = window.shopifyProducts.find(p => p.handle === item.handle);
-            if (product) {
-                const itemTotal = parseFloat(item.price) * item.quantity;
-                subtotal += itemTotal;
+            const itemTotal = parseFloat(item.price) * item.quantity;
+            subtotal += itemTotal;
 
-                const itemElement = document.createElement('div');
-                itemElement.className = 'checkout-item';
-                itemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.title}">
-                    <div class="checkout-item-details">
-                        <h3>${item.title}</h3>
-                        <p>Quantity: ${item.quantity}</p>
-                    </div>
-                    <div class="checkout-item-price">
-                        €${itemTotal.toFixed(2)}
-                    </div>
-                `;
-                checkoutItems.appendChild(itemElement);
-            }
+            const itemElement = document.createElement('div');
+            itemElement.className = 'checkout-item';
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.title}">
+                <div class="checkout-item-details">
+                    <h3>${item.title}</h3>
+                    <p>Quantity: ${item.quantity}</p>
+                </div>
+                <div class="checkout-item-price">
+                    €${itemTotal.toFixed(2)}
+                </div>
+            `;
+            checkoutItems.appendChild(itemElement);
         });
 
         // Update totals
@@ -123,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    cartItems: cart,
+                    cartItems: checkoutItems,
                     total: total,
                     customer: {
                         firstName: customerData.firstName,
@@ -159,6 +163,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Load cart items on page load
-    loadCartItems();
+
 });
