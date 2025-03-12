@@ -203,12 +203,29 @@ function formatPrice(price) {
 }
 
 // Initialize cart UI on page load
+// Reset checkout button state
+function resetCheckoutButton(button) {
+    button.disabled = false;
+    button.textContent = 'Proceed to Checkout';
+    button.style.backgroundColor = '#000000';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
 
     // Initialize checkout button
     const checkoutButton = document.getElementById('checkout-button');
     if (checkoutButton) {
+        // Reset button state on page load
+        resetCheckoutButton(checkoutButton);
+
+        // Handle visibility change to detect when user returns from payment page
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                resetCheckoutButton(checkoutButton);
+            }
+        });
+
         checkoutButton.addEventListener('click', async () => {
             try {
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -245,12 +262,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                 console.error('Checkout error:', error);
-                alert('Checkout failed. Please try again or contact support.');
+                
+                // Show a more user-friendly error message
+                const errorMessage = error.message === 'Payment creation failed' 
+                    ? 'Payment processing failed. Please try again or contact support.'
+                    : 'Checkout was canceled. You can try again when ready.';
+                
+                // Create a notification div if it doesn't exist
+                let notification = document.querySelector('.checkout-notification');
+                if (!notification) {
+                    notification = document.createElement('div');
+                    notification.className = 'checkout-notification';
+                    document.querySelector('.cart-summary').prepend(notification);
+                }
+                
+                // Show the error message
+                notification.innerHTML = `
+                    <div class="notification-content error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        ${errorMessage}
+                    </div>
+                `;
+                
+                // Remove the notification after 5 seconds
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
                 
                 // Reset button state
-                checkoutButton.disabled = false;
-                checkoutButton.textContent = 'Checkout';
-                checkoutButton.style.backgroundColor = '#000000';
+                resetCheckoutButton(checkoutButton);
             }
         });
 
