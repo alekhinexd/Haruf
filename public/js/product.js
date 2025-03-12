@@ -193,26 +193,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add to cart first
             const quantity = parseInt(document.getElementById('quantity')?.value || '1');
-            
-            // Add item to cart directly without UI updates
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingItem = cart.find(item => item.handle === currentProduct.handle);
-            
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({
-                    handle: currentProduct.handle,
-                    title: currentProduct.title,
-                    price: currentProduct.variants[0].price,
-                    image: currentProduct.image.src,
-                    quantity
-                });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
+            window.addToCart({
+                handle: currentProduct.handle,
+                title: currentProduct.title,
+                price: currentProduct.variants[0].price,
+                image: currentProduct.image.src,
+                quantity,
+                skipNotification: true // Skip showing notification for direct checkout
+            });
 
-            // Go directly to checkout page
-            window.location.href = '/pages/checkout.html';
+            // Then redirect to checkout, adding a flag to skip empty cart check
+            window.location.href = '/pages/checkout.html?skipEmptyCheck=true';
         });
     }
 });
