@@ -78,28 +78,35 @@ document.addEventListener('DOMContentLoaded', function() {
             continueToPaymentBtn.textContent = 'Processing...';
             continueToPaymentBtn.style.backgroundColor = '#333333';
 
+            // Prepare payment data with proper customer info
+            const paymentData = {
+                cartItems: cart,
+                customer: {
+                    firstName: customerData.firstName,
+                    lastName: customerData.lastName,
+                    email: customerData.email,
+                    phone: customerData.phone,
+                    address: {
+                        street: customerData.address,
+                        apartment: customerData.apartment || '',
+                        city: customerData.city,
+                        postalCode: customerData.postalCode,
+                        country: customerData.country
+                    }
+                }
+            };
+
             const response = await fetch('https://resell-depot.onrender.com/api/create-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    cartItems: cart,
-                    customer: {
-                        firstName: customerData.firstName,
-                        lastName: customerData.lastName,
-                        email: customerData.email,
-                        phone: customerData.phone,
-                        address: {
-                            street: customerData.address,
-                            apartment: customerData.apartment || '',
-                            city: customerData.city,
-                            postalCode: customerData.postalCode,
-                            country: customerData.country
-                        }
-                    }
-                })
+                body: JSON.stringify(paymentData)
             });
+
+            if (!response.ok) {
+                throw new Error('Payment creation failed');
+            }
 
             const { checkoutUrl } = await response.json();
 
