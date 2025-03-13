@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const total = parseFloat(totalElement.textContent.replace('€', ''));
 
         try {
-            const response = await fetch('/api/create-payment', {
+            const response = await fetch('https://resell-depot.onrender.com/api/create-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
