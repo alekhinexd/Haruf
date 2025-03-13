@@ -210,8 +210,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
             
-            // Save cart and wait a tiny bit before redirecting
+            // Save cart and update UI
             localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count before redirecting
+            const cartCountElements = document.querySelectorAll('#cart-count, #mobile-cart-count');
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCountElements.forEach(element => {
+                element.textContent = totalItems.toString();
+            });
             
             // Use setTimeout to ensure cart is saved before redirect
             setTimeout(() => {
