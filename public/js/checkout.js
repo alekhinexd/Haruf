@@ -74,9 +74,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const total = parseFloat(totalElement.textContent.replace('€', ''));
 
         try {
+            // Format cart items to match the previous working structure
+            const formattedCartItems = checkoutItems.map(item => ({
+                handle: item.handle,
+                title: item.title,
+                price: item.price.toString(), // Ensure price is a string
+                quantity: parseInt(item.quantity),
+                image: item.image
+            }));
+
             const paymentData = {
-                cartItems: checkoutItems,
-                total: total,
+                cartItems: formattedCartItems,
                 customer: {
                     firstName: customerData.firstName,
                     lastName: customerData.lastName,
@@ -84,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     phone: customerData.phone,
                     address: {
                         street: customerData.address,
-                        apartment: customerData.apartment,
+                        apartment: customerData.apartment || '',
                         city: customerData.city,
                         postalCode: customerData.postalCode,
                         country: customerData.country
@@ -97,26 +105,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('https://resell-depot.onrender.com/api/create-payment', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(paymentData)
             });
 
+            const responseData = await response.json();
+            console.log('Server response:', responseData);
+
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Server error:', errorData);
-                throw new Error(errorData.error || 'Payment creation failed');
+                throw new Error(responseData.error || 'Payment creation failed');
             }
 
-            const session = await response.json();
-            console.log('Payment session:', session);
-            
             // Store customer data for order confirmation
             localStorage.setItem('customerData', JSON.stringify(customerData));
 
             // Redirect to Mollie payment page
-            if (session.checkoutUrl) {
-                window.location.href = session.checkoutUrl;
+            if (responseData.checkoutUrl) {
+                window.location.href = responseData.checkoutUrl;
             } else {
                 throw new Error('No checkout URL received from server');
             }
@@ -126,6 +133,4 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Error: ' + error.message);
         }
     });
-
-
 });
