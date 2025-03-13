@@ -207,7 +207,10 @@ function setupEventListeners() {
             console.log('Cart contents:', cart); // Log cart contents
             processPayment();
         } else {
-            showError('Your cart is empty.');
+            // Check if we're on product page before showing error
+            if (!window.location.pathname.includes('product.html')) {
+                showError('Your cart is empty.');
+            }
         }
     });
 }

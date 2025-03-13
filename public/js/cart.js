@@ -50,8 +50,8 @@ function updateCartCount() {
 
 // Update empty cart state
 function updateEmptyCartState() {
-    // Skip this check on checkout page
-    if (window.location.pathname.includes('checkout.html')) return;
+    // Skip this check on checkout page and product page
+    if (window.location.pathname.includes('checkout.html') || window.location.pathname.includes('product.html')) return;
 
     const cartContainer = document.querySelector('#cart-container');
     const emptyCart = document.querySelector('#empty-cart');
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
                 
                 if (cart.length === 0) {
-                    alert('Your cart is empty');
+                    // Removed alert
                     return;
                 }
 
