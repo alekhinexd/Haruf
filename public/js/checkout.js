@@ -67,7 +67,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Get form data
         const formData = new FormData(checkoutForm);
-        const customerData = Object.fromEntries(formData.entries());
+        const customerData = {
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            address: {
+                street: formData.get('address'),
+                apartment: formData.get('apartment') || '',
+                city: formData.get('city'),
+                postalCode: formData.get('postalCode'),
+                country: formData.get('country')
+            }
+        };
         
         // Get cart data
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -83,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 handle: item.handle,
                 title: item.title,
                 price: parseFloat(item.price).toFixed(2),
-                quantity: item.quantity,
+                quantity: parseInt(item.quantity),
                 image: item.image
             }));
 
@@ -95,19 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const paymentData = {
                 cartItems: formattedCartItems,
                 total: total,
-                customer: {
-                    firstName: customerData.firstName,
-                    lastName: customerData.lastName,
-                    email: customerData.email,
-                    phone: customerData.phone,
-                    address: {
-                        street: customerData.address,
-                        apartment: customerData.apartment || '',
-                        city: customerData.city,
-                        postalCode: customerData.postalCode,
-                        country: customerData.country
-                    }
-                }
+                customer: customerData
             };
 
             console.log('Sending payment data:', paymentData);
