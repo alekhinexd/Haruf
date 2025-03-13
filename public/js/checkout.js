@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Get cart data
+        // Get cart data exactly as stored by cart.js
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
         try {
@@ -74,30 +74,28 @@ document.addEventListener('DOMContentLoaded', function() {
             continueToPaymentBtn.textContent = 'Processing...';
             continueToPaymentBtn.style.backgroundColor = '#333333';
 
-            // Create Mollie payment - use exact same structure as cart page
-            const response = await fetch('/api/create-payment', {
+            // Create Mollie payment with cart items exactly as they are stored
+            const response = await fetch('https://resell-depot.onrender.com/api/create-payment', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    cartItems: cart
-                })
+                body: JSON.stringify({ cartItems: cart })
             });
 
+            const responseData = await response.json();
+
             if (!response.ok) {
-                throw new Error('Payment creation failed');
+                throw new Error(responseData.error || 'Payment creation failed');
             }
 
-            const { checkoutUrl } = await response.json();
-            
             // Store form data for order confirmation
             const formData = new FormData(checkoutForm);
             const customerData = Object.fromEntries(formData.entries());
             localStorage.setItem('customerData', JSON.stringify(customerData));
             
             // Redirect to Mollie checkout
-            window.location.href = checkoutUrl;
+            window.location.href = responseData.checkoutUrl;
 
         } catch (error) {
             console.error('Checkout error:', error);

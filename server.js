@@ -29,30 +29,23 @@ const { products } = require('./public/js/data/products.js');
 // Secure payment endpoint with proper validation and error handling
 app.post('/api/create-payment', async (req, res) => {
     try {
-        const { cartItems, customer } = req.body;
-        console.log('Received payment request:', { cartItems, customer });
+        const { cartItems } = req.body;
         
         if (!Array.isArray(cartItems) || cartItems.length === 0) {
-            console.error('Invalid cart items:', cartItems);
             return res.status(400).json({ error: 'Invalid cart items' });
         }
 
         // Calculate total amount from cart items
         const total = cartItems.reduce((sum, item) => {
-            const price = parseFloat(item.price);
-            const quantity = parseInt(item.quantity);
-            console.log(`Processing item: ${item.title}, price: ${price}, quantity: ${quantity}`);
-            return sum + (price * quantity);
+            return sum + (parseFloat(item.price) * parseInt(item.quantity));
         }, 0);
 
         if (isNaN(total) || total <= 0) {
-            console.error('Invalid total amount:', total);
             return res.status(400).json({ error: 'Invalid total amount' });
         }
 
         // Format amount to 2 decimal places
         const amount = total.toFixed(2);
-        console.log('Calculated amount:', amount);
 
         // Create payment with Mollie
         const payment = await mollieClient.payments.create({
@@ -64,39 +57,19 @@ app.post('/api/create-payment', async (req, res) => {
             redirectUrl: `${process.env.APP_URL}/pages/order-confirmation.html`,
             webhookUrl: `${process.env.APP_URL}/api/webhooks/mollie`,
             metadata: {
-                cartItems: cartItems,
-                customer: customer
+                cartItems: cartItems
             },
             method: ['creditcard', 'applepay', 'banktransfer', 'klarnapaylater', 'klarnapaynow'],
-            locale: 'en_US',
-            billingAddress: {
-                streetAndNumber: customer.address.street + ' ' + (customer.address.apartment || ''),
-                postalCode: customer.address.postalCode,
-                city: customer.address.city,
-                country: customer.address.country
-            },
-            shippingAddress: {
-                streetAndNumber: customer.address.street + ' ' + (customer.address.apartment || ''),
-                postalCode: customer.address.postalCode,
-                city: customer.address.city,
-                country: customer.address.country
-            },
-            consumerName: customer.firstName + ' ' + customer.lastName,
-            email: customer.email,
-            phoneNumber: customer.phone
+            locale: 'en_US'
         });
 
-        console.log('Payment created successfully:', payment.id);
         res.json({ 
             checkoutUrl: payment.getCheckoutUrl(),
             paymentId: payment.id
         });
 
     } catch (error) {
-        console.error('Payment creation failed:', error.message);
-        if (error.details) {
-            console.error('Error details:', error.details);
-        }
+        console.error('Payment creation failed:', error);
         res.status(500).json({
             error: 'Payment processing failed. Please try again or contact support.'
         });
