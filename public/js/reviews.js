@@ -236,15 +236,17 @@ function updateProductPage() {
                 </div>
             </div>
         </div>
-        <div class="reviews-section__list">
-            ${updateReviewsList(productReviews)}
-        </div>
+        <div class="reviews-section__list"></div> <!-- Empty list for now -->
     `;
 
+    // Append the reviews section to the product info
     const productInfo = document.querySelector('.product__info');
     if (productInfo) {
         productInfo.parentNode.insertBefore(reviewsSection, productInfo.nextSibling);
     }
+
+    // Now update the reviews list
+    updateReviewsList(productReviews);
 }
 
 // Add customer reviews carousel to homepage
