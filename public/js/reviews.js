@@ -303,11 +303,26 @@ function addReviewsCarousel() {
     const nextBtn = section.querySelector('.next');
     let position = 0;
 
+    function updateCarouselButtons() {
+        const cards = container.querySelectorAll('.review-card');
+        const cardWidth = cards[0].offsetWidth + 24; // Including gap
+        const visibleWidth = container.parentElement.offsetWidth;
+        const maxScroll = container.scrollWidth - visibleWidth;
+        const currentScroll = position * cardWidth;
+
+        prevBtn.disabled = currentScroll <= 0;
+        nextBtn.disabled = currentScroll >= maxScroll;
+
+        prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+        nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+    }
+
     function slide(direction) {
         const cards = container.querySelectorAll('.review-card');
-        const cardWidth = cards[0].offsetWidth + 24; // Including margin
-        const visibleCards = Math.floor(container.offsetWidth / cardWidth);
-        const maxPosition = cards.length - visibleCards;
+        const cardWidth = cards[0].offsetWidth + 24; // Including gap
+        const visibleWidth = container.parentElement.offsetWidth;
+        const visibleCards = Math.floor(visibleWidth / cardWidth);
+        const maxPosition = Math.max(0, cards.length - visibleCards);
 
         if (direction === 'next' && position < maxPosition) {
             position++;
@@ -316,7 +331,12 @@ function addReviewsCarousel() {
         }
 
         container.style.transform = `translateX(-${position * cardWidth}px)`;
+        updateCarouselButtons();
     }
+
+    // Initial button state
+    window.addEventListener('load', updateCarouselButtons);
+    window.addEventListener('resize', updateCarouselButtons);
 
     prevBtn.addEventListener('click', () => slide('prev'));
     nextBtn.addEventListener('click', () => slide('next'));
