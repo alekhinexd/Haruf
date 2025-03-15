@@ -1,19 +1,53 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const orderItems = document.getElementById('order-items');
     const shippingDetails = document.getElementById('shipping-details');
     const subtotalElement = document.getElementById('subtotal');
     const totalElement = document.getElementById('total');
     const orderNumberElement = document.getElementById('order-number');
+    const confirmationContent = document.querySelector('.confirmation-content');
+    const errorMessage = document.querySelector('.error-message');
 
-    // Generate a random order number (in production this should come from your backend)
-    const orderNumber = 'RD' + Date.now().toString().slice(-6);
-    orderNumberElement.textContent = `Order #${orderNumber}`;
+    // Check if this is a valid order confirmation
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentId = localStorage.getItem('currentPaymentId');
+    
+    if (!paymentId) {
+        // No payment ID found, redirect to cart
+        window.location.href = '/pages/cart.html';
+        return;
+    }
 
-    // Load cart items and customer data from localStorage
+    try {
+        // Verify payment status with server
+        const response = await fetch(`/api/verify-payment/${paymentId}`);
+        const paymentStatus = await response.json();
+
+        if (!paymentStatus.isPaid) {
+            // Payment not successful, redirect to cart
+            localStorage.removeItem('currentPaymentId');
+            window.location.href = '/pages/cart.html';
+            return;
+        }
+
+        // If we get here, payment was successful
+        displayOrderConfirmation();
+        
+        // Clear payment ID after successful display
+        localStorage.removeItem('currentPaymentId');
+        
+    } catch (error) {
+        console.error('Error verifying payment:', error);
+        window.location.href = '/pages/cart.html';
+    }
+
     function displayOrderConfirmation() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const customerData = JSON.parse(localStorage.getItem('customerData')) || {};
         let subtotal = 0;
+
+        // Generate order number
+        const orderNumber = 'RD' + Date.now().toString().slice(-6);
+        orderNumberElement.textContent = `Order #${orderNumber}`;
 
         // Display order items
         orderItems.innerHTML = '';
@@ -60,6 +94,4 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('cart');
         localStorage.removeItem('customerData');
     }
-
-    displayOrderConfirmation();
 });

@@ -94,6 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const customerData = Object.fromEntries(formData.entries());
             localStorage.setItem('customerData', JSON.stringify(customerData));
             
+            // Store payment ID for verification
+            localStorage.setItem('currentPaymentId', responseData.paymentId);
+            
             // Redirect to Mollie checkout
             window.location.href = responseData.checkoutUrl;
 

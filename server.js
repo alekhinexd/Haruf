@@ -76,6 +76,30 @@ app.post('/api/create-payment', async (req, res) => {
     }
 });
 
+// Add payment verification endpoint
+app.get('/api/verify-payment/:paymentId', async (req, res) => {
+    try {
+        const { paymentId } = req.params;
+        
+        if (!paymentId) {
+            return res.status(400).json({ error: 'Payment ID is required' });
+        }
+
+        const payment = await mollieClient.payments.get(paymentId);
+        
+        res.json({
+            isPaid: payment.isPaid(),
+            status: payment.status
+        });
+
+    } catch (error) {
+        console.error('Payment verification failed:', error);
+        res.status(500).json({
+            error: 'Payment verification failed'
+        });
+    }
+});
+
 // Secure webhook endpoint for Mollie callbacks
 app.post('/api/webhooks/mollie', async (req, res) => {
     try {
