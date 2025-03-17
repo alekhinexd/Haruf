@@ -512,8 +512,82 @@ function displayProduct(product) {
         quantityInput.style.color = '#000000';
     }
 
-    // Initialize quantity controls
-    initializeQuantityControls();
+    // Display related products
+    displayRelatedProducts(product.handle);
+}
+
+// Function to get random products excluding current product
+function getRandomProducts(currentHandle, count = 4) {
+    const availableProducts = window.shopifyProducts.filter(p => p.handle !== currentHandle);
+    const shuffled = availableProducts.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+// Function to display related products
+function displayRelatedProducts(currentHandle) {
+    const relatedProducts = getRandomProducts(currentHandle, 4);
+    const sliderContainer = document.querySelector('.related-products-slider');
+    
+    if (!sliderContainer) return;
+    
+    sliderContainer.innerHTML = relatedProducts.map(product => `
+        <a href="/pages/product.html?handle=${product.handle}" class="related-product-card">
+            <img src="${product.image.src}" alt="${product.title}">
+            <div class="related-product-info">
+                <h3 class="related-product-title">${product.title}</h3>
+                <p class="related-product-price">${formatPrice(product.variants[0].price)}</p>
+            </div>
+        </a>
+    `).join('');
+
+    // Add touch slide functionality for mobile
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    sliderContainer.addEventListener('mousedown', (e) => {
+        isDown = true;
+        sliderContainer.style.cursor = 'grabbing';
+        startX = e.pageX - sliderContainer.offsetLeft;
+        scrollLeft = sliderContainer.scrollLeft;
+    });
+
+    sliderContainer.addEventListener('mouseleave', () => {
+        isDown = false;
+        sliderContainer.style.cursor = 'grab';
+    });
+
+    sliderContainer.addEventListener('mouseup', () => {
+        isDown = false;
+        sliderContainer.style.cursor = 'grab';
+    });
+
+    sliderContainer.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - sliderContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        sliderContainer.scrollLeft = scrollLeft - walk;
+    });
+
+    // Touch events for mobile
+    sliderContainer.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - sliderContainer.offsetLeft;
+        scrollLeft = sliderContainer.scrollLeft;
+    });
+
+    sliderContainer.addEventListener('touchend', () => {
+        isDown = false;
+    });
+
+    sliderContainer.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - sliderContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        sliderContainer.scrollLeft = scrollLeft - walk;
+    });
 }
 
 async function loadProductFromAPI(handle) {
