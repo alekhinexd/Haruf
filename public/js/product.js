@@ -6,12 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (productHandle) {
         // Try to load from window.shopifyProducts first
-        const products = window.shopifyProducts || [];
-        const variants = products.filter(p => p.handle === productHandle);
-        if (variants.length > 0) {
-            // Use the first variant as the base product
-            const baseProduct = variants[0];
-            displayProduct(baseProduct);
+        const product = window.shopifyProducts?.find(p => p.handle === productHandle);
+        if (product) {
+            displayProduct(product);
         } else {
             // Fallback to API if not found in window
             loadProductFromAPI(productHandle);
@@ -54,8 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.addToCart({
                     handle: currentProduct.handle,
                     title: currentProduct.title,
-                    price: currentProduct.price,
-                    image: currentProduct.image,
+                    price: currentProduct.variants[0].price,
+                    image: currentProduct.image.src,
                     quantity
                 });
 
@@ -66,10 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
                 const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
-                productImage.src = currentProduct.image;
+                productImage.src = currentProduct.image.src;
                 productImage.alt = currentProduct.title;
                 productTitle.textContent = currentProduct.title;
-                productPrice.textContent = formatPrice(currentProduct.price);
+                productPrice.textContent = formatPrice(currentProduct.variants[0].price);
 
                 notificationMenu.classList.add('visible');
 
@@ -207,8 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 cart.push({
                     handle: currentProduct.handle,
                     title: currentProduct.title,
-                    price: currentProduct.price,
-                    image: currentProduct.image,
+                    price: currentProduct.variants[0].price,
+                    image: currentProduct.image.src,
                     quantity
                 });
             }
@@ -234,45 +231,65 @@ document.addEventListener('DOMContentLoaded', () => {
 let selectedOptions = {};
 
 function getProductOptions(product) {
-    const products = window.shopifyProducts || [];
-    const variants = products.filter(p => p.handle === product.handle);
     const options = [];
     
-    // Get all possible option names from variants
-    for (let i = 1; i <= 3; i++) {
-        const nameKey = `Option${i} Name`;
-        const valueKey = `Option${i} Value`;
-        const name = variants[0][nameKey];
-        if (name) {
-            const values = [...new Set(variants.map(v => v[valueKey]))];
-            if (values.length > 0) {
-                options.push({ name, values });
-            }
-        }
+    // Get all variants for this product
+    const products = window.shopifyProducts || [];
+    const variants = products.filter(p => p.handle === product.handle);
+    
+    // Check for Option1
+    if (variants[0] && variants[0].option1_name) {
+        const values = new Set();
+        variants.forEach(variant => {
+            if (variant.option1_value) values.add(variant.option1_value);
+        });
+        options.push({
+            name: variants[0].option1_name,
+            values: Array.from(values)
+        });
     }
+    
+    // Check for Option2
+    if (variants[0] && variants[0].option2_name) {
+        const values = new Set();
+        variants.forEach(variant => {
+            if (variant.option2_value) values.add(variant.option2_value);
+        });
+        options.push({
+            name: variants[0].option2_name,
+            values: Array.from(values)
+        });
+    }
+    
     return options;
 }
 
 function renderProductOptions(product) {
     const optionsContainer = document.getElementById('product-options');
     if (!optionsContainer) return;
-
+    
     const options = getProductOptions(product);
     if (options.length === 0) {
         optionsContainer.style.display = 'none';
         return;
     }
 
+    optionsContainer.style.display = 'block';
     optionsContainer.innerHTML = options.map(option => `
         <div class="option-group" data-option="${option.name.toLowerCase()}">
             <label class="option-group__label">${option.name}</label>
             <div class="option-group__values">
                 ${option.values.map(value => {
-                    const isColor = option.name.toLowerCase().includes('color');
+                    const isColor = option.name.toLowerCase() === 'color';
                     if (isColor) {
-                        const variantWithImage = findVariantWithColorImage(product.handle, value);
-                        const style = variantWithImage ? 
-                            `background-image: url('${variantWithImage['Variant Image']}')` :
+                        // Find variant with this color to get its image
+                        const variant = window.shopifyProducts.find(p => 
+                            p.handle === product.handle && 
+                            (p.option1_value === value || p.option2_value === value) &&
+                            p.image
+                        );
+                        const style = variant && variant.image ? 
+                            `background-image: url('${variant.image}')` :
                             `background-color: ${value.toLowerCase()}`;
                         return `
                             <div class="option-value option-value--color" 
@@ -318,20 +335,37 @@ function renderProductOptions(product) {
         selectedOptions[optionName] = optionValue.dataset.value;
 
         // Update product image if it's a color option
-        if (optionName.toLowerCase().includes('color')) {
-            const variantWithImage = findVariantWithColorImage(product.handle, optionValue.dataset.value);
-            if (variantWithImage && variantWithImage['Variant Image']) {
-                document.getElementById('main-image').src = variantWithImage['Variant Image'];
+        if (optionName === 'color') {
+            const variant = window.shopifyProducts.find(p => 
+                p.handle === product.handle && 
+                (p.option1_value === optionValue.dataset.value || p.option2_value === optionValue.dataset.value) &&
+                p.image
+            );
+            if (variant && variant.image) {
+                document.getElementById('main-image').src = variant.image;
             }
         }
     });
+}
+
+function getUniqueOptionValues(handle, optionField) {
+    const products = window.shopifyProducts || [];
+    const variants = products.filter(p => p.handle === handle);
+    const values = new Set();
+    variants.forEach(variant => {
+        if (variant[optionField]) {
+            values.add(variant[optionField]);
+        }
+    });
+    return Array.from(values);
 }
 
 function findVariantWithColorImage(handle, colorValue) {
     const products = window.shopifyProducts || [];
     return products.find(p => 
         p.handle === handle && 
-        (p['Option1 Value'] === colorValue || p['Option2 Value'] === colorValue || p['Option3 Value'] === colorValue)
+        (p['Option1 Value'] === colorValue || p['Option2 Value'] === colorValue || p['Option3 Value'] === colorValue) && 
+        p['Variant Image']
     );
 }
 
@@ -343,22 +377,11 @@ function addToCart(product) {
         value
     }));
 
-    // Find the specific variant that matches all selected options
-    const products = window.shopifyProducts || [];
-    const matchingVariant = products.find(p => 
-        p.handle === product.handle &&
-        Object.entries(selectedOptions).every(([name, value]) => {
-            return ['Option1', 'Option2', 'Option3'].some(prefix => 
-                p[`${prefix} Name`] === name && p[`${prefix} Value`] === value
-            );
-        })
-    );
-
     window.addToCart({
         handle: product.handle,
         title: product.title,
-        price: matchingVariant ? matchingVariant.price : product.price,
-        image: matchingVariant && matchingVariant.image ? matchingVariant.image : product.image,
+        price: product.price,
+        image: product.image,
         quantity: quantity,
         options: options
     });
@@ -377,7 +400,10 @@ function displayProduct(product) {
     if (mainImage) mainImage.src = product.image;
     if (titleElement) titleElement.textContent = product.title;
     if (priceElement) priceElement.textContent = formatPrice(product.price);
-    if (descriptionElement) descriptionElement.innerHTML = product.body_html;
+    if (descriptionElement) descriptionElement.innerHTML = product.description;
+
+    // Render product options
+    renderProductOptions(product);
 
     // Add rating if product has reviews
     if (product.rating_count) {
@@ -399,16 +425,257 @@ function displayProduct(product) {
                     reviewsSection.scrollIntoView({ behavior: 'smooth' });
                 }
             };
+
+            // Add reviews section
+            const reviewsContainer = document.getElementById('reviews-container');
+            if (reviewsContainer) {
+                reviewsContainer.innerHTML = `
+                    <div class="reviews-section">
+                        <div class="reviews-section__header">
+                            <div class="reviews-section__summary">
+                                <h2>Customer Reviews</h2>
+                                <div class="reviews-section__average">
+                                    <div class="star-rating star-rating--large">
+                                        ${Array(5).fill('★').join('')}
+                                    </div>
+                                    <span class="reviews-section__average-text">5.0 out of 5</span>
+                                </div>
+                                <div class="reviews-section__count">${product.rating_count} reviews</div>
+                                <button class="write-review-btn" id="write-review-btn">Write a Review</button>
+                                <div class="reviews-section__distribution">
+                                    <div class="rating-bar">
+                                        <span class="rating-bar__label">5 stars</span>
+                                        <div class="rating-bar__bar">
+                                            <div class="rating-bar__fill" style="width: 100%"></div>
+                                        </div>
+                                        <span class="rating-bar__count">${product.rating_count}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reviews-section__filters">
+                            <div class="reviews-section__sort">
+                                <label for="sort-reviews">Sort by:</label>
+                                <select id="sort-reviews" class="sort-reviews-select">
+                                    <option value="newest">Newest</option>
+                                    <option value="highest">Highest Rating</option>
+                                    <option value="lowest">Lowest Rating</option>
+                                    <option value="helpful">Most Helpful</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="reviews-section__list">
+                            ${Array(5).fill('').map(() => `
+                                <div class="review-card">
+                                    <div class="review-card__header">
+                                        <div class="star-rating">
+                                            ${Array(5).fill('★').join('')}
+                                        </div>
+                                        <span class="review-card__author">Verified Customer</span>
+                                        <span class="review-card__date">${new Date().toLocaleDateString('en-US', { 
+                                            year: 'numeric', 
+                                            month: 'long', 
+                                            day: 'numeric' 
+                                        })}</span>
+                                    </div>
+                                    <div class="review-card__body">
+                                        <p>Great product! Exactly as described. Fast shipping and excellent customer service.</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="reviews-pagination">
+                            <button class="pagination-btn prev disabled">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="pagination-btn number active">1</button>
+                            <button class="pagination-btn next disabled">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Add event listeners for review functionality
+                const writeReviewBtn = document.getElementById('write-review-btn');
+                const sortReviews = document.getElementById('sort-reviews');
+
+                if (writeReviewBtn) {
+                    writeReviewBtn.addEventListener('click', () => {
+                        // Scroll to top of reviews section
+                        const reviewsSection = document.querySelector('.reviews-section');
+                        if (reviewsSection) {
+                            reviewsSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        
+                        // Show write review form (to be implemented)
+                        alert('Write a review feature coming soon!');
+                    });
+                }
+
+                if (sortReviews) {
+                    sortReviews.addEventListener('change', (e) => {
+                        const sortBy = e.target.value;
+                        // Sort reviews logic (to be implemented)
+                        console.log('Sorting reviews by:', sortBy);
+                    });
+                }
+            }
+        }
+    } else {
+        // Hide rating if no reviews
+        const ratingElement = document.getElementById('product-rating');
+        if (ratingElement) {
+            ratingElement.style.display = 'none';
         }
     }
 
-    // Initialize quantity controls
-    initializeQuantityControls();
+    // Update price with compare at price if available
+    if (priceElement && product.variants && product.variants[0]) {
+        const variant = product.variants[0];
+        if (variant.compare_at_price) {
+            priceElement.innerHTML = `
+                <span class="price-item price-item--sale">€${variant.price}</span>
+                <s class="price-item price-item--regular">€${variant.compare_at_price}</s>
+            `;
+        } else {
+            priceElement.innerHTML = `<span class="price-item">€${variant.price}</span>`;
+        }
+    }
 
-    // Render product options
-    renderProductOptions(product);
+    // Update product details with black color scheme
+    // Add cart notification menu if it doesn't exist
+    if (!document.querySelector('.cart-notification-menu')) {
+        const notificationMenu = document.createElement('div');
+        notificationMenu.className = 'cart-notification-menu';
+        notificationMenu.innerHTML = `
+            <div class="cart-notification-menu__header">
+                <h3 class="cart-notification-menu__title">Added to Cart</h3>
+                <button class="cart-notification-menu__close">&times;</button>
+            </div>
+            <div class="cart-notification-menu__product">
+                <img class="cart-notification-menu__product-image" src="" alt="">
+                <div class="cart-notification-menu__product-info">
+                    <h4 class="cart-notification-menu__product-title"></h4>
+                    <p class="cart-notification-menu__product-price"></p>
+                </div>
+            </div>
+            <div class="cart-notification-menu__buttons">
+                <button class="cart-notification-menu__button cart-notification-menu__button--secondary">Continue Shopping</button>
+                <button class="cart-notification-menu__button cart-notification-menu__button--primary">Checkout Now</button>
+            </div>
+        `;
+        document.body.appendChild(notificationMenu);
 
-    // Load and display related products
+        // Add event listeners for the notification menu
+        const closeBtn = notificationMenu.querySelector('.cart-notification-menu__close');
+        const continueBtn = notificationMenu.querySelector('.cart-notification-menu__button--secondary');
+        const checkoutBtn = notificationMenu.querySelector('.cart-notification-menu__button--primary');
+
+        closeBtn.addEventListener('click', () => {
+            notificationMenu.classList.remove('visible');
+        });
+
+        continueBtn.addEventListener('click', () => {
+            notificationMenu.classList.remove('visible');
+        });
+
+        checkoutBtn.addEventListener('click', () => {
+            window.location.href = '/pages/cart.html';
+        });
+    }
+
+    const addToCartBtn = document.getElementById('add-to-cart');
+    if (addToCartBtn) {
+        // Clear any existing event listeners
+        const newAddToCartBtn = addToCartBtn.cloneNode(true);
+        addToCartBtn.parentNode.replaceChild(newAddToCartBtn, addToCartBtn);
+        
+        newAddToCartBtn.style.display = 'block';
+        newAddToCartBtn.style.border = '2px solid #000000';
+        newAddToCartBtn.style.color = '#000000';
+        newAddToCartBtn.style.backgroundColor = 'transparent';
+        newAddToCartBtn.style.transition = 'all 0.3s ease';
+        
+        newAddToCartBtn.addEventListener('mouseover', () => {
+            newAddToCartBtn.style.backgroundColor = '#333333';
+            newAddToCartBtn.style.color = '#ffffff';
+        });
+        
+        newAddToCartBtn.addEventListener('mouseout', () => {
+            newAddToCartBtn.style.backgroundColor = 'transparent';
+            newAddToCartBtn.style.color = '#000000';
+        });
+
+        // Add to cart functionality
+        newAddToCartBtn.addEventListener('click', () => {
+            const quantity = parseInt(document.getElementById('quantity')?.value || '1');
+            window.addToCart({
+                handle: product.handle,
+                title: product.title,
+                price: product.variants[0].price,
+                image: product.image.src,
+                quantity
+            });
+
+            // Show notification menu
+            const notificationMenu = document.querySelector('.cart-notification-menu');
+            const productImage = notificationMenu.querySelector('.cart-notification-menu__product-image');
+            const productTitle = notificationMenu.querySelector('.cart-notification-menu__product-title');
+            const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
+            const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
+
+            productImage.src = product.image.src;
+            productImage.alt = product.title;
+            productTitle.textContent = product.title;
+            productPrice.textContent = formatPrice(product.variants[0].price);
+
+            notificationMenu.classList.add('visible');
+
+            // Close notification on X button click
+            closeButton.addEventListener('click', () => {
+                notificationMenu.classList.remove('visible');
+            });
+
+            // Show feedback with black color scheme
+            const originalText = newAddToCartBtn.textContent;
+            newAddToCartBtn.textContent = 'Added to Cart!';
+            newAddToCartBtn.style.backgroundColor = '#000000';
+            newAddToCartBtn.style.color = '#ffffff';
+            
+            setTimeout(() => {
+                newAddToCartBtn.textContent = originalText;
+                newAddToCartBtn.style.backgroundColor = 'transparent';
+                newAddToCartBtn.style.color = '#000000';
+            }, 2000);
+        });
+    }
+
+    // Style quantity controls with black color scheme
+    const quantityControls = document.querySelectorAll('.quantity-btn');
+    const quantityInput = document.getElementById('quantity');
+    
+    quantityControls.forEach(btn => {
+        btn.style.border = '1px solid #000000';
+        btn.style.color = '#000000';
+        btn.style.backgroundColor = 'transparent';
+        btn.style.transition = 'all 0.3s ease';
+        
+        btn.addEventListener('mouseover', () => {
+            btn.style.backgroundColor = '#f0f0f0';
+        });
+        
+        btn.addEventListener('mouseout', () => {
+            btn.style.backgroundColor = 'transparent';
+        });
+    });
+
+    if (quantityInput) {
+        quantityInput.style.border = '1px solid #000000';
+        quantityInput.style.color = '#000000';
+    }
+
+    // Load and display related products (using bestsellers)
     loadRelatedProducts();
 }
 
@@ -430,47 +697,74 @@ function displayRelatedProducts(products) {
     if (!container) return;
 
     container.innerHTML = products.map(product => {
-        const variant = product;
+        const variant = product.variants[0];
         const price = formatPrice(variant.price);
         const compareAtPrice = variant.compare_at_price ? formatPrice(variant.compare_at_price) : null;
         const hasDiscount = variant.compare_at_price && variant.compare_at_price > variant.price;
-        const discountPercent = hasDiscount ? Math.round((1 - variant.price / variant.compare_at_price) * 100) : 0;
-
+        const rating = product.rating_count ? product.rating_count : 0;
+        const ratingStars = Math.round(rating / 5 * 5);
+        
         return `
             <div class="bestseller-card">
-                <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" class="bestseller-card__link">
-                    <div class="bestseller-card__image">
-                        ${hasDiscount ? '<span class="sale-badge">Sale</span>' : ''}
-                        <img src="${product.image}" alt="${product.title}" loading="lazy">
-                    </div>
-                    <div class="bestseller-card__info">
-                        <h3 class="bestseller-card__title">${product.title}</h3>
-                        <div class="bestseller-card__price">
-                            ${hasDiscount ? `
-                                <span class="price-item price-item--sale">${price}</span>
-                                <s class="price-item price-item--regular">${compareAtPrice}</s>
-                                <span class="price-item__badge">-${discountPercent}%</span>
-                            ` : `
-                                <span class="price-item">${price}</span>
-                            `}
+                <div class="bestseller-card__content">
+                    <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" class="bestseller-card__link">
+                        <div class="bestseller-card__image">
+                            ${hasDiscount ? '<span class="sale-badge">Sale</span>' : ''}
+                            <img src="${product.image.src}" alt="${product.title}" loading="lazy">
                         </div>
-                    </div>
-                </a>
+                        <div class="bestseller-card__info">
+                            <h3 class="bestseller-card__title">${product.title}</h3>
+                            <div class="bestseller-card__rating">
+                                <div class="star-rating">
+                                    ${Array(5).fill().map((_, i) => `<span class="star ${i < ratingStars ? 'filled' : ''}">${i < ratingStars ? '★' : '☆'}</span>`).join('')}
+                                </div>
+                                <span class="bestseller-card__rating-count">(${rating})</span>
+                            </div>
+                            <div class="bestseller-card__price">
+                                ${compareAtPrice ? `<span class="compare-at-price">${compareAtPrice}</span>` : ''}
+                                <span class="price">${price}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         `;
     }).join('');
 
-    // Add click handlers for product cards
-    const productCards = container.querySelectorAll('.bestseller-card');
-    productCards.forEach(card => {
-        card.addEventListener('click', (e) => {
-            // Add tap animation
-            card.style.transform = 'scale(0.98)';
+    // Handle card clicks with animation
+    const cards = container.getElementsByClassName('bestseller-card');
+    Array.from(cards).forEach(card => {
+        const link = card.querySelector('.bestseller-card__link');
+        if (!link) return;
+
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.href;
+            
+            // Add tapped class for animation
+            card.classList.add('tapped');
+            
+            // Navigate after animation
             setTimeout(() => {
-                card.style.transform = 'scale(1)';
-            }, 100);
+                window.location.href = href;
+            }, 200);
         });
     });
+
+    // Handle desktop arrow navigation
+    const section = container.closest('.bestsellers');
+    const prevButton = section.querySelector('.carousel-control.prev');
+    const nextButton = section.querySelector('.carousel-control.next');
+
+    if (prevButton && nextButton) {
+        prevButton.addEventListener('click', () => {
+            container.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        nextButton.addEventListener('click', () => {
+            container.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    }
 }
 
 async function loadProductFromAPI(handle) {
