@@ -308,13 +308,17 @@ function displayProduct(product) {
             
             // Get selected variant based on options
             const selectedVariant = findSelectedVariant(product);
+            if (!selectedVariant) {
+                alert('Please select all required options');
+                return;
+            }
             
             window.addToCart({
                 handle: product.handle,
                 title: product.title,
                 variant: selectedVariant,
-                price: selectedVariant ? selectedVariant.price : product.variants[0].price,
-                image: selectedVariant?.image || product.image.src,
+                price: selectedVariant.price,
+                image: selectedVariant.image || product.image.src,
                 quantity,
                 options: Object.entries(selectedOptions).map(([name, value]) => ({
                     name,
@@ -329,10 +333,10 @@ function displayProduct(product) {
             const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
             const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
-            productImage.src = selectedVariant?.image || product.image.src;
+            productImage.src = selectedVariant.image || product.image.src;
             productImage.alt = product.title;
             productTitle.textContent = product.title;
-            productPrice.textContent = formatPrice(selectedVariant ? selectedVariant.price : product.variants[0].price);
+            productPrice.textContent = formatPrice(selectedVariant.price);
 
             notificationMenu.classList.add('visible');
 
@@ -639,8 +643,8 @@ function findVariantWithColor(product, colorValue) {
 function findSelectedVariant(product) {
     return product.variants.find(variant => {
         return Object.entries(selectedOptions).every(([name, value]) => {
-            const optionIndex = product[`option1_name`] === name ? 1 : 
-                              product[`option2_name`] === name ? 2 : null;
+            const optionIndex = product[`option1_name`].toLowerCase() === name.toLowerCase() ? 1 : 
+                              product[`option2_name`]?.toLowerCase() === name.toLowerCase() ? 2 : null;
             
             if (!optionIndex) return true;
             return variant[`option${optionIndex}_value`] === value;
