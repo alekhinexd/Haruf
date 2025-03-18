@@ -14,12 +14,63 @@ const products = [
             compare_at_price: 54.99,
             inventory_quantity: -1,
             requires_shipping: false,
-            taxable: false
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'S',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 24.95,
+            compare_at_price: 54.99,
+            inventory_quantity: -1,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'M',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 24.95,
+            compare_at_price: 54.99,
+            inventory_quantity: -1,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'L',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 24.95,
+            compare_at_price: 54.99,
+            inventory_quantity: -1,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'S',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
+        }, {
+            price: 24.95,
+            compare_at_price: 54.99,
+            inventory_quantity: -1,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'M',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
+        }, {
+            price: 24.95,
+            compare_at_price: 54.99,
+            inventory_quantity: -1,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'L',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/07e84d_6d869f53bc43432a820d01b544d5a46b_mv2.webp?v=1729621576',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/07e84d_6d869f53bc43432a820d01b544d5a46b_mv2.webp?v=1729621576',
         rating_count: 81,
         status: 'active'
     },
@@ -39,10 +90,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Applevendors.jpg?v=1729621551',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Applevendors.jpg?v=1729621551',
         status: 'active'
     },
     {
@@ -61,10 +109,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/clothingbildneu.jpg?v=1729621548',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/clothingbildneu.jpg?v=1729621548',
         status: 'active'
     },
     {
@@ -83,10 +128,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Nigga.jpg?v=1729621544',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Nigga.jpg?v=1729621544',
         status: 'active'
     },
     {
@@ -105,10 +147,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/trendingbild.jpg?v=1729621541',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/trendingbild.jpg?v=1729621541',
         status: 'active'
     },
     {
@@ -125,12 +164,63 @@ const products = [
             compare_at_price: 22.95,
             inventory_quantity: 0,
             requires_shipping: false,
-            taxable: false
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'S',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 12.95,
+            compare_at_price: 22.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'M',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 12.95,
+            compare_at_price: 22.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'L',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 12.95,
+            compare_at_price: 22.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'S',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
+        }, {
+            price: 12.95,
+            compare_at_price: 22.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'M',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
+        }, {
+            price: 12.95,
+            compare_at_price: 22.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'L',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/5375_618cee3da69a25.11590256_CW2288-111-2.webp?v=1729621612',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/5375_618cee3da69a25.11590256_CW2288-111-2.webp?v=1729621612',
         rating_count: 274,
         status: 'active'
     },
@@ -150,10 +240,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/AirPods_Pro_2nd_Gen_with_USB-C_PDP_Image_Position-1__en-UScopy.webp?v=1729621609',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/AirPods_Pro_2nd_Gen_with_USB-C_PDP_Image_Position-1__en-UScopy.webp?v=1729621609',
         rating_count: 274,
         status: 'active'
     },
@@ -173,10 +260,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/dbcelx0cxdieuxn7vr1m.png?v=1729621607',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/dbcelx0cxdieuxn7vr1m.png?v=1729621607',
         rating_count: 89,
         status: 'active'
     },
@@ -196,10 +280,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Apple_Watch_Ultra_Titanium_dff179dc-e883-490b-9c33-8c93201b1c9b.webp?v=1729621604',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Apple_Watch_Ultra_Titanium_dff179dc-e883-490b-9c33-8c93201b1c9b.webp?v=1729621604',
         status: 'active'
     },
     {
@@ -218,10 +299,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/5ba3596ac2971a05b48a15e7.png?v=1729621601',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/5ba3596ac2971a05b48a15e7.png?v=1729621601',
         status: 'active'
     },
     {
@@ -240,10 +318,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597',
         status: 'active'
     },
     {
@@ -262,10 +337,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592',
         rating_count: 93,
         status: 'active'
     },
@@ -285,10 +357,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/1_JBL_PULSE_5_HERO_34364_x2_406d3d40-68f9-4482-a929-ba5cf1d5b3d0.webp?v=1729621587',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/1_JBL_PULSE_5_HERO_34364_x2_406d3d40-68f9-4482-a929-ba5cf1d5b3d0.webp?v=1729621587',
         status: 'active'
     },
     {
@@ -305,12 +374,63 @@ const products = [
             compare_at_price: 24.95,
             inventory_quantity: 0,
             requires_shipping: false,
-            taxable: false
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'S',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 17.95,
+            compare_at_price: 24.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'M',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 17.95,
+            compare_at_price: 24.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'L',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Black'
+        }, {
+            price: 17.95,
+            compare_at_price: 24.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'S',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
+        }, {
+            price: 17.95,
+            compare_at_price: 24.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'M',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
+        }, {
+            price: 17.95,
+            compare_at_price: 24.95,
+            inventory_quantity: 0,
+            requires_shipping: false,
+            taxable: false,
+            'Option1 Name': 'Size',
+            'Option1 Value': 'L',
+            'Option2 Name': 'Color',
+            'Option2 Value': 'Navy'
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/DesignohneTitel-2023-04-17T143851.017.webp?v=1729621585',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/DesignohneTitel-2023-04-17T143851.017.webp?v=1729621585',
         status: 'active'
     },
     {
@@ -329,10 +449,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/louis-vuitton-lv-initiales-wendegurtel-30-mm--M0565T_PM2_Frontview.webp?v=1729621580',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/louis-vuitton-lv-initiales-wendegurtel-30-mm--M0565T_PM2_Frontview.webp?v=1729621580',
         status: 'active'
     },
     {
@@ -351,10 +468,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Final_iPhone-14-Pro-Split-Full-Wrap-Vinyl-Skin-Design-Mockup-Front-Back-Angled-View_7c8b1dba-0ddc-4f69-b26e-160550b46b97.webp?v=1729621558',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Final_iPhone-14-Pro-Split-Full-Wrap-Vinyl-Skin-Design-Mockup-Front-Back-Angled-View_7c8b1dba-0ddc-4f69-b26e-160550b46b97.webp?v=1729621558',
         rating_count: 87,
         status: 'active'
     },
@@ -374,10 +488,7 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/full_body_housing_for_samsung_galaxy_s23_ultra_black_maxbhi_com_54246.jpg?v=1729621568',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/full_body_housing_for_samsung_galaxy_s23_ultra_black_maxbhi_com_54246.jpg?v=1729621568',
         rating_count: 97,
         status: 'active'
     },
@@ -397,26 +508,37 @@ const products = [
             requires_shipping: false,
             taxable: false
         }],
-        image: {
-            src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Samsung-Galaxy-Buds-Pro-Silver-1_1.png?v=1729621571',
-            alt: ''
-        },
+        image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/Samsung-Galaxy-Buds-Pro-Silver-1_1.png?v=1729621571',
         status: 'active'
     }
 ];
 
-// Make products available in both Node.js and browser environments
+// Make products available globally
+window.shopifyProducts = products.reduce((acc, product) => {
+    // Flatten variants into separate products with the same handle
+    product.variants.forEach(variant => {
+        acc.push({
+            ...product,
+            handle: product.handle,
+            price: variant.price,
+            compare_at_price: variant.compare_at_price,
+            'Option1 Name': variant['Option1 Name'],
+            'Option1 Value': variant['Option1 Value'],
+            'Option2 Name': variant['Option2 Name'],
+            'Option2 Value': variant['Option2 Value'],
+            'Option3 Name': variant['Option3 Name'],
+            'Option3 Value': variant['Option3 Value']
+        });
+    });
+    return acc;
+}, []);
+
+// For Node.js compatibility
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { products };
-} else {
-    // For browser environment
-    window.shopifyProducts = products;
 }
 
 // Function to fetch products - maintaining exact Shopify functionality
 async function fetchProducts() {
-    if (typeof window !== 'undefined') {
-        return window.shopifyProducts || [];
-    }
     return products;
 }
