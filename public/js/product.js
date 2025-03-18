@@ -308,17 +308,13 @@ function displayProduct(product) {
             
             // Get selected variant based on options
             const selectedVariant = findSelectedVariant(product);
-            if (!selectedVariant) {
-                alert('Please select all required options');
-                return;
-            }
             
             window.addToCart({
                 handle: product.handle,
                 title: product.title,
                 variant: selectedVariant,
-                price: selectedVariant.price,
-                image: selectedVariant.image || product.image.src,
+                price: selectedVariant ? selectedVariant.price : product.variants[0].price,
+                image: selectedVariant?.image || product.image.src,
                 quantity,
                 options: Object.entries(selectedOptions).map(([name, value]) => ({
                     name,
@@ -333,10 +329,10 @@ function displayProduct(product) {
             const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
             const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
-            productImage.src = selectedVariant.image || product.image.src;
+            productImage.src = selectedVariant?.image || product.image.src;
             productImage.alt = product.title;
             productTitle.textContent = product.title;
-            productPrice.textContent = formatPrice(selectedVariant.price);
+            productPrice.textContent = formatPrice(selectedVariant ? selectedVariant.price : product.variants[0].price);
 
             notificationMenu.classList.add('visible');
 
@@ -523,9 +519,32 @@ function showErrorState(message = 'Product not found') {
 
 function renderProductOptions(product) {
     const optionsContainer = document.getElementById('product-options');
-    if (!optionsContainer) return;
-    
-    const options = getProductOptions(product);
+    if (!optionsContainer || !product.variants || product.variants.length === 0) {
+        if (optionsContainer) optionsContainer.style.display = 'none';
+        return;
+    }
+
+    // Get unique options from variants
+    const options = [];
+    if (product.option1_name) {
+        const values = new Set(product.variants.map(v => v.option1_value).filter(Boolean));
+        if (values.size > 0) {
+            options.push({
+                name: product.option1_name,
+                values: Array.from(values)
+            });
+        }
+    }
+    if (product.option2_name) {
+        const values = new Set(product.variants.map(v => v.option2_value).filter(Boolean));
+        if (values.size > 0) {
+            options.push({
+                name: product.option2_name,
+                values: Array.from(values)
+            });
+        }
+    }
+
     if (options.length === 0) {
         optionsContainer.style.display = 'none';
         return;
@@ -539,7 +558,9 @@ function renderProductOptions(product) {
                 ${option.values.map(value => {
                     const isColor = option.name.toLowerCase().includes('color');
                     if (isColor) {
-                        const variant = findVariantWithColor(product, value);
+                        const variant = product.variants.find(v => 
+                            v.option1_value === value || v.option2_value === value
+                        );
                         const style = variant?.image ? 
                             `background-image: url('${variant.image}')` :
                             `background-color: ${value.toLowerCase()}`;
@@ -559,7 +580,7 @@ function renderProductOptions(product) {
         </div>
     `).join('');
 
-    // Set initial selected options
+    // Set initial selected options and update price
     options.forEach(option => {
         const firstValue = option.values[0];
         selectedOptions[option.name] = firstValue;
@@ -571,10 +592,10 @@ function renderProductOptions(product) {
         }
     });
 
-    // Update initial variant
+    // Update price based on initial variant selection
     updateSelectedVariant(product);
 
-    // Add click handlers
+    // Add click handlers for options
     optionsContainer.addEventListener('click', (e) => {
         const optionValue = e.target.closest('.option-value');
         if (!optionValue) return;
@@ -589,65 +610,23 @@ function renderProductOptions(product) {
         optionValue.classList.add('selected');
         selectedOptions[optionName] = optionValue.dataset.value;
 
-        // Update selected variant and price
+        // Update variant and price
         updateSelectedVariant(product);
-
-        // Update product image if it's a color option
-        if (optionName === 'color') {
-            const variant = findVariantWithColor(product, optionValue.dataset.value);
-            if (variant?.image) {
-                document.getElementById('main-image').src = variant.image;
-            }
-        }
     });
 }
 
-function getProductOptions(product) {
-    const options = [];
-    
-    // Helper function to add option if it exists
-    const addOption = (optionNum) => {
-        const name = product[`option${optionNum}_name`];
-        if (name) {
-            const values = new Set();
-            
-            // Add values from all variants
-            product.variants.forEach(variant => {
-                const value = variant[`option${optionNum}_value`];
-                if (value) values.add(value);
-            });
-            
-            if (values.size > 0) {
-                options.push({
-                    name,
-                    values: Array.from(values)
-                });
-            }
-        }
-    };
-    
-    // Check for both option1 and option2
-    addOption(1);
-    addOption(2);
-    
-    return options;
-}
-
-function findVariantWithColor(product, colorValue) {
-    return product.variants.find(variant => 
-        variant.option1_value === colorValue || 
-        variant.option2_value === colorValue
-    );
-}
-
 function findSelectedVariant(product) {
+    if (!product.variants) return null;
+    
     return product.variants.find(variant => {
         return Object.entries(selectedOptions).every(([name, value]) => {
-            const optionIndex = product[`option1_name`].toLowerCase() === name.toLowerCase() ? 1 : 
-                              product[`option2_name`]?.toLowerCase() === name.toLowerCase() ? 2 : null;
-            
-            if (!optionIndex) return true;
-            return variant[`option${optionIndex}_value`] === value;
+            if (product.option1_name === name) {
+                return variant.option1_value === value;
+            }
+            if (product.option2_name === name) {
+                return variant.option2_value === value;
+            }
+            return true;
         });
     });
 }
@@ -655,23 +634,20 @@ function findSelectedVariant(product) {
 function updateSelectedVariant(product) {
     const variant = findSelectedVariant(product);
     if (!variant) return;
-    
+
     // Update price
     const priceElement = document.getElementById('product-price');
     if (priceElement) {
-        const price = variant.price;
-        const comparePrice = variant.compare_at_price;
-        
-        if (comparePrice && comparePrice > price) {
+        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
             priceElement.innerHTML = `
-                <span class="price-item price-item--sale">€${price.toFixed(2)}</span>
-                <s class="price-item price-item--regular">€${comparePrice.toFixed(2)}</s>
+                <span class="price-item price-item--sale">€${variant.price.toFixed(2)}</span>
+                <s class="price-item price-item--regular">€${variant.compare_at_price.toFixed(2)}</s>
             `;
         } else {
-            priceElement.innerHTML = `<span class="price-item">€${price.toFixed(2)}</span>`;
+            priceElement.innerHTML = `<span class="price-item">€${variant.price.toFixed(2)}</span>`;
         }
     }
-    
+
     // Update image if variant has one
     if (variant.image) {
         const mainImage = document.getElementById('main-image');

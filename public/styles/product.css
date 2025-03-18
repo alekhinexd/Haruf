@@ -128,8 +128,8 @@ body {
     font-weight: 500;
     margin-bottom: 10px;
     display: block;
-    font-size: 1rem;
-    color: #333;
+    color: #000;
+    font-size: 14px;
 }
 
 .option-group__values {
@@ -146,35 +146,23 @@ body {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-    padding: 8px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-    min-width: 40px;
-    text-align: center;
+    color: #333;
 }
 
 .option-value:hover {
-    border-color: #999;
-    border-color: #333;
+    border-color: #000;
 }
 
 .option-value.selected {
     border-color: #000;
     background: #000;
     color: #fff;
-    border-color: #000;
-    background-color: #000;
-    color: white;
 }
 
+/* Color option specific styles */
 .option-value--color {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     border-radius: 50%;
     position: relative;
@@ -182,35 +170,21 @@ body {
     background-position: center;
 }
 
-.option-value--color::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border: 2px solid transparent;
-    border-radius: 50%;
-    transition: border-color 0.2s ease;
-}
-
-.option-value--color:hover::after {
-    border-color: #999;
+.option-value--color:hover {
+    transform: scale(1.1);
 }
 
 .option-value--color.selected {
     border-color: #000;
-    border-width: 2px;
-    border-color: #000;
     transform: scale(1.1);
 }
 
-.option-value--color.selected::before {
-    content: '✓';
+.option-value--color.selected::after {
+    content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    text-shadow: 0 0 2px rgba(0,0,0,0.5);
-    font-size: 16px;
+    inset: -4px;
+    border: 2px solid #000;
+    border-radius: 50%;
 }
 
 /* Cart and checkout display */
