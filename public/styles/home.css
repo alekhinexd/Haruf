@@ -250,12 +250,9 @@
 .bestsellers .bestseller-card {
     flex: 0 0 280px;
     max-width: 280px;
-    transition: transform 0.3s ease;
-}
-
-.bestsellers .bestseller-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .bestsellers .bestseller-card__link {
@@ -341,10 +338,6 @@
     font-size: 0.9rem;
     margin-top: 10px;
     transition: color 0.3s;
-}
-
-.bestsellers .bestseller-card:hover .view-details {
-    color: #333333;
 }
 
 /* Features Section */

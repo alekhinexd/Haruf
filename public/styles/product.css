@@ -450,9 +450,6 @@ body {
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    touch-action: pan-x;
-    -webkit-tap-highlight-color: transparent;
-    pointer-events: none;
 }
 
 .bestseller-card__content {
@@ -460,7 +457,6 @@ body {
     border-radius: 8px;
     overflow: hidden;
     height: 100%;
-    pointer-events: none;
 }
 
 .bestseller-card__link {
@@ -469,7 +465,6 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    pointer-events: none;
 }
 
 .bestseller-card__image {
@@ -478,7 +473,6 @@ body {
     padding-bottom: 100%;
     background: #fff;
     overflow: hidden;
-    pointer-events: none;
 }
 
 .bestseller-card__image img {
@@ -489,28 +483,6 @@ body {
     height: 100%;
     object-fit: contain;
     padding: 20px;
-    pointer-events: none;
-    -webkit-user-drag: none;
-}
-
-/* Only apply hover effects on desktop */
-@media (min-width: 1024px) {
-    .bestseller-card {
-        pointer-events: auto;
-        transition: transform 0.3s ease;
-    }
-    
-    .bestseller-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .bestseller-card__content,
-    .bestseller-card__link,
-    .bestseller-card__image,
-    .bestseller-card__image img {
-        pointer-events: auto;
-    }
 }
 
 /* Mobile Styles */
@@ -664,7 +636,6 @@ body {
     border: none;
     background: none;
     font-size: 24px;
-    color: #999;
     cursor: pointer;
     padding: 5px;
     line-height: 1;
