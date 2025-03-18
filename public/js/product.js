@@ -525,35 +525,24 @@ function getRandomProducts(currentHandle, count = 4) {
 
 // Function to display related products
 function displayRelatedProducts(currentHandle) {
-    const relatedProducts = getRandomProducts(currentHandle, 4);
-    const container = document.getElementById('related-products-container');
-    
+    const products = getRandomProducts(currentHandle);
+    const container = document.querySelector('.related-products .products-container');
     if (!container) return;
-    
-    container.innerHTML = relatedProducts.map(product => {
+
+    container.innerHTML = products.map(product => {
         const variant = product.variants[0];
         const price = formatPrice(variant.price);
         const compareAtPrice = variant.compare_at_price ? formatPrice(variant.compare_at_price) : null;
-        const hasDiscount = variant.compare_at_price && variant.compare_at_price > variant.price;
-        const rating = product.rating_count ? product.rating_count : 0;
-        const ratingStars = Math.round(rating / 5 * 5);
-        
+
         return `
             <div class="bestseller-card">
                 <div class="bestseller-card__content">
                     <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" class="bestseller-card__link">
                         <div class="bestseller-card__image">
                             <img src="${product.image.src}" alt="${product.title}" loading="lazy">
-                            ${hasDiscount ? '<span class="sale-badge">Sale</span>' : ''}
                         </div>
                         <div class="bestseller-card__info">
                             <h3 class="bestseller-card__title">${product.title}</h3>
-                            <div class="bestseller-card__rating">
-                                <div class="star-rating" title="${ratingStars} out of 5 stars">
-                                    ${Array(5).fill().map((_, index) => index < ratingStars ? '<span class="star">★</span>' : '<span class="star">☆</span>').join('')}
-                                </div>
-                                <span class="bestseller-card__rating-count">(${rating})</span>
-                            </div>
                             <div class="bestseller-card__price">
                                 ${compareAtPrice ? `<span class="compare-at-price">${compareAtPrice}</span>` : ''}
                                 <span class="price">${price}</span>
@@ -566,41 +555,24 @@ function displayRelatedProducts(currentHandle) {
         `;
     }).join('');
 
-    // Add hover effects
-    const cards = container.querySelectorAll('.bestseller-card');
-    cards.forEach(card => {
-        const viewDetails = card.querySelector('.view-details');
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-5px)';
-            card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
-            if (viewDetails) {
-                viewDetails.style.color = '#333333';
-            }
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'none';
-            card.style.boxShadow = 'none';
-            if (viewDetails) {
-                viewDetails.style.color = '#666';
-            }
-        });
-    });
-
-    // Initialize carousel controls
     initRelatedProductsCarousel();
 }
 
 function initRelatedProductsCarousel() {
-    const container = document.getElementById('related-products-container');
+    const container = document.querySelector('.related-products .products-container');
     const prevButton = document.querySelector('.related-products .carousel-control.prev');
     const nextButton = document.querySelector('.related-products .carousel-control.next');
     
     if (!container || !prevButton || !nextButton) return;
 
-    // Calculate scroll amount based on card width plus gap
-    const cardWidth = 280; // Width of each card
-    const gap = 20; // Gap between cards
-    const scrollAmount = cardWidth + gap;
+    const scrollAmount = 300;
+
+    prevButton.addEventListener('click', () => {
+        container.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    });
 
     nextButton.addEventListener('click', () => {
         container.scrollBy({
@@ -609,12 +581,18 @@ function initRelatedProductsCarousel() {
         });
     });
 
-    prevButton.addEventListener('click', () => {
-        container.scrollBy({
-            left: -scrollAmount,
-            behavior: 'smooth'
-        });
-    });
+    // Update button visibility based on scroll position
+    const updateButtonVisibility = () => {
+        const isAtStart = container.scrollLeft <= 0;
+        const isAtEnd = container.scrollLeft >= container.scrollWidth - container.clientWidth - 1;
+        
+        prevButton.style.display = isAtStart ? 'none' : 'flex';
+        nextButton.style.display = isAtEnd ? 'none' : 'flex';
+    };
+
+    container.addEventListener('scroll', updateButtonVisibility);
+    window.addEventListener('resize', updateButtonVisibility);
+    updateButtonVisibility();
 }
 
 async function loadProductFromAPI(handle) {

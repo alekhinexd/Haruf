@@ -383,23 +383,24 @@ body {
     box-sizing: border-box;
 }
 
-/* Related Products */
+/* Related Products (You May Also Like) */
 .related-products {
-    margin: 40px 0;
+    overflow: hidden;
+    padding: 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-bottom: 40px;
 }
 
 .related-products .section-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
     position: relative;
 }
 
 .related-products .section-title {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2rem;
+    font-size: 32px;
     color: #333;
+    text-align: center;
+    margin-bottom: 40px;
 }
 
 .related-products .carousel-container {
@@ -409,7 +410,9 @@ body {
 }
 
 .related-products .products-container {
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 280px;
     gap: 20px;
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -422,6 +425,100 @@ body {
     display: none;
 }
 
+.related-products .bestseller-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.related-products .bestseller-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.related-products .bestseller-card__content {
+    height: 100%;
+}
+
+.related-products .bestseller-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.related-products .bestseller-card__image {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    background: #f8f8f8;
+    overflow: hidden;
+}
+
+.related-products .bestseller-card__image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 20px;
+}
+
+.related-products .bestseller-card__info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.related-products .bestseller-card__title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 10px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.related-products .bestseller-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.related-products .star-rating {
+    color: #FFA41C;
+    font-size: 16px;
+}
+
+.related-products .bestseller-card__rating-count {
+    color: #666;
+    font-size: 14px;
+}
+
+.related-products .bestseller-card__price {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.related-products .price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.related-products .compare-at-price {
+    font-size: 1rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
 .related-products .carousel-control {
     position: absolute;
     top: 50%;
@@ -429,7 +526,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #fff;
+    background: white;
     border: 1px solid #ddd;
     color: #333;
     font-size: 16px;
@@ -439,6 +536,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .related-products .carousel-control:hover {
@@ -454,18 +552,53 @@ body {
     right: -20px;
 }
 
-/* Hide controls on mobile */
+.related-products .view-details {
+    color: #666;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: color 0.3s;
+}
+
+.related-products .bestseller-card:hover .view-details {
+    color: #333;
+}
+
+/* Mobile styles */
 @media (max-width: 768px) {
+    .related-products {
+        padding: 20px 10px;
+    }
+
+    .related-products .section-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .related-products .carousel-container {
+        margin: 0;
+        padding: 0;
+    }
+
+    .related-products .products-container {
+        grid-auto-columns: 220px;
+        gap: 10px;
+        padding: 5px 0;
+    }
+
+    .related-products .bestseller-card__info {
+        padding: 15px;
+    }
+
+    .related-products .bestseller-card__title {
+        font-size: 0.9rem;
+    }
+
+    .related-products .price {
+        font-size: 1rem;
+    }
+
     .related-products .carousel-control {
         display: none;
-    }
-    
-    .related-products .section-container {
-        padding: 0 10px;
-    }
-    
-    .related-products .products-container {
-        gap: 10px;
     }
 }
 
