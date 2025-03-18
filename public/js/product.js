@@ -572,28 +572,48 @@ function displayRelatedProducts(products) {
     let startX;
     let startScrollLeft;
     let isDragging = false;
+    let isScrolling = false;
 
     function handleTouchStart(e) {
         isDragging = true;
         startX = e.touches[0].pageX;
         startScrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
+        isScrolling = false;
     }
 
     function handleTouchMove(e) {
         if (!isDragging) return;
+        e.preventDefault();
         const x = e.touches[0].pageX;
         const walk = startX - x;
         container.scrollLeft = startScrollLeft + walk;
+        isScrolling = true;
     }
 
     function handleTouchEnd() {
+        if (!isDragging) return;
         isDragging = false;
         container.style.scrollBehavior = 'smooth';
+        
+        if (isScrolling) {
+            // Calculate nearest snap point
+            const itemWidth = 300; // Width of card + gap
+            const currentScroll = container.scrollLeft;
+            const targetScroll = Math.round(currentScroll / itemWidth) * itemWidth;
+            
+            // Smooth scroll to nearest snap point
+            container.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+        }
+        
+        isScrolling = false;
     }
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: true });
-    container.addEventListener('touchmove', handleTouchMove, { passive: true });
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
     container.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
@@ -606,11 +626,19 @@ function displayRelatedProducts(products) {
         const scrollAmount = 300;
 
         prevButton.addEventListener('click', () => {
-            container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            const targetScroll = container.scrollLeft - scrollAmount;
+            container.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
         });
 
         nextButton.addEventListener('click', () => {
-            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            const targetScroll = container.scrollLeft + scrollAmount;
+            container.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
         });
 
         // Show/hide arrows based on screen size

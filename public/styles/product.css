@@ -391,7 +391,6 @@ body {
     margin: 0 auto;
     margin-bottom: 40px;
     border-bottom: 1px solid #e0e0e0;
-    position: relative;
 }
 
 .bestsellers-carousel {
@@ -408,8 +407,7 @@ body {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     padding: 10px 0;
-    margin: 0 -20px;
-    padding: 10px 20px;
+    scroll-snap-type: x mandatory;
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -419,6 +417,7 @@ body {
 .carousel-controls {
     display: flex;
     gap: 10px;
+    margin-left: auto;
 }
 
 .carousel-control {
@@ -443,21 +442,6 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Position the carousel controls */
-.bestsellers .carousel-control.prev {
-    position: absolute;
-    left: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.bestsellers .carousel-control.next {
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
 /* Bestseller Card Styles */
 .bestseller-card {
     flex: 0 0 280px;
@@ -466,6 +450,7 @@ body {
     background: white;
     border-radius: 8px;
     overflow: hidden;
+    scroll-snap-align: start;
 }
 
 .bestseller-card:hover {
