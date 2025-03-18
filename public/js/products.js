@@ -97,19 +97,22 @@ function displayProducts(products) {
         const price = formatPrice(variant.price);
         const compareAtPrice = variant.compare_at_price ? formatPrice(variant.compare_at_price) : null;
         const isOnSale = compareAtPrice && variant.compare_at_price > variant.price;
+        const isBundleProduct = product.title.toLowerCase().includes('bundle');
+        const imageSrc = isBundleProduct ? '/images/bundles/bundle.png' : (product.image?.src || '');
 
         return `
-            <div class="product-card" style="width: 280px; background: white; margin: 10px; transition: transform 0.2s, box-shadow 0.2s;">
-                <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-image-container" style="position: relative; padding: 20px;">
-                        <img src="${product.image.src}" alt="${product.title}" loading="lazy" style="width: 100%; height: auto; display: block;">
-                        ${isOnSale ? '<span class="sale-badge" style="position: absolute; top: 10px; right: 10px; background: #ff0000; color: white; padding: 5px 10px; border-radius: 3px;">Sale</span>' : ''}
+            <div class="product-card">
+                <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}">
+                    <div class="product-image-container">
+                        <img src="${imageSrc}" alt="${product.title}" loading="lazy">
+                        ${isOnSale ? '<span class="sale-badge">Sale</span>' : ''}
                     </div>
-                    <div class="product-info" style="padding: 15px;">
-                        <h3 style="margin: 0 0 10px; font-size: 1rem; color: #333;">${product.title}</h3>
-                        <div class="price-container" style="display: flex; align-items: center; gap: 10px;">
-                            <span class="current-price" style="font-weight: bold; color: ${isOnSale ? '#ff0000' : '#333'};">${price}</span>
-                            ${compareAtPrice ? `<span class="compare-price" style="text-decoration: line-through; color: #999;">${compareAtPrice}</span>` : ''}
+                    <div class="product-info">
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="star-rating">★★★★★</div>
+                        <div class="price-container">
+                            ${compareAtPrice ? `<span class="compare-price">${compareAtPrice}</span>` : ''}
+                            <span class="current-price">${price}</span>
                         </div>
                     </div>
                 </a>

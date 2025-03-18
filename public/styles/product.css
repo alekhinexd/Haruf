@@ -124,29 +124,29 @@ body {
     margin-bottom: 20px;
 }
 
-.option-group__label {
-    font-weight: 500;
-    margin-bottom: 10px;
+.option-group label {
     display: block;
-    color: #000;
+    margin-bottom: 8px;
+    font-weight: 500;
     font-size: 14px;
+    color: #000;
 }
 
-.option-group__values {
+.option-values {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
 .option-value {
-    background: #fff;
+    padding: 8px 16px;
     border: 2px solid #e0e0e0;
     border-radius: 4px;
-    padding: 8px 16px;
     cursor: pointer;
+    background: transparent;
+    color: #000;
     font-size: 14px;
     transition: all 0.2s ease;
-    color: #333;
 }
 
 .option-value:hover {
@@ -154,9 +154,26 @@ body {
 }
 
 .option-value.selected {
-    border-color: #000;
     background: #000;
+    border-color: #000;
     color: #fff;
+}
+
+.option-value--color {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid #e0e0e0;
+}
+
+.option-value--color:hover {
+    transform: scale(1.1);
+}
+
+.option-value--color.selected {
+    border-color: #000;
+    transform: scale(1.1);
 }
 
 /* Color option specific styles */

@@ -231,155 +231,154 @@ document.addEventListener('DOMContentLoaded', () => {
 let selectedOptions = {};
 
 function displayProduct(product) {
+    if (!product) {
+        showErrorState();
+        return;
+    }
+
     currentProduct = product;
     document.title = `${product.title} - Resell Depot`;
-    
+
     // Update main elements
     const mainImage = document.getElementById('main-image');
     const titleElement = document.getElementById('product-title');
     const priceElement = document.getElementById('product-price');
     const descriptionElement = document.getElementById('product-description');
+    const ratingContainer = document.getElementById('product-rating');
     
     if (mainImage && product.image?.src) mainImage.src = product.image.src;
     if (titleElement) titleElement.textContent = product.title;
-    if (descriptionElement && product.body_html) descriptionElement.innerHTML = product.body_html;
+    if (descriptionElement) descriptionElement.innerHTML = product.body_html || '';
 
-    // Update price with compare at price if available
+    // Update price
     if (priceElement && product.variants?.[0]) {
         const variant = product.variants[0];
-        const price = variant.price;
-        const comparePrice = variant.compare_at_price;
-        
-        if (comparePrice && comparePrice > price) {
+        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
             priceElement.innerHTML = `
-                <span class="price-item price-item--sale">€${price.toFixed(2)}</span>
-                <s class="price-item price-item--regular">€${comparePrice.toFixed(2)}</s>
+                <span class="price-item price-item--sale">€${variant.price.toFixed(2)}</span>
+                <s class="price-item price-item--regular">€${variant.compare_at_price.toFixed(2)}</s>
             `;
         } else {
-            priceElement.innerHTML = `<span class="price-item">€${price.toFixed(2)}</span>`;
+            priceElement.innerHTML = `<span class="price-item">€${variant.price.toFixed(2)}</span>`;
         }
     }
 
-    // Render product options
-    renderProductOptions(product);
-
-    // Add rating if product has rating_count
-    const ratingElement = document.getElementById('product-rating');
-    if (ratingElement) {
-        if (product.rating_count) {
-            const starRating = ratingElement.querySelector('.star-rating');
-            const ratingCount = ratingElement.querySelector('.product__rating-count');
-            
-            if (starRating) starRating.innerHTML = Array(5).fill('★').join('');
-            if (ratingCount) ratingCount.textContent = `${product.rating_count} reviews`;
-            
-            ratingElement.style.display = 'flex';
-        } else {
-            ratingElement.style.display = 'none';
-        }
+    // Update rating
+    if (ratingContainer) {
+        const starRating = ratingContainer.querySelector('.star-rating');
+        const ratingCount = ratingContainer.querySelector('.product__rating-count');
+        if (starRating) starRating.innerHTML = '★★★★★';
+        if (ratingCount) ratingCount.textContent = '(5.0)';
     }
 
-    // Add to cart button functionality
-    const addToCartBtn = document.getElementById('add-to-cart');
-    if (addToCartBtn) {
-        // Clear any existing event listeners
-        const newAddToCartBtn = addToCartBtn.cloneNode(true);
-        addToCartBtn.parentNode.replaceChild(newAddToCartBtn, addToCartBtn);
-        
-        newAddToCartBtn.style.display = 'block';
-        newAddToCartBtn.style.border = '2px solid #000000';
-        newAddToCartBtn.style.color = '#000000';
-        newAddToCartBtn.style.backgroundColor = 'transparent';
-        newAddToCartBtn.style.transition = 'all 0.3s ease';
-        
-        newAddToCartBtn.addEventListener('mouseover', () => {
-            newAddToCartBtn.style.backgroundColor = '#333333';
-            newAddToCartBtn.style.color = '#ffffff';
-        });
-        
-        newAddToCartBtn.addEventListener('mouseout', () => {
-            newAddToCartBtn.style.backgroundColor = 'transparent';
-            newAddToCartBtn.style.color = '#000000';
-        });
-
-        // Add to cart functionality
-        newAddToCartBtn.addEventListener('click', () => {
-            const quantity = parseInt(document.getElementById('quantity')?.value || '1');
-            
-            // Get selected variant based on options
-            const selectedVariant = findSelectedVariant(product);
-            
-            window.addToCart({
-                handle: product.handle,
-                title: product.title,
-                variant: selectedVariant,
-                price: selectedVariant ? selectedVariant.price : product.variants[0].price,
-                image: selectedVariant?.image || product.image.src,
-                quantity,
-                options: Object.entries(selectedOptions).map(([name, value]) => ({
-                    name,
-                    value
-                }))
-            });
-
-            // Show notification menu
-            const notificationMenu = document.querySelector('.cart-notification-menu');
-            const productImage = notificationMenu.querySelector('.cart-notification-menu__product-image');
-            const productTitle = notificationMenu.querySelector('.cart-notification-menu__product-title');
-            const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
-            const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
-
-            productImage.src = selectedVariant?.image || product.image.src;
-            productImage.alt = product.title;
-            productTitle.textContent = product.title;
-            productPrice.textContent = formatPrice(selectedVariant ? selectedVariant.price : product.variants[0].price);
-
-            notificationMenu.classList.add('visible');
-
-            // Close notification on X button click
-            closeButton.addEventListener('click', () => {
-                notificationMenu.classList.remove('visible');
-            });
-
-            // Show feedback
-            const originalText = newAddToCartBtn.textContent;
-            newAddToCartBtn.textContent = 'Added to Cart!';
-            newAddToCartBtn.style.backgroundColor = '#000000';
-            newAddToCartBtn.style.color = '#ffffff';
-            
-            setTimeout(() => {
-                newAddToCartBtn.textContent = originalText;
-                newAddToCartBtn.style.backgroundColor = 'transparent';
-                newAddToCartBtn.style.color = '#000000';
-            }, 2000);
-        });
-    }
-
-    // Style quantity controls with black color scheme
-    const quantityControls = document.querySelectorAll('.quantity-btn');
-    const quantityInput = document.getElementById('quantity');
+    // Handle variants
+    selectedOptions = {};
+    const optionsContainer = document.getElementById('product-options');
     
-    quantityControls.forEach(btn => {
-        btn.style.border = '1px solid #000000';
-        btn.style.color = '#000000';
-        btn.style.backgroundColor = 'transparent';
-        btn.style.transition = 'all 0.3s ease';
+    if (optionsContainer && product.variants && product.variants.length > 1) {
+        let optionsHtml = '';
         
-        btn.addEventListener('mouseover', () => {
-            btn.style.backgroundColor = '#f0f0f0';
-        });
+        // Handle Option 1
+        if (product.option1_name) {
+            const option1Values = [...new Set(product.variants.map(v => v.option1_value).filter(Boolean))];
+            if (option1Values.length > 0) {
+                optionsHtml += `
+                    <div class="option-group">
+                        <label>${product.option1_name}</label>
+                        <div class="option-values">
+                            ${option1Values.map(value => `
+                                <button class="option-value" data-option="1" data-value="${value}">
+                                    ${value}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                selectedOptions[product.option1_name] = option1Values[0];
+            }
+        }
         
-        btn.addEventListener('mouseout', () => {
-            btn.style.backgroundColor = 'transparent';
-        });
-    });
+        // Handle Option 2
+        if (product.option2_name) {
+            const option2Values = [...new Set(product.variants.map(v => v.option2_value).filter(Boolean))];
+            if (option2Values.length > 0) {
+                optionsHtml += `
+                    <div class="option-group">
+                        <label>${product.option2_name}</label>
+                        <div class="option-values">
+                            ${option2Values.map(value => `
+                                <button class="option-value" data-option="2" data-value="${value}">
+                                    ${value}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                selectedOptions[product.option2_name] = option2Values[0];
+            }
+        }
 
-    if (quantityInput) {
-        quantityInput.style.border = '1px solid #000000';
-        quantityInput.style.color = '#000000';
+        if (optionsHtml) {
+            optionsContainer.innerHTML = optionsHtml;
+            optionsContainer.style.display = 'block';
+
+            // Add click handlers
+            const optionButtons = optionsContainer.querySelectorAll('.option-value');
+            optionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const optionNumber = button.dataset.option;
+                    const value = button.dataset.value;
+                    const optionName = optionNumber === '1' ? product.option1_name : product.option2_name;
+
+                    // Update selection
+                    const optionGroup = button.closest('.option-group');
+                    optionGroup.querySelectorAll('.option-value').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    button.classList.add('selected');
+                    selectedOptions[optionName] = value;
+
+                    // Find matching variant
+                    const variant = product.variants.find(v => 
+                        (!product.option1_name || v.option1_value === selectedOptions[product.option1_name]) &&
+                        (!product.option2_name || v.option2_value === selectedOptions[product.option2_name])
+                    );
+
+                    if (variant) {
+                        // Update price
+                        if (priceElement) {
+                            if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+                                priceElement.innerHTML = `
+                                    <span class="price-item price-item--sale">€${variant.price.toFixed(2)}</span>
+                                    <s class="price-item price-item--regular">€${variant.compare_at_price.toFixed(2)}</s>
+                                `;
+                            } else {
+                                priceElement.innerHTML = `<span class="price-item">€${variant.price.toFixed(2)}</span>`;
+                            }
+                        }
+
+                        // Update image if variant has one
+                        if (variant.image && mainImage) {
+                            mainImage.src = variant.image;
+                        }
+                    }
+                });
+            });
+
+            // Select first options by default
+            optionsContainer.querySelectorAll('.option-group').forEach(group => {
+                const firstOption = group.querySelector('.option-value');
+                if (firstOption) {
+                    firstOption.classList.add('selected');
+                }
+            });
+        } else {
+            optionsContainer.style.display = 'none';
+        }
+    } else if (optionsContainer) {
+        optionsContainer.style.display = 'none';
     }
 
-    // Load and display related products (using bestsellers)
     loadRelatedProducts();
 }
 
@@ -514,144 +513,6 @@ function showErrorState(message = 'Product not found') {
 
     if (addToCartBtn) {
         addToCartBtn.style.display = 'none';
-    }
-}
-
-function renderProductOptions(product) {
-    const optionsContainer = document.getElementById('product-options');
-    if (!optionsContainer || !product.variants || product.variants.length === 0) {
-        if (optionsContainer) optionsContainer.style.display = 'none';
-        return;
-    }
-
-    // Get unique options from variants
-    const options = [];
-    if (product.option1_name) {
-        const values = new Set(product.variants.map(v => v.option1_value).filter(Boolean));
-        if (values.size > 0) {
-            options.push({
-                name: product.option1_name,
-                values: Array.from(values)
-            });
-        }
-    }
-    if (product.option2_name) {
-        const values = new Set(product.variants.map(v => v.option2_value).filter(Boolean));
-        if (values.size > 0) {
-            options.push({
-                name: product.option2_name,
-                values: Array.from(values)
-            });
-        }
-    }
-
-    if (options.length === 0) {
-        optionsContainer.style.display = 'none';
-        return;
-    }
-
-    optionsContainer.style.display = 'block';
-    optionsContainer.innerHTML = options.map(option => `
-        <div class="option-group" data-option="${option.name.toLowerCase()}">
-            <label class="option-group__label">${option.name}</label>
-            <div class="option-group__values">
-                ${option.values.map(value => {
-                    const isColor = option.name.toLowerCase().includes('color');
-                    if (isColor) {
-                        const variant = product.variants.find(v => 
-                            v.option1_value === value || v.option2_value === value
-                        );
-                        const style = variant?.image ? 
-                            `background-image: url('${variant.image}')` :
-                            `background-color: ${value.toLowerCase()}`;
-                        return `
-                            <div class="option-value option-value--color" 
-                                data-value="${value}"
-                                style="${style}"
-                                title="${value}">
-                            </div>`;
-                    }
-                    return `
-                        <div class="option-value" data-value="${value}">
-                            ${value}
-                        </div>`;
-                }).join('')}
-            </div>
-        </div>
-    `).join('');
-
-    // Set initial selected options and update price
-    options.forEach(option => {
-        const firstValue = option.values[0];
-        selectedOptions[option.name] = firstValue;
-        const firstOption = optionsContainer.querySelector(
-            `.option-group[data-option="${option.name.toLowerCase()}"] .option-value[data-value="${firstValue}"]`
-        );
-        if (firstOption) {
-            firstOption.classList.add('selected');
-        }
-    });
-
-    // Update price based on initial variant selection
-    updateSelectedVariant(product);
-
-    // Add click handlers for options
-    optionsContainer.addEventListener('click', (e) => {
-        const optionValue = e.target.closest('.option-value');
-        if (!optionValue) return;
-
-        const optionGroup = optionValue.closest('.option-group');
-        const optionName = optionGroup.dataset.option;
-
-        // Update selection
-        optionGroup.querySelectorAll('.option-value').forEach(el => {
-            el.classList.remove('selected');
-        });
-        optionValue.classList.add('selected');
-        selectedOptions[optionName] = optionValue.dataset.value;
-
-        // Update variant and price
-        updateSelectedVariant(product);
-    });
-}
-
-function findSelectedVariant(product) {
-    if (!product.variants) return null;
-    
-    return product.variants.find(variant => {
-        return Object.entries(selectedOptions).every(([name, value]) => {
-            if (product.option1_name === name) {
-                return variant.option1_value === value;
-            }
-            if (product.option2_name === name) {
-                return variant.option2_value === value;
-            }
-            return true;
-        });
-    });
-}
-
-function updateSelectedVariant(product) {
-    const variant = findSelectedVariant(product);
-    if (!variant) return;
-
-    // Update price
-    const priceElement = document.getElementById('product-price');
-    if (priceElement) {
-        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
-            priceElement.innerHTML = `
-                <span class="price-item price-item--sale">€${variant.price.toFixed(2)}</span>
-                <s class="price-item price-item--regular">€${variant.compare_at_price.toFixed(2)}</s>
-            `;
-        } else {
-            priceElement.innerHTML = `<span class="price-item">€${variant.price.toFixed(2)}</span>`;
-        }
-    }
-
-    // Update image if variant has one
-    if (variant.image) {
-        const mainImage = document.getElementById('main-image');
-        if (mainImage) mainImage.src = variant.image;
     }
 }
 
