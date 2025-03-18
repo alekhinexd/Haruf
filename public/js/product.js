@@ -521,6 +521,7 @@ async function loadRelatedProducts() {
     const products = window.shopifyProducts || [];
     const bestsellers = products
         .filter(product => !product.title.toLowerCase().includes('bundle'))
+        .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
         .slice(0, 12);
     displayRelatedProducts(bestsellers);
 }
@@ -541,22 +542,22 @@ function displayRelatedProducts(products) {
         const ratingStars = Math.round(rating / 5 * 5);
         
         return `
-            <div class="bestseller-card">
-                <div class="bestseller-card__content">
-                    <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" class="bestseller-card__link">
-                        <div class="bestseller-card__image">
+            <div class="product-card">
+                <div class="product-card__content">
+                    <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" class="product-card__link">
+                        <div class="product-card__image">
                             ${hasDiscount ? '<span class="sale-badge">Sale</span>' : ''}
                             <img src="${product.image.src}" alt="${product.title}" loading="lazy">
                         </div>
-                        <div class="bestseller-card__info">
-                            <h3 class="bestseller-card__title">${product.title}</h3>
-                            <div class="bestseller-card__rating">
+                        <div class="product-card__info">
+                            <h3 class="product-card__title">${product.title}</h3>
+                            <div class="product-card__rating">
                                 <div class="star-rating">
                                     ${Array(5).fill().map((_, i) => `<span class="star ${i < ratingStars ? 'filled' : ''}">${i < ratingStars ? '★' : '☆'}</span>`).join('')}
                                 </div>
-                                <span class="bestseller-card__rating-count">(${rating})</span>
+                                <span class="product-card__rating-count">(${rating})</span>
                             </div>
-                            <div class="bestseller-card__price">
+                            <div class="product-card__price">
                                 ${compareAtPrice ? `<span class="compare-at-price">${compareAtPrice}</span>` : ''}
                                 <span class="price">${price}</span>
                             </div>
