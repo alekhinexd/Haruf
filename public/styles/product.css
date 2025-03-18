@@ -383,8 +383,8 @@ body {
     box-sizing: border-box;
 }
 
-/* Related Products (You May Also Like) */
-.related-products {
+/* Bestsellers Section */
+.bestsellers {
     overflow: hidden;
     padding: 40px 20px;
     max-width: 1400px;
@@ -392,24 +392,24 @@ body {
     margin-bottom: 40px;
 }
 
-.related-products .section-container {
+.bestsellers .section-container {
     position: relative;
 }
 
-.related-products .section-title {
+.bestsellers .section-title {
     font-size: 32px;
     color: #333;
     text-align: center;
     margin-bottom: 40px;
 }
 
-.related-products .carousel-container {
+.bestsellers .carousel-container {
     position: relative;
     margin: 0 -10px;
     padding: 0 10px;
 }
 
-.related-products .products-container {
+.bestsellers .products-container {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 280px;
@@ -419,29 +419,32 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 10px 0;
-    justify-content: center;
-    margin: 0 auto;
-    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
-    touch-action: pan-x; /* Enable horizontal touch swiping */
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
 }
 
-.related-products .bestseller-card {
+.bestsellers .products-container::-webkit-scrollbar {
+    display: none;
+}
+
+.bestsellers .bestseller-card {
     background: white;
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    scroll-snap-align: center;
 }
 
-.related-products .bestseller-card:hover {
+.bestsellers .bestseller-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.related-products .bestseller-card__content {
+.bestsellers .bestseller-card__content {
     height: 100%;
 }
 
-.related-products .bestseller-card__link {
+.bestsellers .bestseller-card__link {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -449,15 +452,15 @@ body {
     height: 100%;
 }
 
-.related-products .bestseller-card__image {
+.bestsellers .bestseller-card__image {
     position: relative;
     width: 100%;
     padding-bottom: 100%;
-    background: #f8f8f8;
+    background: white;
     overflow: hidden;
 }
 
-.related-products .bestseller-card__image img {
+.bestsellers .bestseller-card__image img {
     position: absolute;
     top: 0;
     left: 0;
@@ -467,14 +470,14 @@ body {
     padding: 20px;
 }
 
-.related-products .bestseller-card__info {
+.bestsellers .bestseller-card__info {
     padding: 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
-.related-products .bestseller-card__title {
+.bestsellers .bestseller-card__title {
     font-size: 1rem;
     font-weight: 500;
     margin: 0 0 10px;
@@ -482,24 +485,24 @@ body {
     line-height: 1.4;
 }
 
-.related-products .bestseller-card__rating {
+.bestsellers .bestseller-card__rating {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
 }
 
-.related-products .star-rating {
+.bestsellers .star-rating {
     color: #FFA41C;
     font-size: 16px;
 }
 
-.related-products .bestseller-card__rating-count {
+.bestsellers .bestseller-card__rating-count {
     color: #666;
     font-size: 14px;
 }
 
-.related-products .bestseller-card__price {
+.bestsellers .bestseller-card__price {
     margin-top: auto;
     display: flex;
     flex-wrap: wrap;
@@ -507,19 +510,19 @@ body {
     align-items: baseline;
 }
 
-.related-products .price {
+.bestsellers .price {
     font-size: 1.1rem;
     font-weight: 600;
     color: #333;
 }
 
-.related-products .compare-at-price {
+.bestsellers .compare-at-price {
     font-size: 1rem;
     color: #999;
     text-decoration: line-through;
 }
 
-.related-products .carousel-control {
+.bestsellers .carousel-control {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -529,7 +532,7 @@ body {
     background: white;
     border: 1px solid #ddd;
     color: #333;
-    font-size: 16px;
+    font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -539,71 +542,78 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.related-products .carousel-control:hover {
+.bestsellers .carousel-control:hover {
     background: #f5f5f5;
     border-color: #999;
 }
 
-.related-products .carousel-control.prev {
+.bestsellers .carousel-control.prev {
     left: -20px;
 }
 
-.related-products .carousel-control.next {
+.bestsellers .carousel-control.next {
     right: -20px;
 }
 
-.related-products .view-details {
+.bestsellers .view-details {
     color: #666;
     font-size: 14px;
     margin-top: 10px;
     transition: color 0.3s;
 }
 
-.related-products .bestseller-card:hover .view-details {
+.bestsellers .bestseller-card:hover .view-details {
     color: #333;
+}
+
+.bestsellers .sale-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff0000;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1;
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
-    .related-products {
+    .bestsellers {
         padding: 20px 10px;
     }
 
-    .related-products .section-title {
+    .bestsellers .section-title {
         font-size: 24px;
         margin-bottom: 20px;
     }
 
-    .related-products .carousel-container {
+    .bestsellers .carousel-container {
         margin: 0;
         padding: 0;
     }
 
-    .related-products .products-container {
+    .bestsellers .products-container {
         grid-auto-columns: 220px;
         gap: 10px;
         padding: 5px 0;
-        scroll-snap-type: x mandatory; /* Enable snap scrolling */
-        -webkit-overflow-scrolling: touch;
     }
 
-    .related-products .bestseller-card {
-        scroll-snap-align: center; /* Snap cards to center */
-    }
-
-    .related-products .bestseller-card__info {
+    .bestsellers .bestseller-card__info {
         padding: 15px;
     }
 
-    .related-products .bestseller-card__title {
+    .bestsellers .bestseller-card__title {
         font-size: 0.9rem;
     }
 
-    .related-products .price {
+    .bestsellers .price {
         font-size: 1rem;
     }
 
-    .related-products .carousel-control {
+    .bestsellers .carousel-control {
         display: none;
     }
 }
