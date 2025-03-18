@@ -569,37 +569,46 @@ function displayRelatedProducts(products) {
 
     // Add touch event listeners for mobile scrolling
     let startX;
-    let scrollLeft;
+    let startScrollLeft;
     let isDragging = false;
 
-    productsContainer.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].pageX - productsContainer.offsetLeft;
-        scrollLeft = productsContainer.scrollLeft;
+    function handleTouchStart(e) {
         isDragging = true;
-    }, { passive: true });
+        startX = e.touches[0].pageX;
+        startScrollLeft = productsContainer.scrollLeft;
+        productsContainer.style.scrollBehavior = 'auto';
+    }
 
-    productsContainer.addEventListener('touchmove', (e) => {
+    function handleTouchMove(e) {
         if (!isDragging) return;
-        const x = e.touches[0].pageX - productsContainer.offsetLeft;
-        const walk = (x - startX);
-        productsContainer.scrollLeft = scrollLeft - walk;
-    }, { passive: true });
+        const x = e.touches[0].pageX;
+        const walk = startX - x;
+        productsContainer.scrollLeft = startScrollLeft + walk;
+    }
 
-    productsContainer.addEventListener('touchend', () => {
+    function handleTouchEnd() {
         isDragging = false;
-    }, { passive: true });
+        productsContainer.style.scrollBehavior = 'smooth';
+    }
+
+    productsContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+    productsContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+    productsContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+    productsContainer.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
     // Handle desktop arrow navigation
     const prevButton = container.querySelector('.prev');
     const nextButton = container.querySelector('.next');
     
     if (prevButton && nextButton) {
+        const scrollAmount = 300;
+
         prevButton.addEventListener('click', () => {
-            productsContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            productsContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
 
         nextButton.addEventListener('click', () => {
-            productsContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            productsContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         });
 
         // Show/hide arrows based on screen size

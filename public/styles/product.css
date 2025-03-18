@@ -407,7 +407,7 @@ body {
     position: relative;
     margin: 0 -10px;
     padding: 0 10px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .bestsellers .products-container {
@@ -421,7 +421,7 @@ body {
     -ms-overflow-style: none;
     padding: 10px 0;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     touch-action: pan-x;
     user-select: none;
     -webkit-user-select: none;
@@ -590,6 +590,7 @@ body {
     .bestsellers .carousel-container {
         margin: 0;
         padding: 0;
+        overflow: hidden;
     }
 
     .bestsellers .products-container {
@@ -597,8 +598,7 @@ body {
         gap: 10px;
         padding: 5px 0;
         scroll-snap-type: x mandatory;
-        touch-action: pan-x;
-        -webkit-overflow-scrolling: touch;
+        scroll-padding: 0 10px;
     }
 
     .bestsellers .bestseller-card {
@@ -619,7 +619,7 @@ body {
     }
 
     .bestsellers .carousel-control {
-        display: none !important;
+        display: none;
     }
 }
 
