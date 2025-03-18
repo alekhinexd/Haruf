@@ -117,32 +117,103 @@ body {
 
 /* Product Options */
 .product-options {
-    margin-bottom: 20px;
-    width: 100%;
-    box-sizing: border-box;
+    margin: 20px 0;
 }
 
 .option-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.option-group label {
-    display: block;
-    font-size: 16px;
+.option-group__label {
     font-weight: 500;
     margin-bottom: 10px;
+    display: block;
 }
 
-.option-select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+.option-group__values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.option-value {
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.option-value:hover {
+    border-color: #999;
+}
+
+.option-value.selected {
+    border-color: #000;
+    background: #000;
+    color: #fff;
+}
+
+/* Color option specific styles */
+.option-value--color {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    position: relative;
+}
+
+.option-value--color::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    transition: border-color 0.2s ease;
+}
+
+.option-value--color:hover::after {
+    border-color: #999;
+}
+
+.option-value--color.selected::after {
+    border-color: #000;
+    border-width: 2px;
+}
+
+.option-value--color.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
     font-size: 16px;
-    background-color: white;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+}
+
+/* Cart and checkout display */
+.cart-item__options,
+.checkout-item__options {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.cart-item__option,
+.checkout-item__option {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.cart-item__option:not(:last-child)::after,
+.checkout-item__option:not(:last-child)::after {
+    content: '•';
+    margin-left: 8px;
 }
 
 /* Quantity Selector */

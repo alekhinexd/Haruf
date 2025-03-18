@@ -228,6 +228,144 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+let selectedOptions = {};
+
+function getProductOptions(product) {
+    const options = [];
+    if (product['Option1 Name'] && product['Option1 Value']) {
+        options.push({
+            name: product['Option1 Name'],
+            values: getUniqueOptionValues(product.handle, 'Option1 Value')
+        });
+    }
+    if (product['Option2 Name'] && product['Option2 Value']) {
+        options.push({
+            name: product['Option2 Name'],
+            values: getUniqueOptionValues(product.handle, 'Option2 Value')
+        });
+    }
+    if (product['Option3 Name'] && product['Option3 Value']) {
+        options.push({
+            name: product['Option3 Name'],
+            values: getUniqueOptionValues(product.handle, 'Option3 Value')
+        });
+    }
+    return options;
+}
+
+function getUniqueOptionValues(handle, optionField) {
+    const products = window.shopifyProducts || [];
+    const variants = products.filter(p => p.handle === handle);
+    const values = new Set();
+    variants.forEach(variant => {
+        if (variant[optionField]) {
+            values.add(variant[optionField]);
+        }
+    });
+    return Array.from(values);
+}
+
+function renderProductOptions(product) {
+    const optionsContainer = document.getElementById('product-options');
+    if (!optionsContainer) return;
+
+    const options = getProductOptions(product);
+    if (options.length === 0) {
+        optionsContainer.style.display = 'none';
+        return;
+    }
+
+    optionsContainer.innerHTML = options.map(option => `
+        <div class="option-group" data-option="${option.name.toLowerCase()}">
+            <label class="option-group__label">${option.name}</label>
+            <div class="option-group__values">
+                ${option.values.map(value => {
+                    const isColor = option.name.toLowerCase().includes('color');
+                    if (isColor) {
+                        const variantWithImage = findVariantWithColorImage(product.handle, value);
+                        const style = variantWithImage ? 
+                            `background-image: url('${variantWithImage['Variant Image']}')` :
+                            `background-color: ${value.toLowerCase()}`;
+                        return `
+                            <div class="option-value option-value--color" 
+                                data-value="${value}"
+                                style="${style}"
+                                title="${value}">
+                            </div>`;
+                    }
+                    return `
+                        <div class="option-value" data-value="${value}">
+                            ${value}
+                        </div>`;
+                }).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    // Set initial selected options
+    options.forEach(option => {
+        const firstValue = option.values[0];
+        selectedOptions[option.name] = firstValue;
+        const firstOption = optionsContainer.querySelector(
+            `.option-group[data-option="${option.name.toLowerCase()}"] .option-value[data-value="${firstValue}"]`
+        );
+        if (firstOption) {
+            firstOption.classList.add('selected');
+        }
+    });
+
+    // Add click handlers
+    optionsContainer.addEventListener('click', (e) => {
+        const optionValue = e.target.closest('.option-value');
+        if (!optionValue) return;
+
+        const optionGroup = optionValue.closest('.option-group');
+        const optionName = optionGroup.dataset.option;
+
+        // Update selection
+        optionGroup.querySelectorAll('.option-value').forEach(el => {
+            el.classList.remove('selected');
+        });
+        optionValue.classList.add('selected');
+        selectedOptions[optionName] = optionValue.dataset.value;
+
+        // Update product image if it's a color option
+        if (optionName.toLowerCase().includes('color')) {
+            const variantWithImage = findVariantWithColorImage(product.handle, optionValue.dataset.value);
+            if (variantWithImage && variantWithImage['Variant Image']) {
+                document.getElementById('main-image').src = variantWithImage['Variant Image'];
+            }
+        }
+    });
+}
+
+function findVariantWithColorImage(handle, colorValue) {
+    const products = window.shopifyProducts || [];
+    return products.find(p => 
+        p.handle === handle && 
+        (p['Option1 Value'] === colorValue || p['Option2 Value'] === colorValue || p['Option3 Value'] === colorValue) && 
+        p['Variant Image']
+    );
+}
+
+// Update addToCart to include selected options
+function addToCart(product) {
+    const quantity = parseInt(document.getElementById('quantity')?.value || '1');
+    const options = Object.entries(selectedOptions).map(([name, value]) => ({
+        name,
+        value
+    }));
+
+    window.addToCart({
+        handle: product.handle,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+        options: options
+    });
+}
+
 function displayProduct(product) {
     currentProduct = product;
     document.title = `${product.title} - Resell Depot`;
@@ -511,6 +649,8 @@ function displayProduct(product) {
         quantityInput.style.border = '1px solid #000000';
         quantityInput.style.color = '#000000';
     }
+
+    renderProductOptions(product);
 
     // Load and display related products (using bestsellers)
     loadRelatedProducts();
