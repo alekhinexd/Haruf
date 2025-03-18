@@ -567,6 +567,40 @@ function initRelatedProductsCarousel() {
 
     const scrollAmount = 300;
 
+    // Center the initial scroll position
+    const centerInitialScroll = () => {
+        const totalWidth = container.scrollWidth;
+        const visibleWidth = container.clientWidth;
+        const initialScroll = (totalWidth - visibleWidth) / 2;
+        container.scrollLeft = Math.max(0, initialScroll);
+    };
+
+    // Center on load and resize
+    window.addEventListener('load', centerInitialScroll);
+    window.addEventListener('resize', centerInitialScroll);
+
+    // Touch handling for mobile
+    let startX;
+    let scrollLeft;
+    let isDragging = false;
+
+    container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!startX) return;
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+    }, { passive: true });
+
+    container.addEventListener('touchend', () => {
+        startX = null;
+    }, { passive: true });
+
+    // Button navigation
     prevButton.addEventListener('click', () => {
         container.scrollBy({
             left: -scrollAmount,

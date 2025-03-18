@@ -419,10 +419,10 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 10px 0;
-}
-
-.related-products .products-container::-webkit-scrollbar {
-    display: none;
+    justify-content: center;
+    margin: 0 auto;
+    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+    touch-action: pan-x; /* Enable horizontal touch swiping */
 }
 
 .related-products .bestseller-card {
@@ -583,6 +583,12 @@ body {
         grid-auto-columns: 220px;
         gap: 10px;
         padding: 5px 0;
+        scroll-snap-type: x mandatory; /* Enable snap scrolling */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .related-products .bestseller-card {
+        scroll-snap-align: center; /* Snap cards to center */
     }
 
     .related-products .bestseller-card__info {
@@ -703,7 +709,7 @@ body {
     width: 360px;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
     transition: transform 0.3s ease-in-out;
     z-index: 1000;
     overflow-x: hidden;
