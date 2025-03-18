@@ -523,16 +523,11 @@ function displayProduct(product) {
 }
 
 async function loadRelatedProducts() {
-    try {
-        const products = window.shopifyProducts || [];
-        const bestsellers = products
-            .filter(product => !product.title.toLowerCase().includes('bundle'))
-            .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
-            .slice(0, 12);
-        displayRelatedProducts(bestsellers);
-    } catch (error) {
-        console.error('Error loading related products:', error);
-    }
+    const products = window.shopifyProducts || [];
+    const bestsellers = products
+        .filter(product => !product.title.toLowerCase().includes('bundle'))
+        .slice(0, 12);
+    displayRelatedProducts(bestsellers);
 }
 
 function displayRelatedProducts(products) {
@@ -548,7 +543,7 @@ function displayRelatedProducts(products) {
                     </div>
                     <div class="bestseller-card__content">
                         <h3 class="bestseller-card__title">${product.title}</h3>
-                        <p class="bestseller-card__price">€${product.price}</p>
+                        <p class="bestseller-card__price">€${formatPrice(product.price)}</p>
                     </div>
                 </a>
             </div>

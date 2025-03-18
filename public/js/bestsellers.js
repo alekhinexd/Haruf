@@ -28,7 +28,7 @@ function displayBestsellers(products) {
                     </div>
                     <div class="bestseller-card__content">
                         <h3 class="bestseller-card__title">${product.title}</h3>
-                        <p class="bestseller-card__price">€${product.price}</p>
+                        <p class="bestseller-card__price">€${formatPrice(product.price)}</p>
                     </div>
                 </a>
             </div>
