@@ -568,6 +568,26 @@ function displayRelatedProducts(products) {
         `;
     }).join('');
 
+    // Handle card clicks with animation
+    const cards = container.getElementsByClassName('bestseller-card');
+    Array.from(cards).forEach(card => {
+        const link = card.querySelector('.bestseller-card__link');
+        if (!link) return;
+
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.href;
+            
+            // Add tapped class for animation
+            card.classList.add('tapped');
+            
+            // Navigate after animation
+            setTimeout(() => {
+                window.location.href = href;
+            }, 200);
+        });
+    });
+
     // Handle desktop arrow navigation
     const section = container.closest('.bestsellers');
     const prevButton = section.querySelector('.carousel-control.prev');

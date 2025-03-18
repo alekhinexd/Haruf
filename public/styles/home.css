@@ -229,7 +229,12 @@
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.bestsellers .bestseller-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .bestsellers .bestseller-card__link {
@@ -238,19 +243,11 @@
     color: inherit;
 }
 
-/* Desktop hover effect */
-@media (hover: hover) {
-    .bestseller-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-}
-
 /* Mobile tap effect */
 @media (hover: none) {
-    .bestseller-card:active {
+    .bestseller-card.tapped {
         transform: scale(0.98);
-        transition: transform 0.1s ease;
+        transition: transform 0.2s ease;
     }
 }
 

@@ -54,12 +54,23 @@ function displayBestsellers(products) {
         `;
     }).join('');
 
-    // Disable all link clicks by default and handle them manually
-    const links = container.getElementsByClassName('bestseller-card__link');
-    Array.from(links).forEach(link => {
+    // Handle card clicks with animation
+    const cards = container.getElementsByClassName('bestseller-card');
+    Array.from(cards).forEach(card => {
+        const link = card.querySelector('.bestseller-card__link');
+        if (!link) return;
+
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            window.location.href = link.href;
+            const href = link.href;
+            
+            // Add tapped class for animation
+            card.classList.add('tapped');
+            
+            // Navigate after animation
+            setTimeout(() => {
+                window.location.href = href;
+            }, 200);
         });
     });
 

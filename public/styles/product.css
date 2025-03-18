@@ -420,7 +420,12 @@ body {
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.bestseller-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .bestseller-card__link {
@@ -481,7 +486,12 @@ body {
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.related-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .related-product-card__link {
