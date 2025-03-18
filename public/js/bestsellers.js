@@ -1,12 +1,25 @@
-// Function to display bestsellers
+document.addEventListener('DOMContentLoaded', () => {
+    loadBestsellers();
+});
+
+async function loadBestsellers() {
+    try {
+        const products = window.shopifyProducts || [];
+        const bestsellers = products
+            .filter(product => !product.title.toLowerCase().includes('bundle'))
+            .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
+            .slice(0, 12);
+        displayBestsellers(bestsellers);
+    } catch (error) {
+        console.error('Error loading bestsellers:', error);
+    }
+}
+
 function displayBestsellers(products) {
-    const container = document.querySelector('#bestsellers-container');
+    const container = document.getElementById('bestsellers-container');
     if (!container) return;
 
-    const productsContainer = container.querySelector('.products-container');
-    if (!productsContainer) return;
-
-    productsContainer.innerHTML = products.map(product => {
+    container.innerHTML = products.map(product => {
         const variant = product.variants[0];
         const price = formatPrice(variant.price);
         const compareAtPrice = variant.compare_at_price ? formatPrice(variant.compare_at_price) : null;
@@ -49,40 +62,40 @@ function displayBestsellers(products) {
     function handleTouchStart(e) {
         isDragging = true;
         startX = e.touches[0].pageX;
-        startScrollLeft = productsContainer.scrollLeft;
-        productsContainer.style.scrollBehavior = 'auto';
+        startScrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
     }
 
     function handleTouchMove(e) {
         if (!isDragging) return;
         const x = e.touches[0].pageX;
         const walk = startX - x;
-        productsContainer.scrollLeft = startScrollLeft + walk;
+        container.scrollLeft = startScrollLeft + walk;
     }
 
     function handleTouchEnd() {
         isDragging = false;
-        productsContainer.style.scrollBehavior = 'smooth';
+        container.style.scrollBehavior = 'smooth';
     }
 
-    productsContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-    productsContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-    productsContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
-    productsContainer.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    container.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
     // Handle desktop arrow navigation
-    const prevButton = container.querySelector('.prev');
-    const nextButton = container.querySelector('.next');
+    const prevButton = document.querySelector('.bestsellers .carousel-control.prev');
+    const nextButton = document.querySelector('.bestsellers .carousel-control.next');
     
     if (prevButton && nextButton) {
         const scrollAmount = 300;
 
         prevButton.addEventListener('click', () => {
-            productsContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
 
         nextButton.addEventListener('click', () => {
-            productsContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         });
 
         // Show/hide arrows based on screen size
@@ -96,40 +109,6 @@ function displayBestsellers(products) {
         updateArrowVisibility();
         window.addEventListener('resize', updateArrowVisibility);
     }
-
-    // Add hover effects
-    const cards = productsContainer.querySelectorAll('.bestseller-card');
-    cards.forEach(card => {
-        const viewDetails = card.querySelector('.view-details');
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-5px)';
-            card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
-            if (viewDetails) {
-                viewDetails.style.color = '#333333';
-            }
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'none';
-            card.style.boxShadow = 'none';
-            if (viewDetails) {
-                viewDetails.style.color = '#666';
-            }
-        });
-    });
-}
-
-// Load bestsellers on page load
-async function loadBestsellers() {
-    try {
-        const products = window.shopifyProducts || [];
-        const bestsellers = products
-            .filter(product => !product.title.toLowerCase().includes('bundle'))
-            .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
-            .slice(0, 12);
-        displayBestsellers(bestsellers);
-    } catch (error) {
-        console.error('Error loading bestsellers:', error);
-    }
 }
 
 // Format price to currency
@@ -140,6 +119,3 @@ function formatPrice(price) {
         minimumFractionDigits: 2
     }).format(price).replace('€', '') + '€';
 }
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', loadBestsellers);
