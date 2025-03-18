@@ -203,71 +203,48 @@
 }
 
 .bestsellers-carousel {
-    position: relative;
     width: 100%;
+    position: relative;
 }
 
 .carousel-container {
     display: flex;
     gap: 20px;
-    overflow-x: scroll;
-    scroll-behavior: smooth;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     padding: 10px 0;
+    scroll-snap-type: x mandatory;
 }
 
 .carousel-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
-}
-
-.carousel-controls {
-    display: flex;
-    gap: 10px;
-}
-
-.carousel-control {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.carousel-control:hover {
-    background: #f5f5f5;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none;
 }
 
 .bestsellers .bestseller-card {
     flex: 0 0 280px;
-    max-width: 280px;
-    transition: transform 0.3s ease;
+    min-width: 280px;
+    scroll-snap-align: start;
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    touch-action: none;
-}
-
-.bestsellers .bestseller-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .bestsellers .bestseller-card__link {
+    display: block;
     text-decoration: none;
     color: inherit;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+}
+
+@media (hover: hover) {
+    .bestseller-card__link {
+        transition: transform 0.3s ease;
+    }
+    
+    .bestseller-card__link:hover {
+        transform: translateY(-5px);
+    }
 }
 
 .bestsellers .bestseller-card__image {

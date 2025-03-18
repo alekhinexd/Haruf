@@ -59,80 +59,23 @@ function displayBestsellers(products) {
     Array.from(links).forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            if (!isDragging) {
-                window.location.href = link.href;
-            }
+            window.location.href = link.href;
         });
-    });
-
-    // Simple touch scrolling
-    let startX;
-    let startScrollLeft;
-    let isDragging = false;
-
-    function handleTouchStart(e) {
-        isDragging = true;
-        startX = e.touches[0].pageX;
-        startScrollLeft = container.scrollLeft;
-    }
-
-    function handleTouchMove(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.touches[0].pageX;
-        const walk = startX - x;
-        container.scrollLeft = startScrollLeft + walk;
-    }
-
-    function handleTouchEnd() {
-        isDragging = false;
-        setTimeout(() => isDragging = false, 100);
-    }
-
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchmove', handleTouchMove);
-    container.addEventListener('touchend', handleTouchEnd);
-    container.addEventListener('touchcancel', handleTouchEnd);
-
-    // Update mobile state on resize
-    window.addEventListener('resize', () => {
-        isMobile = window.innerWidth <= 1024;
     });
 
     // Handle desktop arrow navigation
     const section = container.closest('.bestsellers');
     const prevButton = section.querySelector('.carousel-control.prev');
     const nextButton = section.querySelector('.carousel-control.next');
-    
-    if (prevButton && nextButton) {
-        const scrollAmount = 300;
 
+    if (prevButton && nextButton) {
         prevButton.addEventListener('click', () => {
-            const targetScroll = container.scrollLeft - scrollAmount;
-            container.scrollTo({
-                left: targetScroll,
-                behavior: 'smooth'
-            });
+            container.scrollBy({ left: -300, behavior: 'smooth' });
         });
 
         nextButton.addEventListener('click', () => {
-            const targetScroll = container.scrollLeft + scrollAmount;
-            container.scrollTo({
-                left: targetScroll,
-                behavior: 'smooth'
-            });
+            container.scrollBy({ left: 300, behavior: 'smooth' });
         });
-
-        // Show/hide arrows based on screen size
-        const updateArrowVisibility = () => {
-            const isMobile = window.innerWidth <= 768;
-            prevButton.style.display = isMobile ? 'none' : 'flex';
-            nextButton.style.display = isMobile ? 'none' : 'flex';
-        };
-
-        // Update on load and resize
-        updateArrowVisibility();
-        window.addEventListener('resize', updateArrowVisibility);
     }
 }
 
