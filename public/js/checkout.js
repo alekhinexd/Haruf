@@ -22,9 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
         debugElement.appendChild(debugItem);
     }
 
+    // Function to reset button state to default
+    function resetButtonState() {
+        continueToPaymentBtn.disabled = false;
+        continueToPaymentBtn.textContent = 'Continue to Payment';
+        continueToPaymentBtn.style.backgroundColor = '#000000';
+        debugLog('Button state reset to default', {});
+    }
+
     // Initialize checkout
     function initializeCheckout() {
         loadCartItems();
+        resetButtonState(); // Call the resetButtonState function here
     }
 
     // Load cart items from localStorage
@@ -165,10 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Checkout error:', error);
             
             // Reset button state
-            continueToPaymentBtn.disabled = false;
-            continueToPaymentBtn.textContent = 'Continue to Payment';
-            continueToPaymentBtn.style.backgroundColor = '#000000';
-            debugLog('Button state reset after error', {});
+            resetButtonState();
             
             alert('There was an error processing your payment. Please try again.');
         });
