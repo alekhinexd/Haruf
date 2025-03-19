@@ -54,6 +54,9 @@ function displayBestsellers(products) {
         `;
     }).join('');
 
+    // Add an extra spacer div to ensure scrolling to the end
+    container.innerHTML += '<div style="flex: 0 0 20px; min-width: 20px;"></div>';
+
     // Handle card clicks with animation
     const cards = container.getElementsByClassName('bestseller-card');
     Array.from(cards).forEach(card => {
@@ -81,7 +84,7 @@ function displayBestsellers(products) {
 
     if (prevButton && nextButton && container) {
         // Calculate scroll amount based on card width plus gap
-        const cardWidth = 280; // Width of the card
+        const cardWidth = 300; // Width of the card
         const gap = 20; // Gap between cards
         const scrollAmount = cardWidth + gap;
 
