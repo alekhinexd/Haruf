@@ -75,18 +75,18 @@ function displayBestsellers(products) {
     });
 
     // Handle desktop arrow navigation
-    const prevButton = document.querySelector('.bestsellers .carousel-control.prev');
-    const nextButton = document.querySelector('.bestsellers .carousel-control.next');
+    const section = document.querySelector('.bestsellers');
+    const prevButton = section.querySelector('.carousel-control.prev');
+    const nextButton = section.querySelector('.carousel-control.next');
+    const carouselContainer = section.querySelector('.carousel-container');
 
-    if (prevButton && nextButton) {
+    if (prevButton && nextButton && carouselContainer) {
         prevButton.addEventListener('click', () => {
-            const container = document.querySelector('.bestsellers .carousel-container');
-            container.scrollBy({ left: -300, behavior: 'smooth' });
+            carouselContainer.scrollBy({ left: -300, behavior: 'smooth' });
         });
 
         nextButton.addEventListener('click', () => {
-            const container = document.querySelector('.bestsellers .carousel-container');
-            container.scrollBy({ left: 300, behavior: 'smooth' });
+            carouselContainer.scrollBy({ left: 300, behavior: 'smooth' });
         });
     }
 }

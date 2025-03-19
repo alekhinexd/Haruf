@@ -589,18 +589,18 @@ function displayRelatedProducts(products) {
     });
 
     // Handle desktop arrow navigation
-    const prevButton = document.querySelector('.related-products .carousel-control.prev');
-    const nextButton = document.querySelector('.related-products .carousel-control.next');
+    const section = document.querySelector('.related-products');
+    const prevButton = section.querySelector('.carousel-control.prev');
+    const nextButton = section.querySelector('.carousel-control.next');
+    const carouselContainer = section.querySelector('.carousel-container');
 
-    if (prevButton && nextButton) {
+    if (prevButton && nextButton && carouselContainer) {
         prevButton.addEventListener('click', () => {
-            const container = document.querySelector('.related-products .carousel-container');
-            container.scrollBy({ left: -300, behavior: 'smooth' });
+            carouselContainer.scrollBy({ left: -300, behavior: 'smooth' });
         });
 
         nextButton.addEventListener('click', () => {
-            const container = document.querySelector('.related-products .carousel-container');
-            container.scrollBy({ left: 300, behavior: 'smooth' });
+            carouselContainer.scrollBy({ left: 300, behavior: 'smooth' });
         });
     }
 }
