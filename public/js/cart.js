@@ -11,13 +11,21 @@ function addToCart(product) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existingItem = cart.find(item => item.handle === product.handle);
     
+    // Ensure price is a valid number by handling different formats
+    let price = product.price;
+    if (typeof price === 'string') {
+        // Remove currency symbol and replace comma with dot for proper parsing
+        price = price.replace(/[€$£]/g, '').replace(',', '.');
+    }
+    price = parseFloat(price);
+    
     if (existingItem) {
         existingItem.quantity += product.quantity || 1;
     } else {
         cart.push({
             handle: product.handle,
             title: product.title,
-            price: parseFloat(product.price),
+            price: price,
             image: product.image,
             quantity: product.quantity || 1
         });
@@ -245,6 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 checkoutButton.textContent = 'Processing...';
                 checkoutButton.style.backgroundColor = '#333333';
 
+                // Log cart items for debugging
+                console.log('Cart items being sent to server:', cart);
+
                 // Create Mollie payment
                 const response = await fetch('/api/create-payment', {
                     method: 'POST',
@@ -256,14 +267,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
+                // Log response status for debugging
+                console.log('Server response status:', response.status);
+
                 if (!response.ok) {
-                    throw new Error('Payment creation failed');
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Payment creation failed:', errorData);
+                    throw new Error(errorData.error || 'Payment creation failed');
                 }
 
-                const { checkoutUrl } = await response.json();
+                const responseData = await response.json();
+                console.log('Checkout URL received:', responseData.checkoutUrl);
                 
                 // Redirect to Mollie checkout
-                window.location.href = checkoutUrl;
+                if (responseData.checkoutUrl) {
+                    window.location.href = responseData.checkoutUrl;
+                } else {
+                    throw new Error('No checkout URL received from server');
+                }
 
             } catch (error) {
                 console.error('Checkout error:', error);
