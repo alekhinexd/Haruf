@@ -54,9 +54,6 @@ function displayBestsellers(products) {
         `;
     }).join('');
 
-    // Add an extra spacer div to ensure scrolling to the end
-    container.innerHTML += '<div style="flex: 0 0 100px; min-width: 100px;"></div>';
-
     // Handle card clicks with animation
     const cards = container.getElementsByClassName('bestseller-card');
     Array.from(cards).forEach(card => {
@@ -78,41 +75,27 @@ function displayBestsellers(products) {
     });
 
     // Handle desktop arrow navigation
-    const section = document.querySelector('.bestsellers');
-    const prevButton = section.querySelector('.carousel-control.prev');
-    const nextButton = section.querySelector('.carousel-control.next');
+    const prevButton = document.querySelector('.bestsellers .carousel-control.prev');
+    const nextButton = document.querySelector('.bestsellers .carousel-control.next');
 
-    if (prevButton && nextButton && container) {
-        // Calculate scroll amount based on card width plus gap
-        const cardWidth = 300; // Width of the card
-        const gap = 20; // Gap between cards
-        const scrollAmount = cardWidth + gap;
-
-        // Remove any existing event listeners
-        const newPrevButton = prevButton.cloneNode(true);
-        const newNextButton = nextButton.cloneNode(true);
-        
-        prevButton.parentNode.replaceChild(newPrevButton, prevButton);
-        nextButton.parentNode.replaceChild(newNextButton, nextButton);
-        
-        // Add click event listeners
-        newPrevButton.addEventListener('click', () => {
-            container.scrollBy({
-                left: -scrollAmount,
-                behavior: 'smooth'
-            });
+    if (prevButton && nextButton) {
+        prevButton.addEventListener('click', () => {
+            const container = document.querySelector('.bestsellers .carousel-container');
+            container.scrollBy({ left: -300, behavior: 'smooth' });
         });
 
-        newNextButton.addEventListener('click', () => {
-            container.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth'
-            });
+        nextButton.addEventListener('click', () => {
+            const container = document.querySelector('.bestsellers .carousel-container');
+            container.scrollBy({ left: 300, behavior: 'smooth' });
         });
     }
 }
 
 // Format price to currency
 function formatPrice(price) {
-    return price.toFixed(2).replace('.', ',') + '€';
+    return new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2
+    }).format(price).replace('€', '') + '€';
 }

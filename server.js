@@ -37,12 +37,7 @@ app.post('/api/create-payment', async (req, res) => {
 
         // Calculate total amount from cart items
         const total = cartItems.reduce((sum, item) => {
-            // Ensure price is properly parsed regardless of format
-            let price = item.price;
-            if (typeof price === 'string') {
-                price = price.replace(/[€$£]/g, '').replace(',', '.');
-            }
-            return sum + (parseFloat(price) * parseInt(item.quantity));
+            return sum + (parseFloat(item.price) * parseInt(item.quantity));
         }, 0);
 
         if (isNaN(total) || total <= 0) {
