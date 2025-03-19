@@ -440,23 +440,29 @@ body {
     color: inherit;
 }
 
-.bestseller-card__image {
+.bestsellers .bestseller-card__image {
     position: relative;
-    padding-top: 100%;
+    width: 100%;
+    padding-bottom: 100%;
+    background: #fff;
     overflow: hidden;
 }
 
-.bestseller-card__image img {
+.bestsellers .bestseller-card__image img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 20px;
 }
 
-.bestseller-card__info {
-    padding: 15px;
+.bestsellers .bestseller-card__info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .bestseller-card__title {

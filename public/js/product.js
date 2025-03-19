@@ -569,7 +569,7 @@ function displayRelatedProducts(products) {
     }).join('');
 
     // Add an extra spacer div to ensure scrolling to the end
-    container.innerHTML += '<div style="flex: 0 0 20px; min-width: 20px;"></div>';
+    container.innerHTML += '<div style="flex: 0 0 100px; min-width: 100px;"></div>';
 
     // Handle card clicks with animation
     const cards = container.getElementsByClassName('bestseller-card');
