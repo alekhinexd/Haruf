@@ -6,15 +6,31 @@ const fs = require('fs');
 const { createMollieClient } = require('@mollie/api-client');
 require('dotenv').config();
 
-// Initialize Mollie client with strict error checking
-const mollieClient = createMollieClient({ 
-    apiKey: process.env.MOLLIE_API_KEY 
-});
+// Validate environment variables
+const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY;
+const APP_URL = process.env.APP_URL;
 
-if (!process.env.MOLLIE_API_KEY || !process.env.APP_URL) {
-    console.error('ERROR: Missing required environment variables. Check .env file.');
+if (!MOLLIE_API_KEY) {
+    console.error('ERROR: Missing MOLLIE_API_KEY environment variable. Check your .env file or Render.com environment settings.');
     process.exit(1);
 }
+
+if (!APP_URL) {
+    console.error('ERROR: Missing APP_URL environment variable. Check your .env file or Render.com environment settings.');
+    process.exit(1);
+}
+
+// Remove trailing slash from APP_URL if present
+const normalizedAppUrl = APP_URL.endsWith('/') ? APP_URL.slice(0, -1) : APP_URL;
+
+console.log('Environment configuration:');
+console.log(`- APP_URL: ${normalizedAppUrl}`);
+console.log(`- MOLLIE_API_KEY: ${MOLLIE_API_KEY.substring(0, 5)}...${MOLLIE_API_KEY.substring(MOLLIE_API_KEY.length - 4)}`);
+
+// Initialize Mollie client
+const mollieClient = createMollieClient({ 
+    apiKey: MOLLIE_API_KEY 
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -53,29 +69,51 @@ app.post('/api/create-payment', async (req, res) => {
 
         // Create payment with Mollie - using required fields according to latest API
         try {
+            // Construct the webhook URL and redirect URL
+            const redirectUrl = `${normalizedAppUrl}/pages/order-confirmation.html`;
+            const webhookUrl = `${normalizedAppUrl}/api/webhooks/mollie`;
+            
+            console.log('Using the following URLs:');
+            console.log(`- Redirect URL: ${redirectUrl}`);
+            console.log(`- Webhook URL: ${webhookUrl}`);
+            
             const paymentData = {
                 amount: {
                     currency: 'EUR',
                     value: amount
                 },
                 description: 'Order from Resell Depot',
-                redirectUrl: `${process.env.APP_URL}/pages/order-confirmation.html`,
-                webhookUrl: `${process.env.APP_URL}/api/webhooks/mollie`
+                redirectUrl: redirectUrl,
+                webhookUrl: webhookUrl
             };
             
-            console.log('Sending payment data to Mollie:', paymentData);
+            console.log('Sending payment data to Mollie:', JSON.stringify(paymentData, null, 2));
             
             const payment = await mollieClient.payments.create(paymentData);
             
             console.log('Payment created successfully:', payment.id);
+            console.log('Checkout URL:', payment.getCheckoutUrl());
+            
             res.json({ 
                 checkoutUrl: payment.getCheckoutUrl(),
                 paymentId: payment.id
             });
         } catch (mollieError) {
             console.error('Mollie API error:', mollieError);
+            
+            // Provide more detailed error information
+            let errorMessage = 'Payment provider error';
+            
+            if (mollieError.message) {
+                errorMessage += ': ' + mollieError.message;
+            }
+            
+            if (mollieError.details && mollieError.details.field) {
+                errorMessage += ` (Field: ${mollieError.details.field})`;
+            }
+            
             res.status(500).json({
-                error: 'Payment provider error: ' + (mollieError.message || 'Unknown error')
+                error: errorMessage
             });
         }
     } catch (error) {
@@ -113,6 +151,7 @@ app.get('/api/verify-payment/:paymentId', async (req, res) => {
 // Secure webhook endpoint for Mollie callbacks
 app.post('/api/webhooks/mollie', async (req, res) => {
     try {
+        console.log('Webhook called with body:', req.body);
         const { id } = req.body;
         
         if (!id) {
@@ -120,7 +159,10 @@ app.post('/api/webhooks/mollie', async (req, res) => {
             return res.status(200).send('OK'); // Always return 200 to Mollie
         }
 
+        console.log(`Processing webhook for payment: ${id}`);
+        
         const payment = await mollieClient.payments.get(id);
+        console.log(`Payment status: ${payment.status}`);
         
         if (payment.isPaid()) {
             console.log(`Payment ${id} completed successfully`);
