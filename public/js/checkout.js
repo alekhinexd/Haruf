@@ -68,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get cart data exactly as stored by cart.js
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
+        // Check if cart is empty
+        if (!cart || cart.length === 0) {
+            alert('Your cart is empty. Please add items to your cart before checkout.');
+            window.location.href = '/pages/cart.html';
+            return;
+        }
+        
         try {
             // Show loading state
             continueToPaymentBtn.disabled = true;
@@ -83,11 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ cartItems: cart })
             });
 
-            const responseData = await response.json();
-
             if (!response.ok) {
-                throw new Error(responseData.error || 'Payment creation failed');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Payment creation failed');
             }
+
+            const responseData = await response.json();
 
             // Store form data for order confirmation
             const formData = new FormData(checkoutForm);
