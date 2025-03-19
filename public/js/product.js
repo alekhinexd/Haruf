@@ -588,7 +588,7 @@ function displayRelatedProducts(products) {
         });
     });
 
-    // Handle desktop arrow navigation for related products
+    // Handle desktop arrow navigation
     const section = document.querySelector('.bestsellers');
     const prevButton = section.querySelector('.carousel-control.prev');
     const nextButton = section.querySelector('.carousel-control.next');
