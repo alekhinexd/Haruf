@@ -105,14 +105,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const payload = { cartItems: cart };
         debugLog('Sending payload to server', payload);
 
-        // Send only cartItems to the server as per the working implementation
+        // Send request to the current server
         fetch('https://resell-depot.onrender.com/api/create-payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload),
-            // Add cache control to prevent caching issues
             cache: 'no-cache'
         })
         .then(function(response) {
