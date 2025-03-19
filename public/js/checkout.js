@@ -111,7 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            // Add cache control to prevent caching issues
+            cache: 'no-cache'
         })
         .then(function(response) {
             debugLog('Server response received', { 
@@ -120,23 +122,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusText: response.statusText
             });
             
-            // Clone the response so we can log it and still use it
-            return response.clone().text().then(function(text) {
-                try {
-                    const data = JSON.parse(text);
-                    debugLog('Response body', data);
-                } catch (e) {
-                    debugLog('Response is not JSON', text);
-                }
-                
-                if (!response.ok) {
-                    return response.json().then(function(errorData) {
+            if (!response.ok) {
+                return response.text().then(function(text) {
+                    try {
+                        const errorData = JSON.parse(text);
+                        debugLog('Error response body', errorData);
                         throw new Error(errorData.error || 'Payment creation failed');
-                    });
-                }
-                
-                return response.json();
-            });
+                    } catch (e) {
+                        debugLog('Error response is not JSON', text);
+                        throw new Error('Payment creation failed: ' + text);
+                    }
+                });
+            }
+            
+            return response.json();
         })
         .then(function(data) {
             debugLog('Payment created successfully', data);
@@ -147,15 +146,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 debugLog('Payment ID stored', data.paymentId);
             } else {
                 debugLog('No payment ID in response', data);
+                throw new Error('No payment ID received from server');
             }
             
             // Redirect to Mollie checkout
             if (data.checkoutUrl) {
                 debugLog('Redirecting to checkout URL', data.checkoutUrl);
-                window.location.href = data.checkoutUrl;
+                // Use a small timeout to ensure the debug logs are visible
+                setTimeout(function() {
+                    window.location.href = data.checkoutUrl;
+                }, 100);
             } else {
                 debugLog('No checkout URL in response', data);
-                throw new Error('No checkout URL received');
+                throw new Error('No checkout URL received from server');
             }
         })
         .catch(function(error) {

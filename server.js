@@ -47,20 +47,25 @@ app.post('/api/create-payment', async (req, res) => {
             return res.status(400).json({ error: 'Invalid total amount' });
         }
 
-        // Format amount to 2 decimal places
+        // Format amount to 2 decimal places - ensure it's a string as required by Mollie
         const amount = total.toFixed(2);
         console.log('Calculated amount:', amount);
 
-        // Create payment with Mollie - using minimal required fields as per memory
+        // Create payment with Mollie - using required fields according to latest API
         try {
-            const payment = await mollieClient.payments.create({
+            const paymentData = {
                 amount: {
                     currency: 'EUR',
                     value: amount
                 },
                 description: 'Order from Resell Depot',
-                redirectUrl: `${process.env.APP_URL}/pages/order-confirmation.html`
-            });
+                redirectUrl: `${process.env.APP_URL}/pages/order-confirmation.html`,
+                webhookUrl: `${process.env.APP_URL}/api/webhooks/mollie`
+            };
+            
+            console.log('Sending payment data to Mollie:', paymentData);
+            
+            const payment = await mollieClient.payments.create(paymentData);
             
             console.log('Payment created successfully:', payment.id);
             res.json({ 
