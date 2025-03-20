@@ -369,7 +369,10 @@ const products = [
                 inventory_quantity: -6,
                 requires_shipping: false,
                 taxable: false,
-                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597'
+                image: {
+                    src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597',
+                    alt: 'JBL Charge 5 Black'
+                }
             },
             {
                 option1: 'Red',
@@ -378,12 +381,15 @@ const products = [
                 inventory_quantity: 0,
                 requires_shipping: false,
                 taxable: false,
-                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_RED_0029_x2_057649e2-efa2-4a23-8d41-a37a4683266f.webp?v=1729621597'
+                image: {
+                    src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_RED_0029_x2_057649e2-efa2-4a23-8d41-a37a4683266f.webp?v=1729621597',
+                    alt: 'JBL Charge 5 Red'
+                }
             }
         ],
         image: {
             src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597',
-            alt: ''
+            alt: 'JBL Charge 5'
         },
         status: 'active'
     },
@@ -410,7 +416,10 @@ const products = [
                 inventory_quantity: -6,
                 requires_shipping: false,
                 taxable: false,
-                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592'
+                image: {
+                    src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592',
+                    alt: 'JBL Flip 6 Black'
+                }
             },
             {
                 option1: 'Blue',
@@ -419,12 +428,15 @@ const products = [
                 inventory_quantity: 0,
                 requires_shipping: false,
                 taxable: false,
-                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/2_JBL_FLIP6_3_4_RIGHT_BLUE_30192_x1_3d904c40-be44-4952-8add-d0422d834572.webp?v=1729621592'
+                image: {
+                    src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/2_JBL_FLIP6_3_4_RIGHT_BLUE_30192_x1_3d904c40-be44-4952-8add-d0422d834572.webp?v=1729621592',
+                    alt: 'JBL Flip 6 Blue'
+                }
             }
         ],
         image: {
             src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592',
-            alt: ''
+            alt: 'JBL Flip 6'
         },
         rating_count: 93,
         status: 'active'
