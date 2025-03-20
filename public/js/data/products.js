@@ -355,13 +355,32 @@ const products = [
         type: '',
         tags: '',
         published: true,
-        variants: [{
-            price: 21.95,
-            compare_at_price: 32.95,
-            inventory_quantity: -6,
-            requires_shipping: false,
-            taxable: false
-        }],
+        options: [
+            {
+                name: 'Color',
+                values: ['Black', 'Red']
+            }
+        ],
+        variants: [
+            {
+                option1: 'Black',
+                price: 14.95,
+                compare_at_price: 29.95,
+                inventory_quantity: -6,
+                requires_shipping: false,
+                taxable: false,
+                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597'
+            },
+            {
+                option1: 'Red',
+                price: 14.95,
+                compare_at_price: 29.95,
+                inventory_quantity: 0,
+                requires_shipping: false,
+                taxable: false,
+                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_RED_0029_x2_057649e2-efa2-4a23-8d41-a37a4683266f.webp?v=1729621597'
+            }
+        ],
         image: {
             src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/JBL_CHARGE5_HERO_BLACK_0046_x1_55e1907d-f60e-4c12-8585-cded54424f28.webp?v=1729621597',
             alt: ''
@@ -377,13 +396,32 @@ const products = [
         type: '',
         tags: '',
         published: true,
-        variants: [{
-            price: 17.95,
-            compare_at_price: 29.95,
-            inventory_quantity: -6,
-            requires_shipping: false,
-            taxable: false
-        }],
+        options: [
+            {
+                name: 'Color',
+                values: ['Black', 'Blue']
+            }
+        ],
+        variants: [
+            {
+                option1: 'Black',
+                price: 12.95,
+                compare_at_price: 29.95,
+                inventory_quantity: -6,
+                requires_shipping: false,
+                taxable: false,
+                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592'
+            },
+            {
+                option1: 'Blue',
+                price: 12.95,
+                compare_at_price: 29.95,
+                inventory_quantity: 0,
+                requires_shipping: false,
+                taxable: false,
+                image: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/2_JBL_FLIP6_3_4_RIGHT_BLUE_30192_x1_3d904c40-be44-4952-8add-d0422d834572.webp?v=1729621592'
+            }
+        ],
         image: {
             src: 'https://cdn.shopify.com/s/files/1/0855/1576/4040/files/6_JBL_FLIP_6_3_4_LEFT_BLACK_x1-500x500-1.png?v=1729621592',
             alt: ''
