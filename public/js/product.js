@@ -202,9 +202,28 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add to cart first without showing notification
             const quantity = parseInt(document.getElementById('quantity')?.value || '1');
             
+            // Create variant info string
+            let variantInfo = '';
+            if (currentProduct.options && currentProduct.options.length > 0) {
+                const variantDetails = [];
+                currentProduct.options.forEach((option, index) => {
+                    const optionValue = currentProduct.selectedVariant[`option${index + 1}`];
+                    if (optionValue && optionValue !== 'Default Title') {
+                        variantDetails.push(`${option.name}: ${optionValue}`);
+                    }
+                });
+                
+                if (variantDetails.length > 0) {
+                    variantInfo = variantDetails.join(', ');
+                }
+            }
+            
             // Add item directly to cart
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingItem = cart.find(item => item.handle === currentProduct.handle);
+            const existingItem = cart.find(item => 
+                item.handle === currentProduct.handle && 
+                item.variant === (variantInfo || 'Default')
+            );
             
             if (existingItem) {
                 existingItem.quantity += quantity;
@@ -215,7 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     price: currentProduct.selectedVariant.price,
                     image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src,
                     quantity,
-                    variant: currentProduct.selectedVariant.option1 || 'Default'
+                    variant: variantInfo || 'Default',
+                    selectedVariant: {
+                        options: selectedOptions,
+                        variantId: currentProduct.selectedVariant.id
+                    }
                 });
             }
             
@@ -232,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Use setTimeout to ensure cart is saved before redirect
             setTimeout(() => {
                 window.location.href = '/pages/checkout.html';
-            }, 50);
+            }, 200);
         });
     }
 });
