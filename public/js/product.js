@@ -236,7 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     quantity,
                     variant: variantInfo || 'Default',
                     selectedVariant: {
-                        options: selectedOptions,
+                        options: currentProduct.options ? currentProduct.options.map((option, index) => ({
+                            name: option.name,
+                            value: currentProduct.selectedVariant[`option${index + 1}`] || 'Default'
+                        })) : [],
                         variantId: currentProduct.selectedVariant.id
                     }
                 });
@@ -252,10 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.textContent = totalItems.toString();
             });
             
-            // Use setTimeout to ensure cart is saved before redirect
-            setTimeout(() => {
-                window.location.href = '/pages/checkout.html';
-            }, 200);
+            // Redirect to checkout page
+            window.location.href = '/pages/checkout.html';
         });
     }
 });
@@ -670,7 +671,10 @@ function displayProduct(product) {
                 quantity,
                 variant: variantInfo || 'Default',
                 selectedVariant: {
-                    options: selectedOptions,
+                    options: product.options ? product.options.map((option, index) => ({
+                        name: option.name,
+                        value: currentProduct.selectedVariant[`option${index + 1}`] || 'Default'
+                    })) : [],
                     variantId: currentProduct.selectedVariant.id
                 }
             });
