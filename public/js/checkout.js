@@ -123,14 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         debugLog('Cart data for checkout', cart);
         
-        // Check if cart is empty
-        if (!cart || cart.length === 0) {
-            debugLog('Cart is empty', {});
-            alert('Your cart is empty. Please add items to your cart before checkout.');
-            window.location.href = '/pages/cart.html';
-            return;
-        }
-        
         // Show loading state
         continueToPaymentBtn.disabled = true;
         continueToPaymentBtn.textContent = 'Processing...';
