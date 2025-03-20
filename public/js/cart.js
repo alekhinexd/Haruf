@@ -302,8 +302,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutButton = document.getElementById('checkout-button');
     if (checkoutButton) {
         checkoutButton.addEventListener('click', () => {
+            // Get current page path
+            const isProductPage = window.location.pathname.includes('product.html');
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (cart.length === 0) {
+            
+            // Only check for empty cart if we're NOT on the product page
+            if (cart.length === 0 && !isProductPage) {
                 alert('Your cart is empty. Please add items to your cart before checkout.');
                 return;
             }
