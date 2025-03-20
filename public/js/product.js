@@ -51,9 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.addToCart({
                     handle: currentProduct.handle,
                     title: currentProduct.title,
-                    price: currentProduct.variants[0].price,
-                    image: currentProduct.image.src,
-                    quantity
+                    price: currentProduct.selectedVariant.price,
+                    image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src,
+                    quantity,
+                    variant: currentProduct.selectedVariant.option1 || 'Default'
                 });
 
                 // Show notification menu
@@ -63,10 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
                 const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
-                productImage.src = currentProduct.image.src;
+                productImage.src = currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src;
                 productImage.alt = currentProduct.title;
-                productTitle.textContent = currentProduct.title;
-                productPrice.textContent = formatPrice(currentProduct.variants[0].price);
+                
+                // Titel mit Varianteninformation anzeigen, wenn vorhanden
+                let titleWithVariant = currentProduct.title;
+                if (currentProduct.selectedVariant.option1 && currentProduct.selectedVariant.option1 !== 'Default Title') {
+                    titleWithVariant += ` - ${currentProduct.selectedVariant.option1}`;
+                }
+                productTitle.textContent = titleWithVariant;
+                
+                productPrice.textContent = formatPrice(currentProduct.selectedVariant.price);
 
                 notificationMenu.classList.add('visible');
 
@@ -204,9 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 cart.push({
                     handle: currentProduct.handle,
                     title: currentProduct.title,
-                    price: currentProduct.variants[0].price,
-                    image: currentProduct.image.src,
-                    quantity
+                    price: currentProduct.selectedVariant.price,
+                    image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src,
+                    quantity,
+                    variant: currentProduct.selectedVariant.option1 || 'Default'
                 });
             }
             
@@ -230,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function displayProduct(product) {
     currentProduct = product;
+    currentProduct.selectedVariant = product.variants[0];
     document.title = `${product.title} - Resell Depot`;
     
     // Update main elements
@@ -243,7 +253,6 @@ function displayProduct(product) {
     if (descriptionElement) descriptionElement.innerHTML = product.body_html;
 
     // Variablen für die aktuelle Variantenauswahl
-    let selectedVariant = product.variants[0];
     let selectedOptions = {};
     
     // Variantenauswahl anzeigen, wenn das Produkt Optionen hat
@@ -366,7 +375,7 @@ function displayProduct(product) {
         // Funktion zum Aktualisieren der ausgewählten Variante
         function updateSelectedVariant() {
             // Die passende Variante basierend auf den ausgewählten Optionen finden
-            selectedVariant = product.variants.find(variant => {
+            currentProduct.selectedVariant = product.variants.find(variant => {
                 // Prüfen, ob alle ausgewählten Optionen mit dieser Variante übereinstimmen
                 return product.options.every((option, index) => {
                     const optionName = option.name;
@@ -377,11 +386,11 @@ function displayProduct(product) {
             }) || product.variants[0]; // Fallback zur ersten Variante, wenn keine Übereinstimmung gefunden wird
             
             // Preis aktualisieren
-            updatePrice(selectedVariant);
+            updatePrice(currentProduct.selectedVariant);
             
             // Bild aktualisieren, wenn die Variante ein eigenes Bild hat
-            if (selectedVariant.image && mainImage) {
-                mainImage.src = selectedVariant.image.src;
+            if (currentProduct.selectedVariant.image && mainImage) {
+                mainImage.src = currentProduct.selectedVariant.image.src;
             }
         }
         
@@ -534,7 +543,7 @@ function displayProduct(product) {
     }
     
     // Initial den Preis mit der ersten Variante anzeigen
-    updatePrice(selectedVariant);
+    updatePrice(currentProduct.selectedVariant);
 
     // Update product details with black color scheme
     // Add cart notification menu if it doesn't exist
@@ -606,10 +615,10 @@ function displayProduct(product) {
             window.addToCart({
                 handle: product.handle,
                 title: product.title,
-                price: selectedVariant.price,
-                image: selectedVariant.image ? selectedVariant.image.src : product.image.src,
+                price: currentProduct.selectedVariant.price,
+                image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : product.image.src,
                 quantity,
-                variant: selectedVariant.option1 || 'Default'
+                variant: currentProduct.selectedVariant.option1 || 'Default'
             });
 
             // Show notification menu
@@ -619,17 +628,17 @@ function displayProduct(product) {
             const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
             const closeButton = notificationMenu.querySelector('.cart-notification-menu__close');
 
-            productImage.src = selectedVariant.image ? selectedVariant.image.src : product.image.src;
+            productImage.src = currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : product.image.src;
             productImage.alt = product.title;
             
             // Titel mit Varianteninformation anzeigen, wenn vorhanden
             let titleWithVariant = product.title;
-            if (selectedVariant.option1 && selectedVariant.option1 !== 'Default Title') {
-                titleWithVariant += ` - ${selectedVariant.option1}`;
+            if (currentProduct.selectedVariant.option1 && currentProduct.selectedVariant.option1 !== 'Default Title') {
+                titleWithVariant += ` - ${currentProduct.selectedVariant.option1}`;
             }
             productTitle.textContent = titleWithVariant;
             
-            productPrice.textContent = formatPrice(selectedVariant.price);
+            productPrice.textContent = formatPrice(currentProduct.selectedVariant.price);
 
             notificationMenu.classList.add('visible');
 
