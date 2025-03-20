@@ -80,12 +80,30 @@ function displayBestsellers(products) {
     const nextButton = section.querySelector('.carousel-control.next');
 
     if (prevButton && nextButton) {
-        prevButton.addEventListener('click', () => {
-            container.scrollBy({ left: -300, behavior: 'smooth' });
+        // Entferne bestehende Event-Listener, falls vorhanden
+        const newPrevButton = prevButton.cloneNode(true);
+        const newNextButton = nextButton.cloneNode(true);
+        
+        prevButton.parentNode.replaceChild(newPrevButton, prevButton);
+        nextButton.parentNode.replaceChild(newNextButton, nextButton);
+        
+        // Füge verbesserte Event-Listener hinzu
+        newPrevButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Berechne die Scrollposition basierend auf der Kartenbreite
+            const cardWidth = container.querySelector('.bestseller-card')?.offsetWidth || 300;
+            const scrollAmount = cardWidth + 20; // Kartenbreite + Gap
+            container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
 
-        nextButton.addEventListener('click', () => {
-            container.scrollBy({ left: 300, behavior: 'smooth' });
+        newNextButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Berechne die Scrollposition basierend auf der Kartenbreite
+            const cardWidth = container.querySelector('.bestseller-card')?.offsetWidth || 300;
+            const scrollAmount = cardWidth + 20; // Kartenbreite + Gap
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         });
     }
 }

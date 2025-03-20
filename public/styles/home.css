@@ -216,6 +216,17 @@
     -ms-overflow-style: none;
     padding: 10px 0;
     scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    white-space: nowrap;
+    overflow-y: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: pan-x;
 }
 
 .carousel-container::-webkit-scrollbar {
