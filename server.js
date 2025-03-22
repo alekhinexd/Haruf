@@ -11,11 +11,11 @@ require('dotenv').config();
 // Validate environment variables
 const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY;
 const APP_URL = process.env.APP_URL;
-const EMAIL_USER = process.env.EMAIL_USER || 'your-email@example.com';
-const EMAIL_PASS = process.env.EMAIL_PASS || 'your-email-password';
-const EMAIL_HOST = process.env.EMAIL_HOST || 'smtp.gmail.com';
-const EMAIL_PORT = process.env.EMAIL_PORT || 587;
-const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@resell-depot.eth';
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASS = process.env.EMAIL_PASS;
+const EMAIL_HOST = process.env.EMAIL_HOST;
+const EMAIL_PORT = process.env.EMAIL_PORT;
+const EMAIL_FROM = process.env.EMAIL_FROM;
 
 if (!MOLLIE_API_KEY) {
     console.error('ERROR: Missing MOLLIE_API_KEY environment variable. Check your .env file or Render.com environment settings.');
@@ -43,11 +43,14 @@ const mollieClient = createMollieClient({
 const transporter = nodemailer.createTransport({
     host: EMAIL_HOST,
     port: EMAIL_PORT,
-    secure: EMAIL_PORT === 465, // true for 465, false for other ports
+    secure: false,  // Set to false for GoDaddy SMTP
     auth: {
         user: EMAIL_USER,
         pass: EMAIL_PASS,
     },
+    tls: {
+        rejectUnauthorized: false  // This might be needed for GoDaddy
+    }
 });
 
 // Function to send order confirmation email
