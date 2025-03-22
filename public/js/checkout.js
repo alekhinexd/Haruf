@@ -136,7 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
         debugLog('Customer data stored', customerData);
 
         // Create the request payload
-        const payload = { cartItems: cart };
+        const payload = { 
+            cartItems: cart,
+            customerName: `${customerData.firstName} ${customerData.lastName}`,
+            customerEmail: customerData.email
+        };
         debugLog('Sending payload to server', payload);
 
         // Send request to the current server

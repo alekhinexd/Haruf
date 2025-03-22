@@ -4,11 +4,18 @@ const path = require('path');
 const csv = require('csv-parse');
 const fs = require('fs');
 const { createMollieClient } = require('@mollie/api-client');
+const nodemailer = require('nodemailer');
+const createOrderConfirmationEmail = require('./email-templates/order-confirmation');
 require('dotenv').config();
 
 // Validate environment variables
 const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY;
 const APP_URL = process.env.APP_URL;
+const EMAIL_USER = process.env.EMAIL_USER || 'your-email@example.com';
+const EMAIL_PASS = process.env.EMAIL_PASS || 'your-email-password';
+const EMAIL_HOST = process.env.EMAIL_HOST || 'smtp.gmail.com';
+const EMAIL_PORT = process.env.EMAIL_PORT || 587;
+const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@resell-depot.eth';
 
 if (!MOLLIE_API_KEY) {
     console.error('ERROR: Missing MOLLIE_API_KEY environment variable. Check your .env file or Render.com environment settings.');
@@ -32,6 +39,39 @@ const mollieClient = createMollieClient({
     apiKey: MOLLIE_API_KEY 
 });
 
+// Initialize Nodemailer transporter
+const transporter = nodemailer.createTransport({
+    host: EMAIL_HOST,
+    port: EMAIL_PORT,
+    secure: EMAIL_PORT === 465, // true for 465, false for other ports
+    auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+    },
+});
+
+// Function to send order confirmation email
+async function sendOrderConfirmationEmail(order) {
+    try {
+        const htmlContent = createOrderConfirmationEmail(order);
+        
+        const mailOptions = {
+            from: `"Resell Depot" <${EMAIL_FROM}>`,
+            to: order.customerEmail,
+            subject: `Order Confirmation #${order.orderNumber}`,
+            html: htmlContent,
+            replyTo: EMAIL_FROM
+        };
+        
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully:', info.messageId);
+        return true;
+    } catch (error) {
+        console.error('Error sending email:', error);
+        return false;
+    }
+}
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -46,7 +86,7 @@ const { products } = require('./public/js/data/products.js');
 app.post('/api/create-payment', async (req, res) => {
     try {
         console.log('Payment request received:', req.body);
-        const { cartItems } = req.body;
+        const { cartItems, customerName, customerEmail } = req.body;
         
         if (!Array.isArray(cartItems) || cartItems.length === 0) {
             console.error('Invalid cart items:', cartItems);
@@ -84,7 +124,12 @@ app.post('/api/create-payment', async (req, res) => {
                 },
                 description: 'Order from Resell Depot',
                 redirectUrl: redirectUrl,
-                webhookUrl: webhookUrl
+                webhookUrl: webhookUrl,
+                metadata: {
+                    customerName,
+                    customerEmail,
+                    items: cartItems
+                }
             };
             
             console.log('Sending payment data to Mollie:', JSON.stringify(paymentData, null, 2));
@@ -166,11 +211,30 @@ app.post('/api/webhooks/mollie', async (req, res) => {
         
         if (payment.isPaid()) {
             console.log(`Payment ${id} completed successfully`);
-            // Here you would typically:
-            // 1. Update order status in database
-            // 2. Send confirmation email
-            // 3. Clear customer's cart
-            // 4. Update inventory
+            
+            // Get payment metadata
+            const metadata = payment.metadata || {};
+            
+            // Generate order number
+            const orderNumber = 'RD' + Date.now().toString().slice(-6);
+            
+            // Get customer data from metadata or use defaults
+            const customerName = metadata.customerName || 'Valued Customer';
+            const customerEmail = metadata.customerEmail || payment.details?.consumerAccount || 'customer@example.com';
+            
+            // Create order object for email
+            const order = {
+                orderNumber,
+                customerName,
+                customerEmail,
+                items: metadata.items || [{ title: 'Order from Resell Depot', price: payment.amount.value, quantity: 1 }],
+                total: parseFloat(payment.amount.value)
+            };
+            
+            // Send confirmation email
+            await sendOrderConfirmationEmail(order);
+            
+            console.log(`Confirmation email sent to ${customerEmail} for order #${orderNumber}`);
         } else if (payment.isFailed()) {
             console.error(`Payment ${id} failed`);
         }
@@ -234,6 +298,38 @@ app.get('/api/reviews', (req, res) => {
             console.error('Error reading reviews:', error);
             res.status(500).json({ error: 'Failed to load reviews' });
         });
+});
+
+// Test email endpoint (remove in production)
+app.get('/api/test-email', async (req, res) => {
+    try {
+        // Sample order data
+        const order = {
+            orderNumber: 'RD' + Date.now().toString().slice(-6),
+            customerName: 'Test Customer',
+            customerEmail: req.query.email || 'test@example.com',
+            items: [
+                {
+                    title: 'Test Product',
+                    price: 24.95,
+                    quantity: 1
+                }
+            ],
+            total: 24.95
+        };
+        
+        // Send test email
+        const result = await sendOrderConfirmationEmail(order);
+        
+        if (result) {
+            res.json({ success: true, message: 'Test email sent successfully' });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to send test email' });
+        }
+    } catch (error) {
+        console.error('Test email error:', error);
+        res.status(500).json({ success: false, message: 'Error sending test email', error: error.message });
+    }
 });
 
 // Frontend Routes
