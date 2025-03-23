@@ -41,15 +41,10 @@ const mollieClient = createMollieClient({
 
 // Initialize Nodemailer transporter
 const transporter = nodemailer.createTransport({
-    host: EMAIL_HOST,
-    port: EMAIL_PORT,
-    secure: false,  // Set to false for GoDaddy SMTP
+    host: EMAIL_HOST,  // Only specify the host
     auth: {
         user: EMAIL_USER,
         pass: EMAIL_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false  // This might be needed for GoDaddy
     }
 });
 
