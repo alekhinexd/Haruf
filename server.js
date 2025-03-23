@@ -43,6 +43,7 @@ const mollieClient = createMollieClient({
 const transporter = nodemailer.createTransport({
     host: EMAIL_HOST,
     port: EMAIL_PORT,
+    secure: false,
     auth: {
         user: EMAIL_USER,
         pass: EMAIL_PASS,
