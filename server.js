@@ -3,13 +3,16 @@ const cors = require('cors');
 const path = require('path');
 const csv = require('csv-parse');
 const fs = require('fs');
-const { createMollieClient } = require('@mollie/api-client');
+const { Client, Environment } = require('square');
+const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const createOrderConfirmationEmail = require('./email-templates/order-confirmation');
 require('dotenv').config();
 
 // Validate environment variables
-const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY;
+const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
+const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID;
+const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox'; // 'sandbox' or 'production'
 const APP_URL = process.env.APP_URL;
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
@@ -17,8 +20,8 @@ const EMAIL_HOST = process.env.EMAIL_HOST;
 const EMAIL_PORT = process.env.EMAIL_PORT;
 const EMAIL_FROM = process.env.EMAIL_FROM;
 
-if (!MOLLIE_API_KEY) {
-    console.error('ERROR: Missing MOLLIE_API_KEY environment variable. Check your .env file or Render.com environment settings.');
+if (!SQUARE_ACCESS_TOKEN || !SQUARE_LOCATION_ID) {
+    console.error('ERROR: Missing SQUARE_ACCESS_TOKEN or SQUARE_LOCATION_ID environment variables. Check your .env file or Render.com environment settings.');
     process.exit(1);
 }
 
@@ -32,11 +35,13 @@ const normalizedAppUrl = APP_URL.endsWith('/') ? APP_URL.slice(0, -1) : APP_URL;
 
 console.log('Environment configuration:');
 console.log(`- APP_URL: ${normalizedAppUrl}`);
-console.log(`- MOLLIE_API_KEY: ${MOLLIE_API_KEY.substring(0, 5)}...${MOLLIE_API_KEY.substring(MOLLIE_API_KEY.length - 4)}`);
+console.log(`- SQUARE_ENVIRONMENT: ${SQUARE_ENVIRONMENT}`);
+console.log(`- SQUARE_LOCATION_ID: ${SQUARE_LOCATION_ID}`);
 
-// Initialize Mollie client
-const mollieClient = createMollieClient({ 
-    apiKey: MOLLIE_API_KEY 
+// Initialize Square client
+const squareClient = new Client({
+    accessToken: SQUARE_ACCESS_TOKEN,
+    environment: SQUARE_ENVIRONMENT === 'production' ? Environment.Production : Environment.Sandbox
 });
 
 // Initialize Nodemailer transporter
@@ -106,58 +111,84 @@ app.post('/api/create-payment', async (req, res) => {
             return res.status(400).json({ error: 'Invalid total amount' });
         }
 
-        // Format amount to 2 decimal places - ensure it's a string as required by Mollie
-        const amount = total.toFixed(2);
-        console.log('Calculated amount:', amount);
+        // Format amount for Square (in cents)
+        const amountInCents = Math.round(total * 100);
+        console.log('Calculated amount in cents:', amountInCents);
 
-        // Create payment with Mollie - using required fields according to latest API
+        // Create payment with Square
         try {
-            // Construct the webhook URL and redirect URL
+            // Construct the redirect URLs
             const redirectUrl = `${normalizedAppUrl}/pages/order-confirmation.html`;
-            const webhookUrl = `${normalizedAppUrl}/api/webhooks/mollie`;
+            const cancelUrl = `${normalizedAppUrl}/pages/checkout.html`;
             
             console.log('Using the following URLs:');
-            console.log(`- Redirect URL: ${redirectUrl}`);
-            console.log(`- Webhook URL: ${webhookUrl}`);
+            console.log(`- Success URL: ${redirectUrl}`);
+            console.log(`- Cancel URL: ${cancelUrl}`);
             
-            const paymentData = {
-                amount: {
-                    currency: 'EUR',
-                    value: amount
+            // Create a unique order ID
+            const orderId = uuidv4();
+            
+            // Create line items for Square checkout
+            const lineItems = cartItems.map(item => ({
+                name: item.title,
+                quantity: item.quantity.toString(),
+                basePriceMoney: {
+                    amount: Math.round(parseFloat(item.price) * 100),
+                    currency: 'EUR'
+                }
+            }));
+            
+            // Create a payment link with Square
+            const response = await squareClient.checkoutApi.createPaymentLink({
+                idempotencyKey: uuidv4(),
+                quickPay: {
+                    name: 'Resell Depot Order',
+                    priceMoney: {
+                        amount: amountInCents,
+                        currency: 'EUR'
+                    },
+                    locationId: SQUARE_LOCATION_ID
                 },
-                description: 'Order from Resell Depot',
-                redirectUrl: redirectUrl,
-                webhookUrl: webhookUrl,
-                metadata: {
+                checkoutOptions: {
+                    redirectUrl: redirectUrl,
+                    merchantSupportEmail: EMAIL_FROM,
+                    askForShippingAddress: true
+                },
+                prePopulatedData: {
+                    buyerEmail: customerEmail,
+                    buyerAddress: {
+                        firstName: customerName.split(' ')[0],
+                        lastName: customerName.split(' ').slice(1).join(' ')
+                    }
+                },
+                note: `Order details: ${JSON.stringify({
                     customerName,
                     customerEmail,
-                    items: cartItems
-                }
-            };
-            
-            console.log('Sending payment data to Mollie:', JSON.stringify(paymentData, null, 2));
-            
-            const payment = await mollieClient.payments.create(paymentData);
-            
-            console.log('Payment created successfully:', payment.id);
-            console.log('Checkout URL:', payment.getCheckoutUrl());
-            
-            res.json({ 
-                checkoutUrl: payment.getCheckoutUrl(),
-                paymentId: payment.id
+                    items: cartItems.map(item => ({
+                        title: item.title,
+                        price: item.price,
+                        quantity: item.quantity
+                    }))
+                })}`
             });
-        } catch (mollieError) {
-            console.error('Mollie API error:', mollieError);
+            
+            console.log('Payment link created successfully:', response.result);
+            
+            // Return the checkout URL and payment ID to the client
+            res.json({
+                checkoutUrl: response.result.paymentLink.url,
+                paymentId: response.result.paymentLink.id
+            });
+        } catch (squareError) {
+            console.error('Square API error:', squareError);
             
             // Provide more detailed error information
             let errorMessage = 'Payment provider error';
             
-            if (mollieError.message) {
-                errorMessage += ': ' + mollieError.message;
-            }
-            
-            if (mollieError.details && mollieError.details.field) {
-                errorMessage += ` (Field: ${mollieError.details.field})`;
+            if (squareError.errors && squareError.errors.length > 0) {
+                errorMessage += ': ' + squareError.errors[0].detail;
+            } else if (squareError.message) {
+                errorMessage += ': ' + squareError.message;
             }
             
             res.status(500).json({
@@ -181,11 +212,16 @@ app.get('/api/verify-payment/:paymentId', async (req, res) => {
             return res.status(400).json({ error: 'Payment ID is required' });
         }
 
-        const payment = await mollieClient.payments.get(paymentId);
+        // Get payment link details from Square
+        const response = await squareClient.checkoutApi.retrievePaymentLink(paymentId);
+        const paymentLink = response.result.paymentLink;
+        
+        // Check if the payment has been completed
+        const isPaid = paymentLink.orderStatus === 'COMPLETED';
         
         res.json({
-            isPaid: payment.isPaid(),
-            status: payment.status
+            isPaid: isPaid,
+            status: paymentLink.orderStatus || 'UNKNOWN'
         });
 
     } catch (error) {
@@ -196,57 +232,63 @@ app.get('/api/verify-payment/:paymentId', async (req, res) => {
     }
 });
 
-// Secure webhook endpoint for Mollie callbacks
-app.post('/api/webhooks/mollie', async (req, res) => {
+// Webhook endpoint for Square callbacks
+app.post('/api/webhooks/square', async (req, res) => {
     try {
         console.log('Webhook called with body:', req.body);
-        const { id } = req.body;
         
-        if (!id) {
-            console.error('Missing payment ID in webhook');
-            return res.status(200).send('OK'); // Always return 200 to Mollie
+        // Extract the event type and data
+        const { type, data } = req.body;
+        
+        if (type === 'payment.updated') {
+            const paymentId = data.id;
+            
+            // Get payment details from Square
+            const response = await squareClient.paymentsApi.getPayment(paymentId);
+            const payment = response.result.payment;
+            
+            if (payment.status === 'COMPLETED') {
+                console.log(`Payment ${paymentId} completed successfully`);
+                
+                // Extract order information from payment note or metadata
+                let orderInfo = {};
+                try {
+                    if (payment.note) {
+                        // Extract the JSON part from the note
+                        const jsonStr = payment.note.substring(payment.note.indexOf('{'), payment.note.lastIndexOf('}') + 1);
+                        orderInfo = JSON.parse(jsonStr);
+                    }
+                } catch (e) {
+                    console.error('Error parsing order info:', e);
+                }
+                
+                // Generate order number
+                const orderNumber = 'RD' + Date.now().toString().slice(-6);
+                
+                // Get customer data from order info or use defaults
+                const customerName = orderInfo.customerName || 'Valued Customer';
+                const customerEmail = orderInfo.customerEmail || payment.buyerEmail || 'customer@example.com';
+                
+                // Create order object for email
+                const order = {
+                    orderNumber,
+                    customerName,
+                    customerEmail,
+                    items: orderInfo.items || [{ title: 'Order from Resell Depot', price: payment.amountMoney.amount / 100, quantity: 1 }],
+                    total: payment.amountMoney.amount / 100
+                };
+                
+                // Send confirmation email
+                await sendOrderConfirmationEmail(order);
+                
+                console.log(`Confirmation email sent to ${customerEmail} for order #${orderNumber}`);
+            }
         }
-
-        console.log(`Processing webhook for payment: ${id}`);
         
-        const payment = await mollieClient.payments.get(id);
-        console.log(`Payment status: ${payment.status}`);
-        
-        if (payment.isPaid()) {
-            console.log(`Payment ${id} completed successfully`);
-            
-            // Get payment metadata
-            const metadata = payment.metadata || {};
-            
-            // Generate order number
-            const orderNumber = 'RD' + Date.now().toString().slice(-6);
-            
-            // Get customer data from metadata or use defaults
-            const customerName = metadata.customerName || 'Valued Customer';
-            const customerEmail = metadata.customerEmail || payment.details?.consumerAccount || 'customer@example.com';
-            
-            // Create order object for email
-            const order = {
-                orderNumber,
-                customerName,
-                customerEmail,
-                items: metadata.items || [{ title: 'Order from Resell Depot', price: payment.amount.value, quantity: 1 }],
-                total: parseFloat(payment.amount.value)
-            };
-            
-            // Send confirmation email
-            await sendOrderConfirmationEmail(order);
-            
-            console.log(`Confirmation email sent to ${customerEmail} for order #${orderNumber}`);
-        } else if (payment.isFailed()) {
-            console.error(`Payment ${id} failed`);
-        }
-
         res.status(200).send('OK');
-
     } catch (error) {
         console.error('Webhook processing failed:', error);
-        res.status(200).send('OK'); // Always return 200 to Mollie
+        res.status(200).send('OK'); // Always return 200 to Square
     }
 });
 
