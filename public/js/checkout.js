@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function getStripePublishableKey() {
         // In production, you should fetch this from your server
         try {
-            const response = await fetch('/api/stripe-publishable-key');
+            const response = await fetch('/api/stripe-config');
             if (!response.ok) {
                 throw new Error('Failed to fetch Stripe publishable key');
             }
