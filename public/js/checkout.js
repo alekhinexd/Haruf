@@ -182,8 +182,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // If payment element not initialized, initialize it first
         if (!elements || !clientSecret) {
-            await initializeStripePayment();
-            showMessage('Please complete the payment information below');
+            setLoading(true);
+            try {
+                await initializeStripePayment();
+                showMessage('Please complete the payment information below');
+            } catch (error) {
+                showMessage('Failed to initialize payment. Please try again.', true);
+            } finally {
+                setLoading(false);
+            }
             return;
         }
 
@@ -194,34 +201,39 @@ document.addEventListener('DOMContentLoaded', async function() {
         const customerData = Object.fromEntries(formData.entries());
         localStorage.setItem('customerData', JSON.stringify(customerData));
 
-        // Confirm payment with Stripe
-        const { error } = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                return_url: `${window.location.origin}/pages/order-confirmation.html`,
-                receipt_email: customerData.email,
-                shipping: {
-                    name: `${customerData.firstName} ${customerData.lastName}`,
-                    phone: customerData.phone,
-                    address: {
-                        line1: customerData.address,
-                        line2: customerData.apartment || '',
-                        city: customerData.city,
-                        postal_code: customerData.postalCode,
-                        country: customerData.country
+        try {
+            // Confirm payment with Stripe
+            const { error } = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: `${window.location.origin}/pages/order-confirmation.html`,
+                    receipt_email: customerData.email,
+                    shipping: {
+                        name: `${customerData.firstName} ${customerData.lastName}`,
+                        phone: customerData.phone,
+                        address: {
+                            line1: customerData.address,
+                            line2: customerData.apartment || '',
+                            city: customerData.city,
+                            postal_code: customerData.postalCode,
+                            country: customerData.country
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        // This point will only be reached if there is an immediate error
-        // Otherwise, customer will be redirected to return_url
-        if (error) {
-            if (error.type === 'card_error' || error.type === 'validation_error') {
-                showMessage(error.message, true);
-            } else {
-                showMessage('An unexpected error occurred. Please try again.', true);
+            // This point will only be reached if there is an immediate error
+            // Otherwise, customer will be redirected to return_url
+            if (error) {
+                if (error.type === 'card_error' || error.type === 'validation_error') {
+                    showMessage(error.message, true);
+                } else {
+                    showMessage('An unexpected error occurred. Please try again.', true);
+                }
+                setLoading(false);
             }
+        } catch (error) {
+            showMessage('Payment failed. Please try again.', true);
             setLoading(false);
         }
     });
