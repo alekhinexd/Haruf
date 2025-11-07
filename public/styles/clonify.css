@@ -1,0 +1,324 @@
+/* Clonify-Style Homepage CSS */
+
+/* Hero Section */
+.clonify-hero {
+    background: linear-gradient(135deg, #0A0F2C 0%, #1a2456 100%);
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.clonify-hero__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.clonify-hero__subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.btn-clonify {
+    display: inline-block;
+    background: white;
+    color: #0A0F2C;
+    padding: 15px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-clonify:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.clonify-hero__badge {
+    margin-top: 20px;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Product Categories */
+.product-categories {
+    padding: 60px 20px;
+    background: #f9f9f9;
+}
+
+.category-section {
+    margin-bottom: 60px;
+}
+
+.category-title {
+    font-size: 2rem;
+    color: #0A0F2C;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.products-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px 0;
+    scroll-behavior: smooth;
+}
+
+.products-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.products-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.products-scroll::-webkit-scrollbar-thumb {
+    background: #0A0F2C;
+    border-radius: 10px;
+}
+
+.product-card-scroll {
+    min-width: 280px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card-scroll:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.product-card-scroll img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.product-card-scroll__content {
+    padding: 20px;
+}
+
+.product-card-scroll__title {
+    font-size: 1.1rem;
+    color: #0A0F2C;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.product-card-scroll__price {
+    font-size: 1.3rem;
+    color: #0A0F2C;
+    font-weight: 700;
+}
+
+/* Profitable Reselling Section */
+.profitable-reselling {
+    padding: 80px 20px;
+    background: white;
+}
+
+.section-heading {
+    font-size: 2.5rem;
+    color: #0A0F2C;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.section-subheading {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #666;
+    margin-bottom: 50px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    transition: transform 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.feature-card h3 {
+    font-size: 1.2rem;
+    color: #0A0F2C;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: #666;
+}
+
+/* Trust Section */
+.trust-section {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%);
+}
+
+.trust-badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.trust-badge {
+    text-align: center;
+    padding: 20px;
+}
+
+.badge-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.trust-badge p {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Why Best Section */
+.why-best {
+    padding: 80px 20px;
+    background: #0A0F2C;
+    color: white;
+    text-align: center;
+}
+
+.why-best .section-heading {
+    color: white;
+}
+
+.why-best .section-subheading {
+    color: rgba(255,255,255,0.8);
+}
+
+/* Guarantee Section */
+.guarantee-section {
+    padding: 80px 20px;
+    background: white;
+}
+
+.guarantee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.guarantee-item {
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 12px;
+}
+
+.guarantee-item h3 {
+    font-size: 1.5rem;
+    color: #0A0F2C;
+    margin-bottom: 15px;
+}
+
+.guarantee-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* FAQ Section */
+.faq-section {
+    padding: 80px 20px;
+    background: #f9f9f9;
+}
+
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 20px;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+
+.faq-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.faq-item summary {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #0A0F2C;
+    cursor: pointer;
+    list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item p {
+    margin-top: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .clonify-hero__title {
+        font-size: 2rem;
+    }
+    
+    .section-heading {
+        font-size: 1.8rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-card-scroll {
+        min-width: 250px;
+    }
+}
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
