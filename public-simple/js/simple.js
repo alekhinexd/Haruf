@@ -1,10 +1,11 @@
 // Simple cart functionality
 function addToCart() {
-    // Save product to localStorage
+    // Save product to localStorage with structure matching server expectations
     const product = {
-        id: 'ebook-cheap-products',
+        handle: 'ebook-cheap-products',
         title: 'Digital E-Book: How to Find Products Cheap',
         price: 20,
+        image: '/images/logo/Logo.png',
         quantity: 1
     };
     
