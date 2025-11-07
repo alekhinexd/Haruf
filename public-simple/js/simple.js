@@ -45,70 +45,78 @@ async function initCheckout() {
         `;
     }
     
-    // Get Stripe publishable key
-    const configResponse = await fetch('/api/stripe-config');
-    const config = await configResponse.json();
-    
-    // Initialize Stripe
-    const stripe = Stripe(config.publishableKey);
-    
-    // Get customer info from form
-    const form = document.getElementById('checkout-form');
-    
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    try {
+        // Get Stripe publishable key
+        const configResponse = await fetch('/api/stripe-config');
+        const config = await configResponse.json();
         
-        const button = document.getElementById('complete-payment');
-        button.disabled = true;
-        button.textContent = 'Processing...';
+        // Initialize Stripe
+        const stripe = Stripe(config.publishableKey);
         
-        try {
-            // Get form data
-            const formData = new FormData(form);
-            const customerData = {
-                email: formData.get('email'),
-                name: formData.get('name')
-            };
+        // Get form data for email
+        const emailInput = document.getElementById('email');
+        const nameInput = document.getElementById('name');
+        
+        // Create payment intent immediately to get clientSecret
+        const response = await fetch('/api/create-payment-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cartItems: cart,
+                customerEmail: emailInput?.value || 'customer@example.com'
+            })
+        });
+        
+        const { clientSecret } = await response.json();
+        
+        // Create and mount payment element immediately
+        const elements = stripe.elements({ clientSecret });
+        const paymentElement = elements.create('payment');
+        paymentElement.mount('#payment-element');
+        
+        // Handle form submission
+        const form = document.getElementById('checkout-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            // Save customer data
-            localStorage.setItem('customerData', JSON.stringify(customerData));
+            const button = document.getElementById('complete-payment');
+            button.disabled = true;
+            button.textContent = 'Processing...';
             
-            // Create payment intent
-            const response = await fetch('/api/create-payment-intent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    cartItems: cart,
-                    customerEmail: customerData.email
-                })
-            });
-            
-            const { clientSecret } = await response.json();
-            
-            // Mount payment element
-            const elements = stripe.elements({ clientSecret });
-            const paymentElement = elements.create('payment');
-            paymentElement.mount('#payment-element');
-            
-            // Handle form submission
-            const { error } = await stripe.confirmPayment({
-                elements,
-                confirmParams: {
-                    return_url: `${window.location.origin}/pages/confirmation.html`,
-                    receipt_email: customerData.email
+            try {
+                // Get form data
+                const formData = new FormData(form);
+                const customerData = {
+                    email: formData.get('email'),
+                    name: formData.get('name')
+                };
+                
+                // Save customer data
+                localStorage.setItem('customerData', JSON.stringify(customerData));
+                
+                // Confirm payment with Stripe
+                const { error } = await stripe.confirmPayment({
+                    elements,
+                    confirmParams: {
+                        return_url: `${window.location.origin}/pages/confirmation.html`,
+                        receipt_email: customerData.email
+                    }
+                });
+                
+                if (error) {
+                    alert(error.message);
+                    button.disabled = false;
+                    button.textContent = 'Complete Payment';
                 }
-            });
-            
-            if (error) {
-                alert(error.message);
+            } catch (err) {
+                console.error('Payment error:', err);
+                alert('Payment failed. Please try again.');
                 button.disabled = false;
                 button.textContent = 'Complete Payment';
             }
-        } catch (err) {
-            console.error('Payment error:', err);
-            alert('Payment failed. Please try again.');
-            button.disabled = false;
-            button.textContent = 'Complete Payment';
-        }
-    });
+        });
+    } catch (error) {
+        console.error('Checkout initialization error:', error);
+        alert('Failed to initialize checkout. Please refresh the page.');
+    }
 }
