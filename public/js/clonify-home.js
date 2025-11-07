@@ -9,8 +9,11 @@ function loadFeaturedProducts() {
     const container = document.getElementById('featured-products');
     if (!container) return;
 
-    // Get first 12 products from products.js
-    const featuredProducts = products.slice(0, 12);
+    // Use same logic as bestsellers - filter bundles and sort by rating
+    const featuredProducts = products
+        .filter(product => !product.title.toLowerCase().includes('bundle'))
+        .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
+        .slice(0, 12);
 
     featuredProducts.forEach(product => {
         const productCard = createProductCard(product);
