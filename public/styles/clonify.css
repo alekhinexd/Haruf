@@ -3,10 +3,10 @@
 /* Hero Section */
 .clonify-hero {
     position: relative;
-    background-image: url('../images/hero/banner.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #0A0F2C;
     color: white;
     padding: 100px 20px;
     text-align: center;
