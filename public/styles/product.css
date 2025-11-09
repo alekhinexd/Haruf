@@ -178,6 +178,101 @@ body {
     color: #666;
 }
 
+/* Profitable Reselling Section */
+.profitable-reselling-section {
+    padding: 60px 20px;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.section-description {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.reselling-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.reselling-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.reselling-feature i {
+    color: #28a745;
+    font-size: 1.2rem;
+}
+
+.reselling-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.reselling-item {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.reselling-item h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    margin: 0 0 10px 0;
+}
+
+.reselling-item p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+/* Why We're The Best Product Section */
+.why-best-product {
+    padding: 60px 20px;
+    background: white;
+}
+
+.why-best-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.why-best-item {
+    text-align: center;
+    padding: 30px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.why-best-item i {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: 15px;
+}
+
+.why-best-item h3 {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+    font-weight: 500;
+}
+
 .product-pricing {
     display: flex;
     align-items: center;
@@ -965,6 +1060,8 @@ body {
 
     .product-container {
         display: block;
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .product-gallery {
@@ -976,20 +1073,54 @@ body {
         width: 100%;
     }
 
+    .product-title {
+        font-size: 1.5rem;
+        text-align: left;
+    }
+
+    .trust-badge {
+        text-align: center;
+    }
+
     .feature-icons-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
+        margin-bottom: 20px;
     }
 
     .feature-icon-item {
-        min-width: 70px;
+        min-width: auto;
+        padding: 10px 5px;
     }
 
     .feature-icon-item i {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .feature-icon-item span {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+        line-height: 1.1;
+    }
+
+    .product-price {
+        font-size: 1.3rem;
+        text-align: left;
+    }
+
+    .quantity-selector {
+        width: 100%;
+    }
+
+    .product-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .product-button {
+        width: 100%;
     }
 
     .product-info-badges {
@@ -1004,6 +1135,28 @@ body {
 
     .info-badge i {
         font-size: 1.3rem;
+    }
+
+    .reselling-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .why-best-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .why-best-item {
+        padding: 20px 15px;
+    }
+
+    .why-best-item i {
+        font-size: 2rem;
+    }
+
+    .why-best-item h3 {
+        font-size: 0.85rem;
     }
 
     /* Align elements with title */
