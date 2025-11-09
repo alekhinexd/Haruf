@@ -108,17 +108,41 @@
             </div>
 
             <div class="product-details">
-                <div class="product-info">
-                    <h1 id="product-title" class="product-title"></h1>
-                    <div id="product-rating" class="product__rating">
-                        <div class="star-rating"></div>
-                        <span class="product__rating-count"></span>
-                    </div>
-                    <p id="product-price" class="product-price"></p>
+                <h1 id="product-title" class="product-title"></h1>
+                
+                <!-- Trust Badge -->
+                <div class="trust-badge">
+                    <span class="trust-badge-text">⭐ Excellent 4.5 | 40k+ Customers</span>
                 </div>
 
+                <!-- Feature Icons Row -->
+                <div class="feature-icons-row">
+                    <div class="feature-icon-item">
+                        <i class="fas fa-box"></i>
+                        <span>Original Packaging</span>
+                    </div>
+                    <div class="feature-icon-item">
+                        <i class="fas fa-gem"></i>
+                        <span>Same Quality</span>
+                    </div>
+                    <div class="feature-icon-item">
+                        <i class="fas fa-barcode"></i>
+                        <span>Valid Serial Number</span>
+                    </div>
+                    <div class="feature-icon-item">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Fast Shipping</span>
+                    </div>
+                    <div class="feature-icon-item">
+                        <i class="fas fa-receipt"></i>
+                        <span>Receipt incl.</span>
+                    </div>
+                </div>
+
+                <p id="product-price" class="product-price"></p>
+
                 <div id="variant-selector" class="variant-selector">
-                    <!-- Variantenauswahl wird dynamisch hier eingefügt -->
+                    <!-- Variants will be loaded dynamically -->
                 </div>
 
                 <div class="quantity-selector">
@@ -130,18 +154,40 @@
                     </div>
                 </div>
 
-                <div class="product-features">
-                    <div class="feature">
-                        <div class="feature-icon"></div>
-                        <h3 class="feature-title">1:1 Quality Replica</h3>
+                <div class="product-actions">
+                    <button type="button" id="add-to-cart" class="product-button product-button--primary">Add to Cart</button>
+                    <button type="button" id="checkout-button" class="product-button product-button--outline">Buy Now</button>
+                </div>
+
+                <!-- Delivery & Service Info -->
+                <div class="product-info-badges">
+                    <div class="info-badge">
+                        <i class="fas fa-truck"></i>
+                        <div>
+                            <strong>Free Shipping</strong>
+                            <span>Worldwide</span>
+                        </div>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"></div>
-                        <h3 class="feature-title">Original Packaging</h3>
+                    <div class="info-badge">
+                        <i class="fas fa-credit-card"></i>
+                        <div>
+                            <strong>Pay Later</strong>
+                            <span>With Klarna</span>
+                        </div>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"></div>
-                        <h3 class="feature-title">Valid Serial Number</h3>
+                    <div class="info-badge">
+                        <i class="fas fa-headset"></i>
+                        <div>
+                            <strong>24/7 Support</strong>
+                            <span>Live Support</span>
+                        </div>
+                    </div>
+                    <div class="info-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>1:1 Quality</strong>
+                            <span>No difference</span>
+                        </div>
                     </div>
                 </div>
 
@@ -150,11 +196,7 @@
                     <div id="product-description"></div>
                 </div>
 
-                <div class="product-actions">
-                    <button type="button" id="add-to-cart" class="product-button product-button--outline">Add to Cart</button>
-                    <button type="button" id="checkout-button" class="product-button product-button--primary">Checkout</button>
-                </div>
-
+                <!-- Collapsible FAQ -->
                 <div class="collapsible-section">
                     <button class="collapsible">How is this product so cheap?
                         <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -162,7 +204,7 @@
                         </svg>
                     </button>
                     <div class="content">
-                        <p>Because its only a 1:1 Replica...</p>
+                        <p>Because it's a 1:1 replica with the same quality and packaging as the original, but without the brand markup.</p>
                     </div>
 
                     <button class="collapsible">Is this product authentic?
@@ -171,7 +213,7 @@
                         </svg>
                     </button>
                     <div class="content">
-                        <p>No, this is a high-quality replica product.</p>
+                        <p>No, this is a high-quality 1:1 replica product with original packaging and receipt.</p>
                     </div>
 
                     <button class="collapsible">What's included in the package?
@@ -180,7 +222,7 @@
                         </svg>
                     </button>
                     <div class="content">
-                        <p>The package includes the product, original-style packaging, and all standard accessories.</p>
+                        <p>The package includes the product, original-style packaging, receipt, and all standard accessories.</p>
                     </div>
                 </div>
             </div>

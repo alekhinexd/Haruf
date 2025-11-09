@@ -92,7 +92,90 @@ body {
     font-size: 2rem;
     font-weight: 600;
     color: var(--color-primary);
-    margin: 0;
+    margin: 0 0 15px 0;
+}
+
+/* Trust Badge */
+.trust-badge {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.trust-badge-text {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Feature Icons Row */
+.feature-icons-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.feature-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+}
+
+.feature-icon-item i {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.feature-icon-item span {
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.2;
+}
+
+/* Product Info Badges */
+.product-info-badges {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-badge i {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.info-badge div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.info-badge strong {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.info-badge span {
+    font-size: 0.8rem;
+    color: #666;
 }
 
 .product-pricing {
@@ -891,6 +974,36 @@ body {
 
     .product-details {
         width: 100%;
+    }
+
+    .feature-icons-row {
+        gap: 10px;
+    }
+
+    .feature-icon-item {
+        min-width: 70px;
+    }
+
+    .feature-icon-item i {
+        font-size: 1.2rem;
+    }
+
+    .feature-icon-item span {
+        font-size: 0.7rem;
+    }
+
+    .product-info-badges {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .info-badge {
+        gap: 10px;
+    }
+
+    .info-badge i {
+        font-size: 1.3rem;
     }
 
     /* Align elements with title */
