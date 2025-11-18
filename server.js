@@ -80,10 +80,9 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Store version - always use 'full' for main store
-// The 'simple' version is deprecated and should not be used
-const STORE_VERSION = 'full';
-const PUBLIC_DIR = 'public';
+// Store version - read from environment variable or default to 'full'
+const STORE_VERSION = process.env.STORE_VERSION || 'full';
+const PUBLIC_DIR = STORE_VERSION === 'simple' ? 'public-simple' : 'public';
 
 console.log(`🏪 Running ${STORE_VERSION} store version`);
 console.log(`📁 Serving from: ${PUBLIC_DIR}`);
@@ -91,7 +90,8 @@ console.log(`📁 Serving from: ${PUBLIC_DIR}`);
 // Validate that the directory exists
 if (!fs.existsSync(path.join(__dirname, PUBLIC_DIR))) {
     console.error(`❌ Error: ${PUBLIC_DIR} directory not found!`);
-    console.log(`💡 Tip: Set STORE_VERSION=full to use the main store`);
+    console.log(`💡 Tip: Available versions: 'full' (public) or 'simple' (public-simple)`);
+    console.log(`💡 Current STORE_VERSION: ${STORE_VERSION}`);
 }
 
 // Webhook endpoint needs raw body for signature verification
@@ -170,8 +170,8 @@ app.use('/js', express.static(path.join(PUBLIC_DIR, 'js')));
 app.use('/styles', express.static(path.join(PUBLIC_DIR, 'styles')));
 app.use('/pages', express.static(path.join(PUBLIC_DIR, 'pages')));
 
-// Import hardcoded products data
-const { products } = require('./public/js/data/products.js');
+// Import hardcoded products data from the selected store version
+const { products } = require(`./${PUBLIC_DIR}/js/data/products.js`);
 
 // Endpoint to serve Stripe publishable key to frontend
 app.get('/api/stripe-config', (req, res) => {
