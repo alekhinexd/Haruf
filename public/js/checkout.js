@@ -12,25 +12,50 @@ document.addEventListener('DOMContentLoaded', async function() {
     const continueToPaymentBtn = document.getElementById('continue-to-payment');
     const paymentMessage = document.getElementById('payment-message');
 
-    // Initialize Stripe (publishable key should be loaded from server or env)
-    // For now, we'll fetch it from the server or use a placeholder
-    // You need to replace this with your actual Stripe publishable key
-    const STRIPE_PUBLISHABLE_KEY = await getStripePublishableKey();
-    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+    try {
+        // Initialize Stripe (publishable key should be loaded from server or env)
+        console.log('🔄 Initializing checkout...');
+        const STRIPE_PUBLISHABLE_KEY = await getStripePublishableKey();
+        
+        if (!STRIPE_PUBLISHABLE_KEY) {
+            throw new Error('Payment system is not configured');
+        }
+        
+        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        console.log('✅ Stripe initialized');
+    } catch (error) {
+        console.error('❌ Fatal checkout initialization error:', error);
+        showMessage('Unable to initialize payment system. Please try again later or contact support.', true);
+        if (continueToPaymentBtn) {
+            continueToPaymentBtn.disabled = true;
+            continueToPaymentBtn.textContent = 'Payment Unavailable';
+        }
+        return;
+    }
 
     // Function to get Stripe publishable key from server or environment
     async function getStripePublishableKey() {
         // In production, you should fetch this from your server
         try {
+            console.log('Fetching Stripe configuration...');
             const response = await fetch('/api/stripe-config');
             if (!response.ok) {
-                throw new Error('Failed to fetch Stripe publishable key');
+                const errorData = await response.json();
+                console.error('Stripe config error:', errorData);
+                throw new Error(errorData.error || 'Failed to fetch Stripe configuration');
             }
             const { publishableKey } = await response.json();
+            
+            if (!publishableKey) {
+                throw new Error('No Stripe publishable key received from server');
+            }
+            
+            console.log('✅ Stripe configuration loaded successfully');
             return publishableKey;
         } catch (error) {
-            console.error('Error fetching Stripe publishable key:', error);
-            return 'pk_test_YOUR_PUBLISHABLE_KEY_HERE'; // Fallback to placeholder if fetch fails
+            console.error('❌ Error fetching Stripe publishable key:', error);
+            showMessage('Payment system configuration error: ' + error.message, true);
+            throw error;
         }
     }
 
@@ -99,32 +124,39 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Initialize the checkout
-    loadCartItems();
+    const cart = loadCartItems();
+    
+    // Only proceed if cart has items
+    if (cart === 0) {
+        showMessage('Your cart is empty. Please add items before checking out.', true);
+        setTimeout(() => {
+            window.location.href = '/pages/products.html';
+        }, 2000);
+        return;
+    }
     
     // Show loading state immediately
-    showMessage('Initializing secure payment...', false);
+    console.log('🔄 Loading payment methods...');
+    showMessage('Loading payment methods...', false);
     
     await initializeStripePayment();
 
     // Initialize Stripe Payment Element
     async function initializeStripePayment() {
-        // Validate form first
-        if (!checkoutForm.checkValidity()) {
-            console.log('Form not valid yet, waiting for user input');
-            return;
-        }
-
         // Get cart and customer data
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const formData = new FormData(checkoutForm);
-        const customerData = Object.fromEntries(formData.entries());
-
+        
         if (cart.length === 0) {
             showMessage('Your cart is empty', true);
             return;
         }
 
+        // Get form data if available, otherwise use defaults
+        const formData = new FormData(checkoutForm);
+        const customerData = Object.fromEntries(formData.entries());
+
         try {
+            console.log('Creating payment intent...');
             // Create PaymentIntent on the server
             const response = await fetch('/api/payment-intents', {
                 method: 'POST',
@@ -143,11 +175,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             const { clientSecret: secret, orderNumber } = await response.json();
             clientSecret = secret;
+            console.log('✅ Payment intent created successfully');
 
             // Store order number for confirmation page
             localStorage.setItem('orderNumber', orderNumber);
 
             // Create Stripe Elements instance
+            console.log('🔄 Creating payment element...');
             const appearance = {
                 theme: 'stripe',
                 variables: {
@@ -166,11 +200,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             paymentElement = elements.create('payment');
             paymentElement.mount('#payment-element');
 
-            console.log('Stripe Payment Element initialized successfully');
+            console.log('✅ Stripe Payment Element mounted successfully');
+            console.log('✅ Payment methods loaded - user can now select payment method');
+            
+            // Hide the initializing message
+            paymentMessage.style.display = 'none';
+            console.log('✅ Initializing message hidden');
 
         } catch (error) {
             console.error('Error initializing payment:', error);
-            showMessage(error.message, true);
+            showMessage('Failed to initialize payment: ' + error.message, true);
+            
+            // Provide fallback instruction
+            setTimeout(() => {
+                showMessage('Please try refreshing the page or contact support if the issue persists.', true);
+            }, 3000);
         }
     }
 
@@ -242,12 +286,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
-    // Re-initialize payment when form is filled
-    checkoutForm.addEventListener('change', async function() {
-        if (checkoutForm.checkValidity() && !clientSecret) {
-            await initializeStripePayment();
-        }
-    });
+    // Payment element is now initialized immediately on page load
+    // No need to wait for form to be filled
 
     // Add styles for Stripe Payment Element and messages
     const style = document.createElement('style');

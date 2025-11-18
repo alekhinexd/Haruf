@@ -80,9 +80,10 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Store version toggle: 'full' or 'simple'
-const STORE_VERSION = process.env.STORE_VERSION || 'full';
-const PUBLIC_DIR = STORE_VERSION === 'simple' ? 'public-simple' : 'public';
+// Store version - always use 'full' for main store
+// The 'simple' version is deprecated and should not be used
+const STORE_VERSION = 'full';
+const PUBLIC_DIR = 'public';
 
 console.log(`🏪 Running ${STORE_VERSION} store version`);
 console.log(`📁 Serving from: ${PUBLIC_DIR}`);
@@ -174,8 +175,17 @@ const { products } = require('./public/js/data/products.js');
 
 // Endpoint to serve Stripe publishable key to frontend
 app.get('/api/stripe-config', (req, res) => {
+    if (!STRIPE_PUBLISHABLE_KEY) {
+        console.error('❌ Stripe publishable key not configured!');
+        return res.status(500).json({ 
+            error: 'Payment system not configured. Please contact support.',
+            publishableKey: ''
+        });
+    }
+    
+    console.log('✅ Stripe config requested - key available');
     res.json({ 
-        publishableKey: STRIPE_PUBLISHABLE_KEY || ''
+        publishableKey: STRIPE_PUBLISHABLE_KEY
     });
 });
 
