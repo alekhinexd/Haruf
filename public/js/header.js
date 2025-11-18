@@ -42,4 +42,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
     }
+
+    // Prevent annoying double-tap zoom on mobile while keeping normal taps
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
 });

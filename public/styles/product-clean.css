@@ -1,0 +1,92 @@
+/* CLEAN PRODUCT PAGE - DESKTOP ONLY */
+
+.product-page {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-image {
+    width: 100%;
+}
+
+.product-image img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: contain;
+}
+
+.product-details {
+    width: 100%;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #080046;
+    margin-bottom: 20px;
+}
+
+.product__rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #080046;
+    margin-bottom: 20px;
+}
+
+.variant-selector {
+    margin-bottom: 20px;
+}
+
+.quantity-selector {
+    margin-bottom: 20px;
+}
+
+.feature-icons-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.product-button {
+    width: 100%;
+    padding: 16px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #080046;
+}
+
+.product-button--primary {
+    background: #080046;
+    color: white;
+}
+
+.product-button--outline {
+    background: white;
+    color: #080046;
+}
+

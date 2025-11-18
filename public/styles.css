@@ -1,10 +1,10 @@
 /* Reset and Base Styles */
 :root {
-    --primary-color: #0A0F2C;
+    --primary-color: #080046;
     --secondary-color: #333;
     --accent-color: #ff4d4d;
     --background-color: #fff;
-    --text-color: #0A0F2C;
+    --text-color: #080046;
     --border-color: #e5e5e5;
     --success-color: #4CAF50;
     --error-color: #f44336;
@@ -293,7 +293,7 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #0A0F2C;
+    background-color: #080046;
     color: white;
     padding: 60px 0 30px;
 }

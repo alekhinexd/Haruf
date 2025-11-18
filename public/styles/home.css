@@ -64,7 +64,7 @@
 .button.button--primary {
     font-size: 18px;
     padding: 15px 40px;
-    background-color: #0A0F2C;
+    background-color: #080046;
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -92,18 +92,18 @@
 .button.button--outline:hover {
     transform: translateY(-2px);
     background-color: white;
-    color: #0A0F2C;
+    color: #080046;
 }
 
 /* Override button styles in hero section */
 .hero .button.button--primary {
     background-color: white;
-    color: #0A0F2C;
+    color: #080046;
 }
 
 .hero .button.button--primary:hover {
     background-color: white;
-    color: #0A0F2C;
+    color: #080046;
     opacity: 0.9;
 }
 
@@ -344,7 +344,8 @@
     padding: 60px 20px;
     background-color: white;
     margin-bottom: 40px;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .features__content {
@@ -653,7 +654,7 @@
 .bundle-card .add-to-cart-btn {
     width: 100%;
     padding: 12px;
-    background: #0A0F2C;
+    background: #080046;
     color: white;
     border: none;
     cursor: pointer;
@@ -726,7 +727,7 @@
 
 .our-story__content h2 {
     font-size: 36px;
-    color: #0A0F2C;
+    color: #080046;
     margin-bottom: 30px;
     font-weight: 700;
 }
@@ -795,7 +796,7 @@
 .spotlight-bestseller__title {
     text-align: center;
     font-size: 36px;
-    color: #0A0F2C;
+    color: #080046;
     margin-bottom: 40px;
     font-weight: 700;
 }
@@ -869,7 +870,7 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    background-color: #0A0F2C;
+    background-color: #080046;
     color: white;
     padding: 8px 16px;
     border-radius: 4px;
@@ -883,7 +884,7 @@
 
 .spotlight-bestseller__content h3 {
     font-size: 32px;
-    color: #0A0F2C;
+    color: #080046;
     margin-bottom: 20px;
     font-weight: 700;
 }
@@ -895,7 +896,7 @@
 .spotlight-bestseller__price .price {
     font-size: 24px;
     font-weight: 700;
-    color: #0A0F2C;
+    color: #080046;
     margin-right: 12px;
 }
 
@@ -913,14 +914,14 @@
 }
 
 .spotlight-bestseller__description strong {
-    color: #0A0F2C;
+    color: #080046;
 }
 
 .spotlight-bestseller .button.button--primary {
     display: inline-block;
     padding: 15px 40px;
     font-size: 18px;
-    background-color: #0A0F2C;
+    background-color: #080046;
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -1069,3 +1070,4 @@
         text-align: center;
     }
 }
+

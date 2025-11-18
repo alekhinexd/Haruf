@@ -98,6 +98,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // When returning from checkout via browser back/forward cache, reset checkout button style
+    window.addEventListener('pageshow', () => {
+        const btn = document.getElementById('checkout-button');
+        if (btn) {
+            btn.disabled = false;
+            btn.style.backgroundColor = '#000000';
+            btn.style.cursor = 'pointer';
+        }
+    });
+
     // Quantity Controls with black color scheme
     if (minusButton && plusButton && quantityInput) {
         minusButton.addEventListener('click', () => {
@@ -193,15 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutButton.style.backgroundColor = '#000000';
         });
 
+        // Ensure button looks active on load
+        checkoutButton.disabled = false;
+        checkoutButton.style.backgroundColor = '#000000';
+
         checkoutButton.addEventListener('click', () => {
-            if (!currentProduct) {
+            if (!currentProduct || !currentProduct.selectedVariant) {
                 alert('Product not found');
                 return;
             }
 
-            // Add to cart first without showing notification
             const quantity = parseInt(document.getElementById('quantity')?.value || '1');
-            
+
             // Create variant info string
             let variantInfo = '';
             if (currentProduct.options && currentProduct.options.length > 0) {
@@ -212,50 +225,61 @@ document.addEventListener('DOMContentLoaded', () => {
                         variantDetails.push(`${option.name}: ${optionValue}`);
                     }
                 });
-                
+
                 if (variantDetails.length > 0) {
                     variantInfo = variantDetails.join(', ');
                 }
             }
-            
-            // Add item directly to cart
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingItem = cart.find(item => 
-                item.handle === currentProduct.handle && 
-                item.variant === (variantInfo || 'Default')
-            );
-            
-            if (existingItem) {
-                existingItem.quantity += quantity;
+
+            const productForCart = {
+                handle: currentProduct.handle,
+                title: currentProduct.title,
+                price: currentProduct.selectedVariant.price,
+                image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src,
+                quantity,
+                variant: variantInfo || 'Default',
+                selectedVariant: {
+                    options: currentProduct.options ? currentProduct.options.map((option, index) => ({
+                        name: option.name,
+                        value: currentProduct.selectedVariant[`option${index + 1}`] || 'Default'
+                    })) : []
+                },
+                skipNotification: true
+            };
+
+            // Use shared cart/addToCart logic when available
+            if (typeof addToCart === 'function' || window.addToCart) {
+                (typeof addToCart === 'function' ? addToCart : window.addToCart)(productForCart);
             } else {
-                cart.push({
-                    handle: currentProduct.handle,
-                    title: currentProduct.title,
-                    price: currentProduct.selectedVariant.price,
-                    image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src,
-                    quantity,
-                    variant: variantInfo || 'Default',
-                    selectedVariant: {
-                        options: currentProduct.options ? currentProduct.options.map((option, index) => ({
-                            name: option.name,
-                            value: currentProduct.selectedVariant[`option${index + 1}`] || 'Default'
-                        })) : [],
-                        variantId: currentProduct.selectedVariant.id
+                // Fallback: write to localStorage.cart directly (same shape as cart.js)
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                const existingItem = cart.find(item => {
+                    if (item.selectedVariant && productForCart.selectedVariant) {
+                        return item.handle === productForCart.handle &&
+                               JSON.stringify(item.selectedVariant.options) === JSON.stringify(productForCart.selectedVariant.options);
                     }
+                    return item.handle === productForCart.handle;
                 });
+
+                if (existingItem) {
+                    existingItem.quantity += productForCart.quantity || 1;
+                } else {
+                    cart.push({
+                        handle: productForCart.handle,
+                        title: productForCart.title,
+                        price: parseFloat(productForCart.price),
+                        image: productForCart.image,
+                        quantity: productForCart.quantity || 1,
+                        variant: productForCart.variant || 'Default',
+                        selectedVariant: productForCart.selectedVariant || null
+                    });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
             }
-            
-            // Save cart and update UI
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Update cart count before redirecting
-            const cartCountElements = document.querySelectorAll('#cart-count, #mobile-cart-count');
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            cartCountElements.forEach(element => {
-                element.textContent = totalItems.toString();
-            });
-            
-            // Redirect to checkout page
+
+            // Redirect straight to checkout
             window.location.href = '/pages/checkout.html';
         });
     }
@@ -555,9 +579,15 @@ function displayProduct(product) {
     function updatePrice(variant) {
         if (priceElement && variant) {
             if (variant.compare_at_price) {
+                const discount = Math.round(((variant.compare_at_price - variant.price) / variant.compare_at_price) * 100);
                 priceElement.innerHTML = `
-                    <span class="price-item price-item--sale">€${variant.price}</span>
-                    <s class="price-item price-item--regular">€${variant.compare_at_price}</s>
+                    <div class="price-wrapper">
+                        <s class="compare-price">€${variant.compare_at_price}</s>
+                        <div class="price-sale-group">
+                            <span class="price-item price-item--sale">€${variant.price}</span>
+                            <span class="sale-badge"><i class="fas fa-tag"></i>Save ${discount}%</span>
+                        </div>
+                    </div>
                 `;
             } else {
                 priceElement.innerHTML = `<span class="price-item">€${variant.price}</span>`;

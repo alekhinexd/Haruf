@@ -298,25 +298,23 @@ function resetCheckoutButton(button) {
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
 
-    // Initialize checkout button
+    // Initialize checkout button (cart and other pages only, not product page)
     const checkoutButton = document.getElementById('checkout-button');
-    if (checkoutButton) {
+    const isProductPage = window.location.pathname.includes('product.html');
+    if (checkoutButton && !isProductPage) {
         checkoutButton.addEventListener('click', () => {
-            // Get current page path
-            const isProductPage = window.location.pathname.includes('product.html');
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
-            // Only check for empty cart if we're NOT on the product page
-            if (cart.length === 0 && !isProductPage) {
+
+            if (cart.length === 0) {
                 alert('Your cart is empty. Please add items to your cart before checkout.');
                 return;
             }
-            
+
             // Show loading state
             checkoutButton.disabled = true;
             checkoutButton.textContent = 'Processing...';
             checkoutButton.style.backgroundColor = '#333333';
-            
+
             // Redirect to checkout page
             window.location.href = '/pages/checkout.html';
         });

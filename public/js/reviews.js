@@ -31,7 +31,7 @@ async function loadReviews() {
         // Update UI after loading reviews
         updateProductCards();
         updateProductPage();
-        addReviewsCarousel();
+        // Do not inject the extra homepage 'Let our Customers Speak' section anymore
     } catch (error) {
         console.error('Error loading reviews:', error);
     }
@@ -137,28 +137,94 @@ function updateReviewsList(productReviews) {
     const reviewsList = document.querySelector('.reviews-section__list');
     if (!reviewsList) return;
 
+    // Render as a carousel on the product page
     reviewsList.innerHTML = `
-        ${reviewsToShow.map(review => `
-            <div class="review-card">
-                <div class="review-card__header">
-                    ${generateStarRating(parseInt(review.rating))}
-                    <span class="review-card__author">${review.reviewer_name}</span>
-                    <span class="review-card__date">${formatDate(review.review_date)}</span>
-                </div>
-                <div class="review-card__body">
-                    <p>${review.body}</p>
-                </div>
-                ${review.picture_urls ? `
-                    <div class="review-card__images">
-                        ${review.picture_urls.split(',').map(url => `
-                            <img src="${url.trim()}" alt="Review image" loading="lazy">
-                        `).join('')}
-                    </div>
-                ` : ''}
+        <div class="reviews-carousel reviews-carousel--product">
+            <div class="carousel-controls">
+                <button class="carousel-control prev" aria-label="Previous review">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control next" aria-label="Next review">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-        `).join('')}
-        ${generatePagination(productReviews.length)}
+            <div class="carousel-container">
+                ${reviewsToShow.map(review => `
+                    <div class="review-card">
+                        <div class="review-card__header">
+                            ${generateStarRating(parseInt(review.rating))}
+                            <span class="review-card__author">${review.reviewer_name}</span>
+                            <span class="review-card__date">${formatDate(review.review_date)}</span>
+                        </div>
+                        <div class="review-card__body">
+                            <p>${review.body}</p>
+                        </div>
+                        ${review.picture_urls ? `
+                            <div class="review-card__images">
+                                ${review.picture_urls.split(',').map(url => `
+                                    <img src="${url.trim()}" alt="Review image" loading="lazy">
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
     `;
+
+    // Attach simple carousel logic (single card viewport)
+    const container = reviewsList.querySelector('.carousel-container');
+    const prevBtn = reviewsList.querySelector('.carousel-control.prev');
+    const nextBtn = reviewsList.querySelector('.carousel-control.next');
+    if (!container || !prevBtn || !nextBtn) return;
+
+    let position = 0;
+
+    function updateButtons() {
+        const cards = container.querySelectorAll('.review-card');
+        if (!cards.length) return;
+
+        const cardWidth = cards[0].offsetWidth + 24; // include gap
+        const visibleWidth = container.parentElement.offsetWidth;
+        const visibleCards = Math.max(1, Math.floor(visibleWidth / cardWidth));
+        const maxPosition = Math.max(0, cards.length - visibleCards);
+
+        position = Math.max(0, Math.min(position, maxPosition));
+        const currentScroll = position * cardWidth;
+        const maxScroll = container.scrollWidth - visibleWidth;
+
+        prevBtn.disabled = currentScroll <= 0;
+        nextBtn.disabled = currentScroll >= maxScroll || position >= maxPosition;
+
+        prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+        nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+    }
+
+    function slide(direction) {
+        const cards = container.querySelectorAll('.review-card');
+        if (!cards.length) return;
+
+        const cardWidth = cards[0].offsetWidth + 24;
+        const visibleWidth = container.parentElement.offsetWidth;
+        const visibleCards = Math.max(1, Math.floor(visibleWidth / cardWidth));
+        const maxPosition = Math.max(0, cards.length - visibleCards);
+
+        if (direction === 'next' && position < maxPosition) {
+            position++;
+        } else if (direction === 'prev' && position > 0) {
+            position--;
+        }
+
+        container.style.transform = `translateX(-${position * cardWidth}px)`;
+        updateButtons();
+    }
+
+    window.addEventListener('resize', updateButtons);
+    prevBtn.addEventListener('click', () => slide('prev'));
+    nextBtn.addEventListener('click', () => slide('next'));
+
+    // Initial state
+    setTimeout(updateButtons, 0);
 }
 
 // Update all product cards with reviews
@@ -199,7 +265,7 @@ function updateProductPage() {
     const rating = getProductRating(productHandle);
     if (!rating || rating.count === 0) return;
 
-    const titleEl = document.querySelector('.product__title');
+    const titleEl = document.querySelector('.product-title');
     if (!titleEl) return;
 
     // Add rating summary below product title
@@ -210,52 +276,18 @@ function updateProductPage() {
         </div>
     `;
     titleEl.insertAdjacentHTML('afterend', ratingHtml);
-
-    // Add reviews section after product info
-    const productReviews = getProductReviews(productHandle);
-    const reviewsSection = document.createElement('section');
-    reviewsSection.id = 'reviews-section';
-    reviewsSection.className = 'reviews-section';
-
-    reviewsSection.innerHTML = `
-        <div class="reviews-section__header">
-            <div class="reviews-section__summary">
-                <h2>Customer Reviews</h2>
-                <div class="reviews-section__average">
-                    ${generateStarRating(parseFloat(rating.average), 'large')}
-                    <span class="reviews-section__average-text">${rating.average} out of 5</span>
-                </div>
-                <div class="reviews-section__count">${rating.count} reviews</div>
-                <div class="reviews-section__distribution">
-                    ${Object.entries(rating.distribution).reverse().map(([stars, count]) => `
-                        <div class="rating-bar">
-                            <span class="rating-bar__label">${stars} stars</span>
-                            <div class="rating-bar__bar">
-                                <div class="rating-bar__fill" style="width: ${(count / rating.count * 100)}%"></div>
-                            </div>
-                            <span class="rating-bar__count">${count}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </div>
-        <div class="reviews-section__list"></div> <!-- Empty list for now -->
-    `;
-
-    // Append the reviews section to the product info
-    const productInfo = document.querySelector('.product__info');
-    if (productInfo) {
-        productInfo.parentNode.insertBefore(reviewsSection, productInfo.nextSibling);
-    }
-
-    // Now update the reviews list
-    updateReviewsList(productReviews);
+    
+    // We only want the rating under the title; the page already has its own
+    // "What Our Customers Say" section in the HTML, so do not inject an
+    // additional reviews layout here.
 }
 
 // Add customer reviews carousel to homepage
 function addReviewsCarousel() {
-    // Only add to homepage
-    if (!document.querySelector('.hero')) return;
+    // Only add to homepage (detect by path to be robust against layout changes)
+    const path = window.location.pathname;
+    const isHomepage = path === '/' || path === '/index.html' || path === '';
+    if (!isHomepage) return;
 
     // Get top rated reviews
     const topReviews = [...reviews]

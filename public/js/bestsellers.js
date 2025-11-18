@@ -5,14 +5,49 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadBestsellers() {
     try {
         const products = window.shopifyProducts || [];
-        const bestsellers = products
-            .filter(product => !product.title.toLowerCase().includes('bundle'))
-            .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
-            .slice(0, 12);
+        // Custom bestseller selection in a fixed priority order
+        const priorityGroups = [
+            // 1) AirPods (small in-ears, explicitly excluding AirPods 4)
+            p => titleIncludes(p, ['airpods pro 2', 'airpods pro', 'airpods']) && !titleIncludes(p, ['airpods 4']),
+            // 2) AirPods Max (over-ear)
+            p => titleIncludes(p, ['airpods max']),
+            // 3) Moncler jacket
+            p => titleIncludes(p, ['moncler maya']),
+            // 4) All Tom Ford perfumes
+            p => titleIncludes(p, ['tom ford']),
+            // 5) iPhones
+            p => titleIncludes(p, ['iphone 16', 'iphone 15', 'iphone']),
+            // 6) Samsung phones (e.g. S23 Ultra)
+            p => titleIncludes(p, ['s23 ultra', 'galaxy s23', 'samsung'])
+        ];
+
+        const usedHandles = new Set();
+        const ordered = [];
+
+        for (const matches of priorityGroups) {
+            products.forEach(product => {
+                if (usedHandles.has(product.handle)) return;
+                if (matches(product)) {
+                    ordered.push(product);
+                    usedHandles.add(product.handle);
+                }
+            });
+        }
+
+        const bestsellers = ordered.slice(0, 12);
         displayBestsellers(bestsellers);
     } catch (error) {
         console.error('Error loading bestsellers:', error);
     }
+}
+
+function titleIncludes(product, keywords) {
+    const title = (product.title || '').toLowerCase();
+    const handle = (product.handle || '').toLowerCase();
+    return keywords.some(keyword => {
+        const k = keyword.toLowerCase();
+        return title.includes(k) || handle.includes(k);
+    });
 }
 
 function displayBestsellers(products) {

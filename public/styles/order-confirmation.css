@@ -32,7 +32,7 @@
 
 .confirmation-header h1 {
     font-size: 1.75rem;
-    color: #0A0F2C;
+    color: #080046;
     margin-bottom: 0.5rem;
 }
 
@@ -48,7 +48,7 @@
 .confirmation-section h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: #0A0F2C;
+    color: #080046;
 }
 
 /* Order Items Styles */
@@ -131,7 +131,7 @@
 .continue-shopping {
     display: inline-block;
     padding: 1rem 2rem;
-    background-color: #0A0F2C;
+    background-color: #080046;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
@@ -140,7 +140,7 @@
 }
 
 .continue-shopping:hover {
-    background-color: #0A0F2C;
+    background-color: #080046;
     opacity: 0.9;
 }
 
@@ -163,3 +163,4 @@
         height: 60px;
     }
 }
+

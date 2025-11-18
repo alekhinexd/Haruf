@@ -281,7 +281,7 @@ app.get('/api/verify-payment/:paymentIntentId', async (req, res) => {
 // Product detail page route - must come before static file handling
 app.get('/pages/product.html', (req, res) => {
     console.log('Serving product detail page');
-    res.sendFile(path.join(__dirname, 'public', 'pages', 'product.html'));
+    res.sendFile(path.join(__dirname, PUBLIC_DIR, 'pages', 'product.html'));
 });
 
 // API route for product data
@@ -365,12 +365,12 @@ app.get('/api/test-email', async (req, res) => {
 
 // Frontend Routes
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, PUBLIC_DIR, 'index.html'));
 });
 
 // Handle other static pages
 app.get('/pages/*', (req, res, next) => {
-    const filePath = path.join(__dirname, 'public', req.path);
+    const filePath = path.join(__dirname, PUBLIC_DIR, req.path);
     res.sendFile(filePath, (err) => {
         if (err) {
             next();
@@ -380,7 +380,7 @@ app.get('/pages/*', (req, res, next) => {
 
 // Catch-all route for SPA
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, PUBLIC_DIR, 'index.html'));
 });
 
 app.listen(port, () => {

@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "dev:full": "SET STORE_VERSION=full&& nodemon server.js",
+    "dev:simple": "SET STORE_VERSION=simple&& nodemon server.js",
+    "start:full": "SET STORE_VERSION=full&& node server.js",
+    "start:simple": "SET STORE_VERSION=simple&& node server.js"
   },
   "keywords": ["ecommerce", "resale", "marketplace"],
   "author": "Dupelify",

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dupelify - Premium 1:1 Products</title>
     <meta name="description" content="Rated #1 Best Supplier in 2025. High quality 1:1 products with original packaging and receipt.">
     <link rel="icon" href="/images/logo/favicon.ico" type="image/x-icon">
@@ -95,6 +95,15 @@
                     <div class="products-scroll" id="featured-products">
                         <!-- Products will be loaded dynamically -->
                     </div>
+                    <div class="bestsellers-controls">
+                        <button class="bestsellers-control prev" id="bestsellers-prev" aria-label="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="carousel-counter" id="bestsellers-counter">1/1</span>
+                        <button class="bestsellers-control next" id="bestsellers-next" aria-label="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -108,7 +117,7 @@
                 <!-- Image + Text Layout -->
                 <div class="content-with-image">
                     <div class="content-image">
-                        <img src="images/content/reselling-success.jpg" alt="Reselling Success" loading="lazy">
+                        <img src="/images/content/reselling-success.png" alt="Reselling Success" class="hero-image" />
                     </div>
                     <div class="content-text">
                         <h3>Start Your Reselling Journey Today</h3>
@@ -147,80 +156,47 @@
             </div>
         </section>
 
-        <!-- Trust Section -->
-        <section class="trust-section">
+        <!-- Category Cards Section -->
+        <section class="category-cards-section">
             <div class="container">
-                <h2 class="section-heading">We were rated #1 because of our high quality</h2>
-                <div class="trust-badges">
-                    <div class="trust-badge">
-                        <i class="fas fa-undo badge-icon"></i>
-                        <p>Easy 30-Day Returns</p>
-                    </div>
-                    <div class="trust-badge">
-                        <i class="fas fa-file-invoice badge-icon"></i>
-                        <p>Receipt Included with Every Purchase</p>
-                    </div>
-                    <div class="trust-badge">
-                        <i class="fas fa-box-open badge-icon"></i>
-                        <p>Original Packaging Included</p>
-                    </div>
-                    <div class="trust-badge">
-                        <i class="fas fa-comments badge-icon"></i>
-                        <p>24/7 Customer Support</p>
-                    </div>
+                <h2 class="section-heading">Shop by Category</h2>
+                <div class="category-cards-track" id="category-cards-track">
+                    <a href="/pages/products.html?category=electronics" class="category-card">
+                        <div class="category-card__image-wrapper">
+                            <img src="https://cdn.shopify.com/s/files/1/0953/0871/0272/files/Bild19.jpg?v=1762099326" alt="Electronics - AirPods" class="category-card__image">
+                        </div>
+                        <h3>Electronics</h3>
+                        <p>Phones, AirPods, consoles and more.</p>
+                    </a>
+                    <a href="/pages/products.html?category=clothing" class="category-card">
+                        <div class="category-card__image-wrapper">
+                            <img src="https://cdn.shopify.com/s/files/1/0953/0871/0272/files/07e84d_6d869f53bc43432a820d01b544d5a46b_mv2.webp?v=1762099317" alt="Clothing - Moncler Maya Jacket" class="category-card__image">
+                        </div>
+                        <h3>Clothing &amp; Accessories</h3>
+                        <p>Sneakers, jackets, bags and fashion.</p>
+                    </a>
+                    <a href="/pages/products.html?category=perfumes" class="category-card">
+                        <div class="category-card__image-wrapper">
+                            <img src="https://cdn.shopify.com/s/files/1/0953/0871/0272/files/Bildschirmfoto2025-10-13um11.29.48.png?v=1762099292" alt="Perfumes - Tom Ford Tobacco Vanile" class="category-card__image">
+                        </div>
+                        <h3>Perfumes</h3>
+                        <p>Top designer fragrances.</p>
+                    </a>
+                    <a href="/pages/products.html" class="category-card">
+                        <div class="category-card__image-wrapper">
+                            <img src="https://cdn.shopify.com/s/files/1/0953/0871/0272/files/IMG-2694.png?v=1762099345" alt="All Products" class="category-card__image">
+                        </div>
+                        <h3>All Products</h3>
+                        <p>Discover the full collection.</p>
+                    </a>
                 </div>
-                <div style="text-align: center;">
-                    <a href="/pages/products.html" class="btn-clonify">Shop Now</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Why We're The Best Section -->
-        <section class="why-best" style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('images/hero/banner1.jpg'); background-size: cover; background-position: center;">
-            <div class="container" style="position: relative; z-index: 10;">
-                <h2 class="section-heading" style="color: white;">Your Success Is Our Mission</h2>
-                <p class="section-subheading" style="color: white;">Premium 1:1 products with authentic packaging and dedicated support.</p>
-                <a href="/pages/contact.html" class="btn-clonify">Contact Us</a>
-            </div>
-        </section>
-
-        <!-- Guarantee Section -->
-        <section class="guarantee-section">
-            <div class="container">
-                <div class="guarantee-grid">
-                    <div class="guarantee-item">
-                        <h3>Our 30-Day Risk-Free Guarantee</h3>
-                        <p>Try our product risk-free with our 30-day money-back guarantee. For more Information about Returns please check our refund policy.</p>
-                    </div>
-                    <div class="guarantee-item">
-                        <h3>24/7 Support</h3>
-                        <p>Feel free to contact us if you face any issue. Our support will give their best to solve any problem you face within hours.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ Section -->
-        <section class="faq-section">
-            <div class="container">
-                <h2 class="section-heading">FAQ</h2>
-                <div class="faq-list">
-                    <details class="faq-item">
-                        <summary>How long does shipping take?</summary>
-                        <p>Standard shipping takes 4-7 business days. We offer express shipping options for faster delivery.</p>
-                    </details>
-                    <details class="faq-item">
-                        <summary>Can you see the difference?</summary>
-                        <p>Our products are 1:1 replicas with the exact same quality, materials, and packaging as the originals.</p>
-                    </details>
-                    <details class="faq-item">
-                        <summary>Is reselling legal?</summary>
-                        <p>Yes, reselling products is completely legal. You own the products you purchase and can resell them.</p>
-                    </details>
-                    <details class="faq-item">
-                        <summary>Do products have receipt?</summary>
-                        <p>Yes! Every purchase includes an original-looking receipt and packaging for authentic reselling.</p>
-                    </details>
+                <div class="category-cards-controls">
+                    <button class="category-cards-control prev" id="category-prev" aria-label="Previous category">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="category-cards-control next" id="category-next" aria-label="Next category">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </section>
@@ -281,12 +257,65 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <p class="testimonial-text">"Fast shipping, premium quality, and the tutorial included helped me start immediately. Already made back my investment in the first week!"</p>
+                            <p class="testimonial-text">"Fast shipping, great quality, and amazing customer service. I've been using them for 6 months and have never had an issue. Highly recommend!"</p>
                             <div class="testimonial-author">
                                 <strong>David M.</strong>
                                 <span>Verified Buyer</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Section -->
+        <section class="trust-section">
+            <div class="container">
+                <h2 class="section-heading">We were rated #1 because of our high quality</h2>
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-undo badge-icon"></i>
+                        <p>Easy 30-Day Returns</p>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-file-invoice badge-icon"></i>
+                        <p>Receipt Included with Every Purchase</p>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-box-open badge-icon"></i>
+                        <p>Original Packaging Included</p>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-comments badge-icon"></i>
+                        <p>24/7 Customer Support</p>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <a href="/pages/products.html" class="btn-clonify">Shop Now</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why We're The Best Section -->
+        <section class="why-best" style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('images/hero/banner1.jpg'); background-size: cover; background-position: center;">
+            <div class="container" style="position: relative; z-index: 10;">
+                <h2 class="section-heading" style="color: white;">Your Success Is Our Mission</h2>
+                <p class="section-subheading" style="color: white;">Premium 1:1 products with authentic packaging and dedicated support.</p>
+                <a href="/pages/contact.html" class="btn-clonify">Contact Us</a>
+            </div>
+        </section>
+
+        <!-- Guarantee Section -->
+        <section class="guarantee-section">
+            <div class="container">
+                <div class="guarantee-grid">
+                    <div class="guarantee-item">
+                        <h3>Our 30-Day Risk-Free Guarantee</h3>
+                        <p>Try our product risk-free with our 30-day money-back guarantee. For more Information about Returns please check our refund policy.</p>
+                    </div>
+                    <div class="guarantee-item">
+                        <h3>24/7 Support</h3>
+                        <p>Feel free to contact us if you face any issue. Our support will give their best to solve any problem you face within hours.</p>
                     </div>
                 </div>
             </div>
@@ -341,6 +370,50 @@
             </div>
         </section>
 
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <h2 class="section-heading">FAQ</h2>
+                <div class="faq-list">
+                    <button class="collapsible"><i class="fas fa-question-circle"></i>&nbsp;How long does shipping take?
+                        <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="content">
+                        <p>Standard shipping takes 4-7 business days. We offer express shipping options for faster delivery.</p>
+                    </div>
+
+                    <button class="collapsible"><i class="fas fa-question-circle"></i>&nbsp;Can you see the difference?
+                        <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="content">
+                        <p>Our products are 1:1 replicas with the exact same quality, materials, and packaging as the originals.</p>
+                    </div>
+
+                    <button class="collapsible"><i class="fas fa-question-circle"></i>&nbsp;Is reselling legal?
+                        <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="content">
+                        <p>Yes, reselling products is completely legal. You own the products you purchase and can resell them.</p>
+                    </div>
+
+                    <button class="collapsible"><i class="fas fa-question-circle"></i>&nbsp;Do products have receipt?
+                        <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="content">
+                        <p>Yes! Every purchase includes an original-looking receipt and packaging for authentic reselling.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact CTA -->
         <section class="profitable-reselling" style="padding: 60px 20px;">
             <div class="container" style="text-align: center;">
@@ -357,6 +430,8 @@
     <script src="js/data/products.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/clonify-home.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="js/testimonials-carousel.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/mobile-menu.js"></script>
 </body>

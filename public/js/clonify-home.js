@@ -2,22 +2,79 @@
 document.addEventListener('DOMContentLoaded', function() {
     loadFeaturedProducts();
     updateCartCount();
+    // Initialize carousels after products are loaded
+    setTimeout(() => {
+        initBestsellersCarousel();
+        initCategoryCarousel();
+    }, 100);
+    // Initialize collapsible FAQ sections
+    initCollapsibles();
 });
+
+// Initialize collapsible sections
+function initCollapsibles() {
+    const collapsibles = document.querySelectorAll('.collapsible');
+    collapsibles.forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content && content.classList.contains('content')) {
+                content.classList.toggle('active');
+            }
+        });
+    });
+}
 
 // Load featured products into horizontal scroll
 function loadFeaturedProducts() {
     const container = document.getElementById('featured-products');
     if (!container) return;
 
-    // Use same logic as bestsellers - filter bundles and sort by rating
-    const featuredProducts = products
-        .filter(product => !product.title.toLowerCase().includes('bundle'))
-        .sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0))
-        .slice(0, 12);
+    const allProducts = (typeof window !== 'undefined' && window.shopifyProducts) ? window.shopifyProducts : (typeof products !== 'undefined' ? products : []);
+
+    // Custom bestseller selection in a fixed priority order
+    const priorityGroups = [
+        // 1) AirPods (small in-ears, explicitly excluding AirPods 4)
+        p => titleIncludesHome(p, ['airpods pro 2', 'airpods pro', 'airpods']) && !titleIncludesHome(p, ['airpods 4']),
+        // 2) AirPods Max (over-ear)
+        p => titleIncludesHome(p, ['airpods max']),
+        // 3) Moncler jacket
+        p => titleIncludesHome(p, ['moncler maya']),
+        // 4) All Tom Ford perfumes
+        p => titleIncludesHome(p, ['tom ford']),
+        // 5) iPhones
+        p => titleIncludesHome(p, ['iphone 16', 'iphone 15', 'iphone']),
+        // 6) Samsung phones (e.g. S23 Ultra)
+        p => titleIncludesHome(p, ['s23 ultra', 'galaxy s23', 'samsung'])
+    ];
+
+    const usedHandles = new Set();
+    const ordered = [];
+
+    for (const matches of priorityGroups) {
+        allProducts.forEach(product => {
+            if (usedHandles.has(product.handle)) return;
+            if (matches(product)) {
+                ordered.push(product);
+                usedHandles.add(product.handle);
+            }
+        });
+    }
+
+    const featuredProducts = ordered.slice(0, 12);
 
     featuredProducts.forEach(product => {
         const productCard = createProductCard(product);
         container.appendChild(productCard);
+    });
+}
+
+function titleIncludesHome(product, keywords) {
+    const title = (product.title || '').toLowerCase();
+    const handle = (product.handle || '').toLowerCase();
+    return keywords.some(keyword => {
+        const k = keyword.toLowerCase();
+        return title.includes(k) || handle.includes(k);
     });
 }
 
@@ -64,6 +121,118 @@ function createProductCard(product) {
     `;
 
     return card;
+}
+
+// Initialize Bestsellers scroll controls
+function initBestsellersCarousel() {
+    const container = document.getElementById('featured-products');
+    const prevBtn = document.getElementById('bestsellers-prev');
+    const nextBtn = document.getElementById('bestsellers-next');
+    const counter = document.getElementById('bestsellers-counter');
+    if (!container || !prevBtn || !nextBtn || !counter) return;
+
+    function scrollByStep(direction) {
+        const step = container.clientWidth * 0.7; // show ~1.5 cards
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const current = container.scrollLeft;
+        let target = direction === 'next' ? current + step : current - step;
+        if (target < 0) target = 0;
+        if (target > maxScroll) target = maxScroll;
+        container.scrollTo({ left: target, behavior: 'smooth' });
+    }
+
+    function updateCounter() {
+        const cards = container.querySelectorAll('.product-card-scroll');
+        const totalProducts = cards.length;
+        
+        if (totalProducts === 0) {
+            counter.textContent = '0/0';
+            return;
+        }
+        
+        // Find which product is most visible in the viewport
+        const containerRect = container.getBoundingClientRect();
+        const containerCenter = containerRect.left + containerRect.width / 2;
+        
+        let closestCard = 1;
+        let closestDistance = Infinity;
+        
+        cards.forEach((card, index) => {
+            const cardRect = card.getBoundingClientRect();
+            const cardCenter = cardRect.left + cardRect.width / 2;
+            const distance = Math.abs(cardCenter - containerCenter);
+            
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestCard = index + 1;
+            }
+        });
+        
+        counter.textContent = `${closestCard}/${totalProducts}`;
+    }
+
+    function updateButtons() {
+        const maxScroll = container.scrollWidth - container.clientWidth - 1; // small tolerance
+        const atStart = container.scrollLeft <= 0;
+        const atEnd = container.scrollLeft >= maxScroll;
+
+        prevBtn.classList.toggle('disabled', atStart);
+        nextBtn.classList.toggle('disabled', atEnd);
+        
+        updateCounter();
+    }
+
+    prevBtn.addEventListener('click', () => {
+        scrollByStep('prev');
+    });
+    nextBtn.addEventListener('click', () => {
+        scrollByStep('next');
+    });
+
+    container.addEventListener('scroll', updateButtons);
+    window.addEventListener('resize', updateButtons);
+
+    // Initial state
+    updateButtons();
+}
+
+// Initialize category cards scroll controls
+function initCategoryCarousel() {
+    const container = document.getElementById('category-cards-track');
+    const prevBtn = document.getElementById('category-prev');
+    const nextBtn = document.getElementById('category-next');
+    if (!container || !prevBtn || !nextBtn) return;
+
+    function scrollByStep(direction) {
+        const step = container.clientWidth * 0.7; // ~1.5 cards
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const current = container.scrollLeft;
+        let target = direction === 'next' ? current + step : current - step;
+        if (target < 0) target = 0;
+        if (target > maxScroll) target = maxScroll;
+        container.scrollTo({ left: target, behavior: 'smooth' });
+    }
+
+    function updateButtons() {
+        const maxScroll = container.scrollWidth - container.clientWidth - 1;
+        const atStart = container.scrollLeft <= 0;
+        const atEnd = container.scrollLeft >= maxScroll;
+
+        prevBtn.classList.toggle('disabled', atStart);
+        nextBtn.classList.toggle('disabled', atEnd);
+    }
+
+    prevBtn.addEventListener('click', () => {
+        scrollByStep('prev');
+    });
+    nextBtn.addEventListener('click', () => {
+        scrollByStep('next');
+    });
+
+    container.addEventListener('scroll', updateButtons);
+    window.addEventListener('resize', updateButtons);
+
+    updateButtons();
 }
 
 // Update cart count in header
