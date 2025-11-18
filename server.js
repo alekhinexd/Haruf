@@ -170,8 +170,9 @@ app.use('/js', express.static(path.join(PUBLIC_DIR, 'js')));
 app.use('/styles', express.static(path.join(PUBLIC_DIR, 'styles')));
 app.use('/pages', express.static(path.join(PUBLIC_DIR, 'pages')));
 
-// Import hardcoded products data from the selected store version
-const { products } = require(`./${PUBLIC_DIR}/js/data/products.js`);
+// Import hardcoded products data - always from public folder
+// Both store versions use the same product data
+const { products } = require('./public/js/data/products.js');
 
 // Endpoint to serve Stripe publishable key to frontend
 app.get('/api/stripe-config', (req, res) => {
