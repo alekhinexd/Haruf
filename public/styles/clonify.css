@@ -1,5 +1,12 @@
 /* Clonify-Style Homepage CSS */
 
+/* CSS Variables - Same as product.css */
+:root {
+    --color-primary: #080046;
+    --color-primary-light: #f0f0f0;
+    --color-primary-dark: #333333;
+}
+
 /* Hero Section */
 .clonify-hero {
     position: relative;
@@ -503,19 +510,108 @@
     margin: 0 auto;
 }
 
-/* FAQ collapsible buttons inherit styles from product.css */
+/* FAQ Section - Complete styles copied from product.css */
+.faq-section {
+    padding: 60px 20px;
+    background: white;
+}
+
+.faq-section .container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-heading {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
 .faq-list .collapsible {
     width: 100%;
+    padding: 1.5rem 1.25rem;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
+.faq-list .collapsible:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.faq-list .collapsible.active {
+    border-color: var(--color-primary);
+    background: #f8f9fa;
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.faq-list .collapsible-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+    color: var(--color-primary);
+}
+
+.faq-list .collapsible.active .collapsible-icon {
+    transform: rotate(180deg);
+}
+
 .faq-list .content {
+    padding: 1.5rem 1.25rem;
+    background: white;
+    border: 1px solid var(--color-primary);
+    border-top: none;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     display: none;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    line-height: 1.6;
     margin-bottom: 15px;
 }
 
 .faq-list .content.active {
     display: block;
+}
+
+.faq-list .content p {
+    margin: 0;
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .faq-heading {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .faq-list .collapsible {
+        padding: 1.25rem 1rem;
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+    }
+
+    .faq-list .content {
+        padding: 1.25rem 1rem;
+        margin-bottom: 12px;
+    }
 }
 
 /* Carousel Counter */

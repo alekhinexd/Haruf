@@ -11,39 +11,20 @@ document.addEventListener('DOMContentLoaded', function() {
     initCollapsibles();
 });
 
-// Initialize collapsible sections
+// Initialize collapsible sections - Exact copy from product.js
 function initCollapsibles() {
     const collapsibles = document.querySelectorAll('.collapsible');
     collapsibles.forEach(button => {
-        button.addEventListener('click', function() {
-            this.classList.toggle('active');
-            const content = this.nextElementSibling;
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
             
             if (content && content.classList.contains('content')) {
                 if (content.classList.contains('active')) {
                     content.classList.remove('active');
-                    this.style.backgroundColor = 'transparent';
                 } else {
                     content.classList.add('active');
-                    this.style.backgroundColor = '#f0f0f0';
                 }
-            }
-        });
-
-        // Style collapsible buttons
-        button.style.color = '#000000';
-        button.style.borderColor = '#000000';
-        button.style.transition = 'all 0.3s ease';
-        
-        button.addEventListener('mouseover', () => {
-            if (!button.nextElementSibling?.classList.contains('active')) {
-                button.style.backgroundColor = '#f0f0f0';
-            }
-        });
-        
-        button.addEventListener('mouseout', () => {
-            if (!button.nextElementSibling?.classList.contains('active')) {
-                button.style.backgroundColor = 'transparent';
             }
         });
     });
