@@ -510,7 +510,12 @@
 }
 
 .faq-list .content {
+    display: none;
     margin-bottom: 15px;
+}
+
+.faq-list .content.active {
+    display: block;
 }
 
 /* Carousel Counter */
