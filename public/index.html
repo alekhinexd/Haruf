@@ -79,7 +79,18 @@
 
     <main>
         <!-- Hero Section with Video/GIF Background -->
-        <section class="why-best" id="hero-section" style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('images/hero/bags-hero.gif'); background-size: cover; background-position: center;">
+        <section class="why-best" id="hero-section" style="position: relative; overflow: hidden; min-height: 500px;">
+            <!-- Video Background (comment out if using GIF) -->
+            <video autoplay muted loop playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;">
+                <source src="images/hero/bags-hero.mp4" type="video/mp4">
+                <!-- Fallback to GIF if video doesn't load -->
+                <img src="images/hero/bags-hero.gif" alt="Designer Bags" style="width: 100%; height: 100%; object-fit: cover;">
+            </video>
+            
+            <!-- Dark Overlay -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)); z-index: 2;"></div>
+            
+            <!-- Content -->
             <div class="container" style="position: relative; z-index: 10;">
                 <h2 class="section-heading" style="color: white;">Luxury 1:1 Designer Bags</h2>
                 <p class="section-subheading" style="color: white;">Premium Quality, Authentic Packaging, Indistinguishable Craftsmanship</p>
