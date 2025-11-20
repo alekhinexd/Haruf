@@ -830,9 +830,18 @@
 }
 
 /* Testimonials Section */
+hr {
+    border: 0;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
 .testimonials-section {
     padding: 80px 20px;
-    background: #ffffff;
+    background: white;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 60px;
 }
 
 .testimonials-grid {

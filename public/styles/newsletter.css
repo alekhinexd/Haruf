@@ -18,7 +18,7 @@
 .newsletter-page__content h1 {
     font-size: 32px;
     margin-bottom: 20px;
-    color: #080046;
+    color: #000000;
 }
 
 .newsletter-page__content p {
@@ -44,12 +44,12 @@
 
 .newsletter-page__input:focus {
     outline: none;
-    border-color: #080046;
+    border-color: #000000;
 }
 
 .button.button--primary {
     padding: 12px 25px;
-    background-color: #080046;
+    background-color: #000000;
     color: white;
     border: none;
     border-radius: 4px;

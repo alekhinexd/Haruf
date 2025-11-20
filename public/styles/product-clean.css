@@ -32,7 +32,7 @@
 .product-title {
     font-size: 2rem;
     font-weight: 600;
-    color: #080046;
+    color: #000000;
     margin-bottom: 20px;
 }
 
@@ -46,7 +46,7 @@
 .product-price {
     font-size: 1.5rem;
     font-weight: 500;
-    color: #080046;
+    color: #000000;
     margin-bottom: 20px;
 }
 
@@ -77,16 +77,16 @@
     font-size: 1rem;
     border-radius: 4px;
     cursor: pointer;
-    border: 1px solid #080046;
+    border: 1px solid #000000;
 }
 
 .product-button--primary {
-    background: #080046;
+    background: #000000;
     color: white;
 }
 
 .product-button--outline {
     background: white;
-    color: #080046;
+    color: #000000;
 }
 
