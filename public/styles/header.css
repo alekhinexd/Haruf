@@ -315,6 +315,32 @@ textarea,
     box-sizing: border-box;
 }
 
+.mobile-cart-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: #000000;
+    position: relative;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.mobile-cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #5A3518;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    font-weight: 600;
+}
+
 .mobile-menu {
     position: fixed;
     top: 0;
@@ -436,6 +462,16 @@ textarea,
         display: block;
         position: absolute;
         left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        box-sizing: border-box;
+    }
+
+    .mobile-cart-toggle {
+        display: block;
+        position: absolute;
+        right: 20px;
         top: 50%;
         transform: translateY(-50%);
         z-index: 2;

@@ -37,11 +37,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Update cart count
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    
     const cartCount = document.getElementById('cart-count');
     if (cartCount) {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
     }
+    
+    // Update mobile cart count
+    const mobileCartCounts = document.querySelectorAll('.mobile-cart-count');
+    mobileCartCounts.forEach(count => {
+        count.textContent = totalItems;
+    });
 
     // Prevent annoying double-tap zoom on mobile while keeping normal taps
     let lastTouchEnd = 0;
