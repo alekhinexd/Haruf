@@ -285,13 +285,13 @@
 }
 
 .cart-summary .button--primary {
-    background: #000000;
+    background: #5A3518;
     color: white;
     border: none;
 }
 
 .cart-summary .button--primary:hover {
-    background: #333333;
+    background: #7A4A28;
 }
 
 .cart-summary .button--secondary {

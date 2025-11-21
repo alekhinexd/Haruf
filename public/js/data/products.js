@@ -13,7 +13,7 @@ const products = [
             {
                 "option1": "creme",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -25,7 +25,7 @@ const products = [
             {
                 "option1": "rot",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 0,
                 "requires_shipping": true,
                 "taxable": true,
@@ -37,7 +37,7 @@ const products = [
             {
                 "option1": "schwarz",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -49,7 +49,7 @@ const products = [
             {
                 "option1": "weiss",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -64,7 +64,18 @@ const products = [
             "alt": "Chanel Timeless"
         },
         "rating_count": 98,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "creme",
+                    "rot",
+                    "schwarz",
+                    "weiss"
+                ]
+            }
+        ]
     },
     {
         "handle": "dior-lady-dior-tasche",
@@ -79,7 +90,7 @@ const products = [
             {
                 "option1": "schwarz",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 49,
                 "requires_shipping": true,
                 "taxable": true,
@@ -91,7 +102,7 @@ const products = [
             {
                 "option1": "rosa",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -103,7 +114,7 @@ const products = [
             {
                 "option1": "beige-1",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -115,7 +126,7 @@ const products = [
             {
                 "option1": "weiss",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -130,7 +141,18 @@ const products = [
             "alt": "Dior Lady Dior Tasche"
         },
         "rating_count": 85,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "schwarz",
+                    "rosa",
+                    "beige-1",
+                    "weiss"
+                ]
+            }
+        ]
     },
     {
         "handle": "gucci-gg-emblem-shopper",
@@ -184,7 +206,17 @@ const products = [
             "alt": "Gucci GG Emblem Shopper"
         },
         "rating_count": 99,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "basic-braunes-logo",
+                    "weiss",
+                    "rosa"
+                ]
+            }
+        ]
     },
     {
         "handle": "gucci-ophidia",
@@ -199,7 +231,7 @@ const products = [
             {
                 "option1": "basic-braunes-logo",
                 "price": 39.99,
-                "compare_at_price": null,
+                "compare_at_price": 49.99,
                 "inventory_quantity": 48,
                 "requires_shipping": true,
                 "taxable": true,
@@ -211,7 +243,7 @@ const products = [
             {
                 "option1": "rosa",
                 "price": 39.99,
-                "compare_at_price": null,
+                "compare_at_price": 49.99,
                 "inventory_quantity": 49,
                 "requires_shipping": true,
                 "taxable": true,
@@ -226,7 +258,16 @@ const products = [
             "alt": "Gucci Ophidia"
         },
         "rating_count": 70,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "basic-braunes-logo",
+                    "rosa"
+                ]
+            }
+        ]
     },
     {
         "handle": "ysl-crossbody-bag",
@@ -269,7 +310,7 @@ const products = [
         "variants": [
             {
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -298,7 +339,7 @@ const products = [
         "variants": [
             {
                 "price": 67.99,
-                "compare_at_price": null,
+                "compare_at_price": 84.99,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -328,7 +369,7 @@ const products = [
             {
                 "option1": "schwarz",
                 "price": 34.99,
-                "compare_at_price": null,
+                "compare_at_price": 43.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -340,7 +381,7 @@ const products = [
             {
                 "option1": "basic-braunes-logo",
                 "price": 34.99,
-                "compare_at_price": null,
+                "compare_at_price": 43.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -352,7 +393,7 @@ const products = [
             {
                 "option1": "creme",
                 "price": 34.99,
-                "compare_at_price": null,
+                "compare_at_price": 43.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -367,7 +408,17 @@ const products = [
             "alt": "Coach Lana Shoulder Bag"
         },
         "rating_count": 68,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "schwarz",
+                    "basic-braunes-logo",
+                    "creme"
+                ]
+            }
+        ]
     },
     {
         "handle": "coach-tabby-bag",
@@ -382,7 +433,7 @@ const products = [
             {
                 "option1": "basic-braunes-logo",
                 "price": 39.99,
-                "compare_at_price": null,
+                "compare_at_price": 49.99,
                 "inventory_quantity": 43,
                 "requires_shipping": true,
                 "taxable": true,
@@ -394,7 +445,7 @@ const products = [
             {
                 "option1": "schwarz",
                 "price": 39.99,
-                "compare_at_price": null,
+                "compare_at_price": 49.99,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -406,7 +457,7 @@ const products = [
             {
                 "option1": "weiss",
                 "price": 39.99,
-                "compare_at_price": null,
+                "compare_at_price": 49.99,
                 "inventory_quantity": 49,
                 "requires_shipping": true,
                 "taxable": true,
@@ -418,7 +469,7 @@ const products = [
             {
                 "option1": "rot",
                 "price": 39.99,
-                "compare_at_price": null,
+                "compare_at_price": 49.99,
                 "inventory_quantity": 49,
                 "requires_shipping": true,
                 "taxable": true,
@@ -433,7 +484,18 @@ const products = [
             "alt": "Coach Tabby Bag"
         },
         "rating_count": 95,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "basic-braunes-logo",
+                    "schwarz",
+                    "weiss",
+                    "rot"
+                ]
+            }
+        ]
     },
     {
         "handle": "prada-re-edition-2005-mini-bag",
@@ -487,7 +549,17 @@ const products = [
             "alt": "Prada Re-Edition 2005 Mini Bag"
         },
         "rating_count": 92,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "schwarz",
+                    "beige-1",
+                    "rosa"
+                ]
+            }
+        ]
     },
     {
         "handle": "louis-vuitton-felicie-pochette",
@@ -502,7 +574,7 @@ const products = [
             {
                 "option1": "braunes-muster",
                 "price": 59.99,
-                "compare_at_price": null,
+                "compare_at_price": 74.99,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -514,7 +586,7 @@ const products = [
             {
                 "option1": "schwarzes-muster",
                 "price": 59.99,
-                "compare_at_price": null,
+                "compare_at_price": 74.99,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -526,7 +598,7 @@ const products = [
             {
                 "option1": "beiges-muster",
                 "price": 59.99,
-                "compare_at_price": null,
+                "compare_at_price": 74.99,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -538,7 +610,7 @@ const products = [
             {
                 "option1": "grau-weiss-kariert",
                 "price": 59.99,
-                "compare_at_price": null,
+                "compare_at_price": 74.99,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -553,7 +625,18 @@ const products = [
             "alt": "Louis Vuitton Félicie Pochette"
         },
         "rating_count": 97,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "braunes-muster",
+                    "schwarzes-muster",
+                    "beiges-muster",
+                    "grau-weiss-kariert"
+                ]
+            }
+        ]
     },
     {
         "handle": "louis-vuitton-alma-bb",
@@ -568,7 +651,7 @@ const products = [
             {
                 "option1": "basic-braunes-logo",
                 "price": 54.99,
-                "compare_at_price": null,
+                "compare_at_price": 68.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -580,7 +663,7 @@ const products = [
             {
                 "option1": "rosa",
                 "price": 54.99,
-                "compare_at_price": null,
+                "compare_at_price": 68.74,
                 "inventory_quantity": 49,
                 "requires_shipping": true,
                 "taxable": true,
@@ -595,7 +678,16 @@ const products = [
             "alt": "Louis Vuitton Alma bb"
         },
         "rating_count": 91,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "basic-braunes-logo",
+                    "rosa"
+                ]
+            }
+        ]
     },
     {
         "handle": "louis-vuitton-nano-speedy",
@@ -610,7 +702,7 @@ const products = [
             {
                 "option1": "basic-braunes-logo",
                 "price": 54.99,
-                "compare_at_price": null,
+                "compare_at_price": 68.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -622,7 +714,7 @@ const products = [
             {
                 "option1": "beige",
                 "price": 54.99,
-                "compare_at_price": null,
+                "compare_at_price": 68.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -634,7 +726,7 @@ const products = [
             {
                 "option1": "denim-blaues-muster",
                 "price": 54.99,
-                "compare_at_price": null,
+                "compare_at_price": 68.74,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -649,7 +741,17 @@ const products = [
             "alt": "Louis Vuitton Nano Speedy"
         },
         "rating_count": 99,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "basic-braunes-logo",
+                    "beige",
+                    "denim-blaues-muster"
+                ]
+            }
+        ]
     },
     {
         "handle": "dior-sattle-bag",
@@ -664,7 +766,7 @@ const products = [
             {
                 "option1": "braun",
                 "price": 44.95,
-                "compare_at_price": null,
+                "compare_at_price": 56.19,
                 "inventory_quantity": 0,
                 "requires_shipping": true,
                 "taxable": true,
@@ -676,7 +778,7 @@ const products = [
             {
                 "option1": "blau",
                 "price": 44.95,
-                "compare_at_price": null,
+                "compare_at_price": 56.19,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -688,7 +790,7 @@ const products = [
             {
                 "option1": "schwarz",
                 "price": 44.95,
-                "compare_at_price": null,
+                "compare_at_price": 56.19,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -700,7 +802,7 @@ const products = [
             {
                 "option1": "weiss",
                 "price": 44.95,
-                "compare_at_price": null,
+                "compare_at_price": 56.19,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -715,7 +817,18 @@ const products = [
             "alt": "Dior Sattle Bag"
         },
         "rating_count": 54,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "braun",
+                    "blau",
+                    "schwarz",
+                    "weiss"
+                ]
+            }
+        ]
     },
     {
         "handle": "chloe-tote-bag",
@@ -729,7 +842,7 @@ const products = [
         "variants": [
             {
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 0,
                 "requires_shipping": true,
                 "taxable": true,
@@ -759,7 +872,7 @@ const products = [
             {
                 "option1": "beige",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -771,7 +884,7 @@ const products = [
             {
                 "option1": "braun",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -783,7 +896,7 @@ const products = [
             {
                 "option1": "grau",
                 "price": 49.99,
-                "compare_at_price": null,
+                "compare_at_price": 62.49,
                 "inventory_quantity": 50,
                 "requires_shipping": true,
                 "taxable": true,
@@ -798,7 +911,17 @@ const products = [
             "alt": "The Tote Bag"
         },
         "rating_count": 62,
-        "status": "active"
+        "status": "active",
+        "options": [
+            {
+                "name": "Farbe",
+                "values": [
+                    "beige",
+                    "braun",
+                    "grau"
+                ]
+            }
+        ]
     }
 ];
 
@@ -807,6 +930,7 @@ if (typeof window !== 'undefined') {
     window.shopifyProducts = products;
 }
 
+// For Node.js compatibility
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { products };
+    module.exports = products;
 }

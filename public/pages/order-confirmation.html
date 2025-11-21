@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation - Dupelify</title>
+    <title>Bestellbestätigung - Dupelify</title>
     <link rel="icon" href="../images/logo/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/styles/header.css">
@@ -26,25 +26,25 @@
             <div class="confirmation-content">
                 <div class="confirmation-header">
                     <i class="fas fa-check-circle"></i>
-                    <h1>Thank you for your order!</h1>
+                    <h1>Vielen Dank für Ihre Bestellung!</h1>
                     <p id="order-number"></p>
                     <div class="confirmation-message">
-                        <p><strong>Your order will be shipped as soon as possible!</strong></p>
-                        <p>You will receive a tracking number via email once your order has been dispatched.</p>
-                        <p>If you have any questions about your order, please <a href="/pages/contact.html" class="contact-link">fill out our contact form</a>.</p>
+                        <p><strong>Ihre Bestellung wird schnellstmöglich versendet!</strong></p>
+                        <p>Sie erhalten eine Tracking-Nummer per E-Mail, sobald Ihre Bestellung versandt wurde.</p>
+                        <p>Wenn Sie Fragen zu Ihrer Bestellung haben, <a href="/pages/contact.html" class="contact-link">füllen Sie bitte unser Kontaktformular aus</a>.</p>
                     </div>
                 </div>
 
                 <div class="confirmation-details">
                     <div class="confirmation-section">
-                        <h2>Order Details</h2>
+                        <h2>Bestelldetails</h2>
                         <div id="order-items" class="order-items">
                             <!-- Items will be populated by JavaScript -->
                         </div>
                     </div>
 
                     <div class="confirmation-section">
-                        <h2>Shipping Information</h2>
+                        <h2>Versandinformationen</h2>
                         <div id="shipping-details" class="shipping-details">
                             <!-- Shipping details will be populated by JavaScript -->
                         </div>
@@ -53,15 +53,15 @@
                     <div class="confirmation-section totals-section">
                         <div class="order-totals">
                             <div class="total-line">
-                                <span>Subtotal</span>
+                                <span>Zwischensumme</span>
                                 <span id="subtotal"></span>
                             </div>
                             <div class="total-line">
-                                <span>Shipping</span>
-                                <span id="shipping">Free</span>
+                                <span>Versand</span>
+                                <span id="shipping">Kostenlos</span>
                             </div>
                             <div class="total-line total">
-                                <span>Total</span>
+                                <span>Gesamt</span>
                                 <span id="total"></span>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="confirmation-actions">
-                    <a href="/" class="continue-shopping">Continue Shopping</a>
+                    <a href="/" class="continue-shopping">Weiter einkaufen</a>
                 </div>
             </div>
         </div>

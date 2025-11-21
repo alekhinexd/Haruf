@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Show feedback with black color scheme
                 const originalText = newAddToCartButton.textContent;
-                newAddToCartButton.textContent = 'Added to Cart!';
+                newAddToCartButton.textContent = 'Hinzugefügt!';
                 newAddToCartButton.style.backgroundColor = '#000000';
                 newAddToCartButton.style.color = '#ffffff';
                 
@@ -603,7 +603,7 @@ function displayProduct(product) {
                         <s class="compare-price">€${variant.compare_at_price}</s>
                         <div class="price-sale-group">
                             <span class="price-item price-item--sale">€${variant.price}</span>
-                            <span class="sale-badge"><i class="fas fa-tag"></i>Save ${discount}%</span>
+                            <span class="sale-badge"><i class="fas fa-tag"></i>Spare ${discount}%</span>
                         </div>
                     </div>
                 `;
@@ -623,7 +623,7 @@ function displayProduct(product) {
         notificationMenu.className = 'cart-notification-menu';
         notificationMenu.innerHTML = `
             <div class="cart-notification-menu__header">
-                <h3 class="cart-notification-menu__title">Added to Cart</h3>
+                <h3 class="cart-notification-menu__title">Zum Warenkorb hinzugefügt</h3>
                 <button class="cart-notification-menu__close">&times;</button>
             </div>
             <div class="cart-notification-menu__product">
@@ -634,8 +634,8 @@ function displayProduct(product) {
                 </div>
             </div>
             <div class="cart-notification-menu__buttons">
-                <button class="cart-notification-menu__button cart-notification-menu__button--secondary">Continue Shopping</button>
-                <button class="cart-notification-menu__button cart-notification-menu__button--primary">Checkout Now</button>
+                <button class="cart-notification-menu__button cart-notification-menu__button--secondary">Weiter einkaufen</button>
+                <button class="cart-notification-menu__button cart-notification-menu__button--primary">Zur Kasse</button>
             </div>
         `;
         document.body.appendChild(notificationMenu);

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Dupelify</title>
+    <title>Kasse - Dupelify</title>
     <link rel="icon" href="../images/logo/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/styles/header.css">
@@ -31,71 +31,71 @@
                 <div class="checkout-form-section">
                     <form id="checkout-form" class="checkout-form">
                         <div class="form-section">
-                            <h2>Contact Information</h2>
+                            <h2>Kontaktinformationen</h2>
                             <div class="form-group">
-                                <input type="email" id="email" name="email" required placeholder="Email">
+                                <input type="email" id="email" name="email" required placeholder="E-Mail">
                             </div>
                         </div>
 
                         <div class="form-section">
-                            <h2>Shipping Address</h2>
+                            <h2>Lieferadresse</h2>
                             <div class="form-group">
-                                <input type="text" id="firstName" name="firstName" required placeholder="First name">
-                                <input type="text" id="lastName" name="lastName" required placeholder="Last name">
+                                <input type="text" id="firstName" name="firstName" required placeholder="Vorname">
+                                <input type="text" id="lastName" name="lastName" required placeholder="Nachname">
                             </div>
                             <div class="form-group">
-                                <input type="text" id="address" name="address" required placeholder="Address">
+                                <input type="text" id="address" name="address" required placeholder="Adresse">
                             </div>
                             <div class="form-group">
-                                <input type="text" id="apartment" name="apartment" placeholder="Apartment, suite, etc. (optional)">
+                                <input type="text" id="apartment" name="apartment" placeholder="Wohnung, Etage, usw. (optional)">
                             </div>
                             <div class="form-group">
-                                <input type="text" id="city" name="city" required placeholder="City">
-                                <input type="text" id="postalCode" name="postalCode" required placeholder="Postal code">
+                                <input type="text" id="city" name="city" required placeholder="Stadt">
+                                <input type="text" id="postalCode" name="postalCode" required placeholder="Postleitzahl">
                             </div>
                             <div class="form-group">
                                 <select id="country" name="country" required>
-                                    <option value="">Select Country</option>
-                                    <option value="DE">Germany</option>
-                                    <option value="AT">Austria</option>
-                                    <option value="CH">Switzerland</option>
-                                    <option value="NL">Netherlands</option>
-                                    <option value="BE">Belgium</option>
-                                    <option value="FR">France</option>
-                                    <option value="IT">Italy</option>
-                                    <option value="ES">Spain</option>
-                                    <option value="PL">Poland</option>
-                                    <option value="SE">Sweden</option>
-                                    <option value="DK">Denmark</option>
-                                    <option value="NO">Norway</option>
+                                    <option value="">Land auswählen</option>
+                                    <option value="DE">Deutschland</option>
+                                    <option value="AT">Österreich</option>
+                                    <option value="CH">Schweiz</option>
+                                    <option value="NL">Niederlande</option>
+                                    <option value="BE">Belgien</option>
+                                    <option value="FR">Frankreich</option>
+                                    <option value="IT">Italien</option>
+                                    <option value="ES">Spanien</option>
+                                    <option value="PL">Polen</option>
+                                    <option value="SE">Schweden</option>
+                                    <option value="DK">Dänemark</option>
+                                    <option value="NO">Norwegen</option>
                                     <!-- Add more countries as needed -->
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-section shipping-method-section">
-                            <h2>Shipping Method</h2>
+                            <h2>Versandart</h2>
                             <div class="shipping-option">
                                 <div class="shipping-option-content">
                                     <div class="shipping-option-details">
-                                        <div class="shipping-option-name">4-7 Days Shipping</div>
-                                        <div class="shipping-option-description">Tracking number provided</div>
+                                        <div class="shipping-option-name">4-7 Tage Versand</div>
+                                        <div class="shipping-option-description">Tracking-Nummer inklusive</div>
                                     </div>
-                                    <div class="shipping-option-price">FREE</div>
+                                    <div class="shipping-option-price">KOSTENLOS</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-section payment-section">
-                            <h2>Payment Method</h2>
+                            <h2>Zahlungsmethode</h2>
                             <!-- Stripe Payment Element will be mounted here -->
                             <div id="payment-element" class="payment-element-container">
                                 <!-- Stripe.js injects the Payment Element here -->
                             </div>
                             <div id="payment-message" class="payment-message"></div>
                             <!-- Payment button inside form -->
-                            <button type="button" id="continue-to-payment" class="checkout-button">Complete Payment</button>
-                            <a href="/pages/cart.html" class="return-to-cart">Return to cart</a>
+                            <button type="button" id="continue-to-payment" class="checkout-button">Zahlung abschließen</button>
+                            <a href="/pages/cart.html" class="return-to-cart">Zurück zum Warenkorb</a>
                         </div>
                     </form>
                 </div>
@@ -103,33 +103,33 @@
                 <!-- Right side: Order summary -->
                 <div class="checkout-summary-section">
                     <div class="order-summary">
-                        <h2>Order Summary</h2>
+                        <h2>Bestellübersicht</h2>
                         <div id="checkout-items" class="checkout-items">
                             <!-- Items will be populated by JavaScript -->
                         </div>
                         <div class="summary-totals">
                             <div class="discount-code-section">
                                 <div class="discount-input-group">
-                                    <input type="text" id="discount-code" placeholder="Discount code" class="discount-input">
-                                    <button type="button" id="apply-discount" class="apply-discount-btn">Apply</button>
+                                    <input type="text" id="discount-code" placeholder="Rabattcode" class="discount-input">
+                                    <button type="button" id="apply-discount" class="apply-discount-btn">Anwenden</button>
                                 </div>
                                 <div id="discount-message" class="discount-message"></div>
                             </div>
                             
                             <div class="summary-line">
-                                <span>Subtotal</span>
+                                <span>Zwischensumme</span>
                                 <span id="subtotal">€0.00</span>
                             </div>
                             <div class="summary-line discount-line" id="discount-line" style="display: none;">
-                                <span>Discount (<span id="discount-code-label"></span>)</span>
+                                <span>Rabatt (<span id="discount-code-label"></span>)</span>
                                 <span id="discount-amount" class="discount-amount">-€0.00</span>
                             </div>
                             <div class="summary-line">
-                                <span>Shipping</span>
-                                <span id="shipping">FREE</span>
+                                <span>Versand</span>
+                                <span id="shipping">KOSTENLOS</span>
                             </div>
                             <div class="summary-line total">
-                                <span>Total</span>
+                                <span>Gesamt</span>
                                 <span id="total">€0.00</span>
                             </div>
                         </div>
