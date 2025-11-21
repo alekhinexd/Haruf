@@ -1,4 +1,4 @@
-/* Checkout Page Styles - Clean Single Page Design */
+/* Checkout Page Styles - Express First, Summary with Payment */
 .checkout-page {
     background-color: #fafafa;
     min-height: 100vh;
@@ -16,7 +16,7 @@
 
 .checkout-main {
     padding: 2rem 1rem;
-    max-width: 1280px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -24,10 +24,81 @@
     background-color: transparent;
 }
 
+/* Express Checkout at Top - Full Width */
+.express-checkout-top {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e1e3e5;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.express-checkout-top h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #202223;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.or-divider-main {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0 1.5rem;
+}
+
+.or-divider-main::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e1e3e5;
+}
+
+.or-divider-main span {
+    position: relative;
+    background: #fff;
+    padding: 0 1rem;
+    color: #6c757d;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.scroll-hint {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin: 1.5rem 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.scroll-hint i {
+    color: #5A3518;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
 .checkout-content {
-    display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 3rem;
+    display: block;
+    max-width: 100%;
 }
 
 .checkout-subtitle {
@@ -379,15 +450,19 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-    .checkout-content {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+@media (max-width: 768px) {
+    .express-checkout-top {
+        padding: 1.5rem;
     }
 
-    .checkout-summary-section {
-        position: static;
-        order: -1;
+    .express-checkout-top h2 {
+        font-size: 1.25rem;
+    }
+
+    .scroll-hint {
+        font-size: 0.85rem;
+        flex-direction: column;
+        text-align: center;
     }
 }
 
@@ -589,25 +664,47 @@
     margin-bottom: 1.5rem;
 }
 
-/* Express Checkout in Sidebar */
-.express-checkout-sidebar {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e1e3e5;
+/* Order Summary Inline with Payment */
+.order-summary-inline {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e1e3e5;
+    margin-bottom: 2rem;
 }
 
-.express-checkout-sidebar h3 {
-    font-size: 1rem;
+.order-summary-inline h3 {
+    font-size: 1.1rem;
     font-weight: 600;
     color: #202223;
     margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.85rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #5A3518;
 }
 
-.mobile-summary-reminder {
-    display: none;
+.payment-divider {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0 1.5rem;
+}
+
+.payment-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e1e3e5;
+}
+
+.payment-divider span {
+    position: relative;
+    background: #fff;
+    padding: 0 1rem;
+    color: #202223;
+    font-weight: 600;
+    font-size: 1rem;
 }
 
 .express-title {
@@ -686,42 +783,16 @@
         padding: 1rem;
     }
 
-    .checkout-content {
-        gap: 1rem;
-    }
-
-    .checkout-form-section,
-    .checkout-summary-section .order-summary {
+    .checkout-form-section {
         padding: 1.5rem;
-        border: 1px solid #e1e3e5;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .form-row {
         grid-template-columns: 1fr;
     }
 
-    .mobile-summary-reminder {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem;
-        background: #fff3cd;
-        border: 1px solid #ffc107;
-        border-radius: 6px;
-        margin-top: 1rem;
-        font-size: 0.85rem;
-        color: #856404;
-        text-align: center;
-    }
-
-    .checkout-form-section {
-        padding: 1.5rem;
-    }
-
-    .checkout-summary-section {
-        padding: 1.5rem;
+    .order-summary-inline {
+        padding: 1rem;
     }
 
     .form-group {

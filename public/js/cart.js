@@ -249,7 +249,7 @@ function showCartNotification(product) {
             <button class="cart-notification__close">&times;</button>
             <div class="cart-notification__header">
                 <i class="fas fa-check-circle cart-notification__icon"></i>
-                Added to Cart!
+                Zum Warenkorb hinzugefügt!
             </div>
             <div class="cart-notification__product">
                 <img id="cart-notification-image" src="${product.image}" alt="${product.title}">
@@ -260,8 +260,8 @@ function showCartNotification(product) {
                 </div>
             </div>
             <div class="cart-notification__buttons">
-                <a href="/pages/cart.html" class="button button--outline">View Cart</a>
-                <a href="/pages/checkout.html" class="button button--primary">Checkout</a>
+                <a href="/pages/products.html" class="button button--outline">Weiter einkaufen</a>
+                <a href="/pages/checkout.html" class="button button--primary">Zur Kasse</a>
             </div>
         </div>
     `;

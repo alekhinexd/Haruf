@@ -341,17 +341,22 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             elements = stripe.elements({ appearance, clientSecret });
 
-            // Create Express Checkout Element first (for Apple Pay, Google Pay, etc.)
+            // Create Express Checkout Element (Apple Pay, Google Pay, Klarna)
             console.log('🔄 Creating express checkout element...');
             try {
                 expressCheckoutElement = elements.create('expressCheckout', {
                     wallets: {
                         applePay: 'auto',
-                        googlePay: 'auto'
+                        googlePay: 'auto',
+                        amazonPay: 'never',
+                        link: 'never'
+                    },
+                    paymentMethods: {
+                        klarna: 'always'
                     }
                 });
                 expressCheckoutElement.mount('#express-checkout-element');
-                console.log('✅ Express checkout element mounted');
+                console.log('✅ Express checkout element mounted (Apple Pay, Google Pay, Klarna)');
                 
                 // Listen for express checkout events
                 expressCheckoutElement.on('confirm', async (event) => {
@@ -361,20 +366,22 @@ document.addEventListener('DOMContentLoaded', async function() {
             } catch (error) {
                 console.log('ℹ️ Express checkout not available:', error.message);
                 // Hide express checkout section if not available
-                const expressSection = document.querySelector('.express-checkout-section');
+                const expressSection = document.querySelector('.express-checkout-top');
                 if (expressSection) {
                     expressSection.style.display = 'none';
                 }
             }
 
             // Create and mount the Payment Element with accordion layout for better mobile support
+            // Klarna will be available here as a regular payment method
             paymentElement = elements.create('payment', {
                 layout: {
                     type: 'accordion',
                     defaultCollapsed: false,
                     radios: true,
                     spacedAccordionItems: true
-                }
+                },
+                paymentMethodOrder: ['card', 'klarna', 'sepa_debit']
             });
             paymentElement.mount('#payment-element');
 
