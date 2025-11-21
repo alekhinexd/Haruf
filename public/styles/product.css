@@ -999,15 +999,17 @@ body {
     right: -400px;
     width: 360px;
     background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000;
+    transition: transform 0.3s ease;
+    z-index: 10000;
     overflow-x: hidden;
+    pointer-events: auto;
 }
 
 .cart-notification.visible {
     transform: translateX(-380px);
+    pointer-events: auto;
 }
 
 .cart-notification__content {
@@ -1075,6 +1077,15 @@ body {
 .cart-notification__buttons {
     display: flex;
     gap: 10px;
+    z-index: 10001;
+    position: relative;
+}
+
+.cart-notification__buttons a {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    display: block;
+    text-decoration: none;
 }
 
 .button--outline {
@@ -1513,10 +1524,26 @@ body {
         width: calc(100% - 20px);
         right: 10px;
         left: 10px;
+        top: 60px;
+    }
+    
+    .cart-notification.visible {
+        transform: translateX(0);
+        right: 10px;
     }
 
     .cart-notification__buttons {
         flex-direction: column;
+    }
+    
+    .cart-notification__buttons a,
+    .cart-notification__buttons .button {
+        pointer-events: auto !important;
+        touch-action: manipulation;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 

@@ -341,21 +341,24 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             elements = stripe.elements({ appearance, clientSecret });
 
-            // Create Express Checkout Element (Apple Pay, Google Pay, Klarna)
+            // Create Express Checkout Element (Only Apple Pay)
             console.log('🔄 Creating express checkout element...');
             try {
                 expressCheckoutElement = elements.create('expressCheckout', {
                     wallets: {
                         applePay: 'auto',
-                        googlePay: 'auto',
+                        googlePay: 'never',
                         amazonPay: 'never',
                         link: 'never'
+                    },
+                    buttonType: {
+                        applePay: 'buy'
                     }
                 });
                 
-                // Mount and keep visible
+                // Mount with faster loading
                 expressCheckoutElement.mount('#express-checkout-element');
-                console.log('✅ Express checkout element mounted (Apple Pay, Google Pay, Klarna)');
+                console.log('✅ Express checkout element mounted (Apple Pay only)');
                 
                 // Prevent hiding on ready
                 expressCheckoutElement.on('ready', () => {
@@ -381,7 +384,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
 
             // Create and mount the Payment Element with accordion layout for better mobile support
-            // Klarna will be available here as a regular payment method
+            // Include Apple Pay, Klarna, and other methods here
             paymentElement = elements.create('payment', {
                 layout: {
                     type: 'accordion',
@@ -389,7 +392,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     radios: true,
                     spacedAccordionItems: true
                 },
-                paymentMethodOrder: ['card', 'klarna', 'sepa_debit']
+                wallets: {
+                    applePay: 'auto',
+                    googlePay: 'auto'
+                },
+                paymentMethodOrder: ['card', 'klarna', 'paypal', 'apple_pay', 'google_pay', 'sepa_debit']
             });
             paymentElement.mount('#payment-element');
 

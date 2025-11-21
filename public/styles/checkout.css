@@ -116,10 +116,20 @@
     border: 1px solid #e1e3e5;
 }
 
+.checkout-form-section > *:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
 .form-section {
     margin-bottom: 2rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid #f0f0f0;
+}
+
+.form-section:first-child {
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .form-section:last-child {
@@ -132,7 +142,15 @@
     margin-bottom: 1.5rem;
     color: #202223;
     padding-bottom: 0.75rem;
+    padding-top: 0;
+    margin-top: 0;
     border-bottom: 2px solid #5A3518;
+    border-top: none;
+}
+
+.form-section:first-child .section-header-simple h2 {
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .form-group {
