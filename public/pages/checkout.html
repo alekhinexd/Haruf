@@ -136,8 +136,13 @@
                             <div class="section-header-simple">
                                 <h2>Zahlungsmethode</h2>
                             </div>
+
+                            <div id="payment-element" class="payment-element-container">
+                                <!-- Stripe.js injects the Payment Element here -->
+                            </div>
+                            <div id="payment-message" class="payment-message"></div>
                             
-                            <!-- Order Summary integrated with Payment -->
+                            <!-- Order Summary below payment -->
                             <div class="order-summary-inline" id="order-summary">
                                 <div id="checkout-items" class="checkout-items">
                                     <!-- Items will be populated by JavaScript -->
@@ -169,15 +174,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="payment-divider">
-                                <span>Zahlungsmethode wählen</span>
-                            </div>
-
-                            <div id="payment-element" class="payment-element-container">
-                                <!-- Stripe.js injects the Payment Element here -->
-                            </div>
-                            <div id="payment-message" class="payment-message"></div>
 
                             <!-- Payment button inside form -->
                             <button type="button" id="continue-to-payment" class="checkout-button">

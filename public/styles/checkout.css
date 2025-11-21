@@ -127,6 +127,13 @@
 .checkout-form-section > *:first-child {
     margin-top: 0;
     padding-top: 0;
+    border-top: none;
+}
+
+.checkout-header {
+    margin-bottom: 2rem;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .form-section {
@@ -136,9 +143,9 @@
 }
 
 .form-section:first-child {
-    padding-top: 0;
-    margin-top: 0;
-    border-top: none;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    border-top: none !important;
 }
 
 .form-section:last-child {
@@ -162,13 +169,15 @@
 }
 
 .form-section:first-child .section-header-simple {
-    margin-top: 0;
-    padding-top: 0;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
 }
 
 .form-section:first-child .section-header-simple h2 {
-    margin-top: 0;
-    padding-top: 0;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
 }
 
 .form-group {
@@ -339,14 +348,14 @@
 }
 
 .checkout-items {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .checkout-item {
     display: grid;
-    grid-template-columns: 64px 1fr auto;
-    gap: 1rem;
-    padding: 1rem 0;
+    grid-template-columns: 50px 1fr auto;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
     border-bottom: 1px solid #e1e3e5;
 }
 
@@ -355,47 +364,47 @@
 }
 
 .checkout-item img {
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid #e1e3e5;
 }
 
 .checkout-item-details h3 {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
     color: #202223;
 }
 
 .checkout-item-details p {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: #6d7175;
 }
 
 .checkout-item-variant {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: #6d7175;
-    margin: 4px 0;
+    margin: 2px 0;
 }
 
 .checkout-item-price {
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     color: #202223;
 }
 
 .summary-totals {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
     border-top: 1px solid #e5e5e5;
 }
 
 /* Discount Code Section */
 .discount-code-section {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid #e5e5e5;
 }
 
@@ -406,10 +415,10 @@
 
 .discount-input {
     flex: 1;
-    padding: 0.75rem;
+    padding: 0.65rem 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     font-family: inherit;
     transition: border-color 0.2s;
 }
@@ -424,12 +433,12 @@
 }
 
 .apply-discount-btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.65rem 1.25rem;
     background-color: #5A3518;
     color: white;
     border: none;
     border-radius: 4px;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.2s;
@@ -472,16 +481,16 @@
 .summary-line {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.875rem;
-    font-size: 0.875rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.8125rem;
     color: #202223;
 }
 
 .summary-line.total {
-    margin-top: 0.875rem;
-    padding-top: 0.875rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
     border-top: 1px solid #e1e3e5;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #202223;
 }
@@ -704,12 +713,13 @@
 /* Order Summary Inline with Payment */
 .order-summary-inline {
     background: transparent;
-    padding: 0;
+    padding: 1.5rem 0 0 0;
     border-radius: 0;
     border: none;
-    border-bottom: 1px solid #e1e3e5;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
+    border-top: 1px solid #e1e3e5;
+    border-bottom: none;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .order-summary-inline h3 {
@@ -717,28 +727,7 @@
 }
 
 .payment-divider {
-    position: relative;
-    text-align: center;
-    margin: 2rem 0 1.5rem;
-}
-
-.payment-divider::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e1e3e5;
-}
-
-.payment-divider span {
-    position: relative;
-    background: #fff;
-    padding: 0 1rem;
-    color: #202223;
-    font-weight: 600;
-    font-size: 1rem;
+    display: none;
 }
 
 .express-title {
@@ -781,10 +770,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 3rem;
-    margin-top: 2rem;
-    padding: 2rem 0;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding: 1.5rem 0;
     background-color: transparent;
     border-radius: 0;
     border-top: 1px solid #e1e3e5;
@@ -795,21 +784,22 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     text-align: center;
     flex: 0 0 auto;
 }
 
 .security-badge i {
-    font-size: 2rem;
+    font-size: 1.25rem;
     color: #5A3518;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0;
 }
 
 .security-badge span {
-    font-size: 0.875rem;
+    font-size: 0.7rem;
     font-weight: 400;
     color: #6b7280;
+    white-space: nowrap;
 }
 
 .checkout-button i {
@@ -830,8 +820,8 @@
     }
 
     .order-summary-inline {
-        padding: 0;
-        padding-bottom: 1.5rem;
+        padding: 1rem 0 0 0;
+        margin-top: 1.5rem;
     }
     
     .form-section:first-child {
@@ -908,22 +898,23 @@
     
     /* Mobile Security Badges */
     .security-badges {
-        gap: 1.5rem;
-        padding: 1.5rem 0;
+        gap: 1rem;
+        padding: 1rem 0;
+        flex-wrap: nowrap;
     }
     
     .security-badge {
         flex-direction: column;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 0.25rem;
     }
     
     .security-badge i {
-        font-size: 1.5rem;
+        font-size: 1.15rem;
     }
     
     .security-badge span {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         text-align: center;
     }
     
