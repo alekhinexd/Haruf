@@ -340,7 +340,7 @@
 
 /* Profitable Reselling Section */
 .profitable-reselling {
-    padding: 80px 20px;
+    padding: 80px 20px 20px 20px;
     background: white;
     border-top: 1px solid #e5e5e5;
     overflow-x: hidden;
@@ -366,7 +366,7 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
     max-width: 1200px;
-    margin: 0 auto 40px;
+    margin: 0 auto 0;
     padding: 0 15px;
     box-sizing: border-box;
     overflow-x: hidden;
