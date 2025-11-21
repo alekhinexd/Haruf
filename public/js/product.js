@@ -643,8 +643,8 @@ function displayProduct(product) {
                 </div>
             </div>
             <div class="cart-notification-menu__buttons">
-                <button class="cart-notification-menu__button cart-notification-menu__button--secondary">Weiter einkaufen</button>
-                <button class="cart-notification-menu__button cart-notification-menu__button--primary">Zur Kasse</button>
+                <button class="cart-notification-menu__button cart-notification-menu__button--secondary" style="background-color: transparent !important; color: #5A3518 !important; border: 2px solid #5A3518 !important; padding: 14px !important; display: block !important; visibility: visible !important;">Weiter einkaufen</button>
+                <button class="cart-notification-menu__button cart-notification-menu__button--primary" style="background-color: #5A3518 !important; color: #ffffff !important; border: 2px solid #5A3518 !important; padding: 14px !important; display: block !important; visibility: visible !important;">Zur Kasse</button>
             </div>
         `;
         document.body.appendChild(notificationMenu);
@@ -788,9 +788,10 @@ function displayProduct(product) {
         window.metaPixel.trackViewContent({
             title: product.title,
             handle: product.handle,
-            id: product.id,
             price: product.selectedVariant.price
         });
+    } else {
+        console.warn('⚠️ Meta Pixel not available for ViewContent tracking');
     }
 
     // Load and display related products (using bestsellers)

@@ -31,50 +31,68 @@ console.log('📊 Meta Pixel: PageView tracked');
 
 // Helper function to track view content (product pages)
 function trackViewContent(productData) {
-    if (typeof fbq === 'undefined') return;
+    if (typeof fbq === 'undefined') {
+        console.error('❌ Meta Pixel: fbq not defined - ViewContent not tracked');
+        return;
+    }
     
-    fbq('track', 'ViewContent', {
+    const trackingData = {
         content_name: productData.title,
-        content_ids: [productData.handle || productData.id],
+        content_ids: [productData.handle],
         content_type: 'product',
         value: parseFloat(productData.price) || 0,
         currency: 'EUR'
-    });
-    console.log('📊 Meta Pixel: ViewContent tracked', productData.title);
+    };
+    
+    console.log('🎯 Tracking ViewContent:', trackingData);
+    fbq('track', 'ViewContent', trackingData);
+    console.log('✅ Meta Pixel: ViewContent tracked successfully');
 }
 
 // Helper function to track add to cart
 function trackAddToCart(item) {
-    if (typeof fbq === 'undefined') return;
+    if (typeof fbq === 'undefined') {
+        console.error('❌ Meta Pixel: fbq not defined - AddToCart not tracked');
+        return;
+    }
     
-    fbq('track', 'AddToCart', {
+    const trackingData = {
         content_name: item.title,
-        content_ids: [item.handle || item.id],
+        content_ids: [item.handle],
         content_type: 'product',
         value: parseFloat(item.price) * (item.quantity || 1),
         currency: 'EUR'
-    });
-    console.log('📊 Meta Pixel: AddToCart tracked', item.title);
+    };
+    
+    console.log('🎯 Tracking AddToCart:', trackingData);
+    fbq('track', 'AddToCart', trackingData);
+    console.log('✅ Meta Pixel: AddToCart tracked successfully');
 }
 
 // Helper function to track initiate checkout
 function trackInitiateCheckout(cart) {
-    if (typeof fbq === 'undefined') return;
+    if (typeof fbq === 'undefined') {
+        console.error('❌ Meta Pixel: fbq not defined - InitiateCheckout not tracked');
+        return;
+    }
     
     const value = cart.reduce((sum, item) => {
         return sum + (parseFloat(item.price) * item.quantity);
     }, 0);
     
-    const content_ids = cart.map(item => item.handle || item.id);
+    const content_ids = cart.map(item => item.handle);
     
-    fbq('track', 'InitiateCheckout', {
+    const trackingData = {
         content_ids: content_ids,
         content_type: 'product',
         value: value,
         currency: 'EUR',
         num_items: cart.length
-    });
-    console.log('📊 Meta Pixel: InitiateCheckout tracked', value);
+    };
+    
+    console.log('🎯 Tracking InitiateCheckout:', trackingData);
+    fbq('track', 'InitiateCheckout', trackingData);
+    console.log('✅ Meta Pixel: InitiateCheckout tracked successfully');
 }
 
 // Helper function to track purchase (order confirmation page)
@@ -86,23 +104,19 @@ function trackPurchase(orderData) {
         return;
     }
     
-    const content_ids = orderData.items.map(item => item.handle || item.id || item.title);
+    const content_ids = orderData.items.map(item => item.handle);
     
-    console.log('🎯 Sending Purchase event to Meta Pixel...');
-    console.log('Value:', orderData.total);
-    console.log('Currency: EUR');
-    console.log('Items:', orderData.items.length);
-    console.log('Content IDs:', content_ids);
-    
-    fbq('track', 'Purchase', {
+    const trackingData = {
         content_ids: content_ids,
         content_type: 'product',
         value: orderData.total,
         currency: 'EUR',
         num_items: orderData.items.length
-    });
+    };
     
-    console.log('✅ Meta Pixel: Purchase tracked - €' + orderData.total);
+    console.log('🎯 Tracking Purchase:', trackingData);
+    fbq('track', 'Purchase', trackingData);
+    console.log('✅ Meta Pixel: Purchase tracked successfully - €' + orderData.total);
 }
 
 // Make functions globally available
