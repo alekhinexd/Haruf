@@ -363,6 +363,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     paymentMethods: {
                         link: 'never',
                         amazonPay: 'never'
+                    },
+                    fields: {
+                        billingDetails: 'auto'
                     }
                 });
                 
@@ -428,18 +431,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     applePay: 'never',  // Already in express checkout
                     googlePay: 'never'  // Already in express checkout
                 },
-                paymentMethodOrder: ['card', 'klarna', 'sepa_debit'],
-                fields: {
-                    billingDetails: {
-                        name: 'never',
-                        email: 'never',
-                        phone: 'never',
-                        address: {
-                            country: 'never',
-                            postalCode: 'never'
-                        }
-                    }
-                }
+                paymentMethodOrder: ['card', 'klarna', 'sepa_debit']
             });
             paymentElement.mount('#payment-element');
 
@@ -527,36 +519,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             console.log('🔄 Confirming payment with Stripe...');
             
-            // Confirm payment with Stripe - let Stripe handle billing details from payment element
+            // Confirm payment with Stripe - Payment Element handles billing details automatically
             const { error } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
                     return_url: `${window.location.origin}/pages/order-confirmation.html`,
-                    receipt_email: customerData.email,
-                    payment_method_data: {
-                        billing_details: {
-                            name: `${customerData.firstName} ${customerData.lastName}`,
-                            email: customerData.email,
-                            address: {
-                                line1: customerData.address,
-                                line2: customerData.apartment || '',
-                                city: customerData.city,
-                                state: customerData.state || '',
-                                postal_code: customerData.postalCode,
-                                country: customerData.country
-                            }
-                        }
-                    },
-                    shipping: {
-                        name: `${customerData.firstName} ${customerData.lastName}`,
-                        address: {
-                            line1: customerData.address,
-                            line2: customerData.apartment || '',
-                            city: customerData.city,
-                            postal_code: customerData.postalCode,
-                            country: customerData.country
-                        }
-                    }
+                    receipt_email: customerData.email
                 }
             });
 

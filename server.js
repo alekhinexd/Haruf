@@ -253,20 +253,29 @@ app.post('/api/payment-intents', async (req, res) => {
             currency: 'eur',
             automatic_payment_methods: {
                 enabled: true,
+                allow_redirects: 'always'
             },
             // Store order metadata for webhook processing
             metadata: {
                 orderNumber,
-                customerName,
-                customerEmail,
+                customerName: customerName || 'Customer',
+                customerEmail: customerEmail || '',
                 cartItems: JSON.stringify(cartItems.map(item => ({
                     title: item.title,
                     price: item.price,
                     quantity: item.quantity
-                })))
+                }))),
+                discountCode: discountCode || '',
+                discountAmount: discountAmount || '0'
             },
-            receipt_email: customerEmail,
-            description: `Order from Dupelify - ${cartItems.length} item(s)`
+            receipt_email: customerEmail || undefined,
+            description: `Order from Dupelify - ${cartItems.length} item(s)`,
+            shipping: customerName ? {
+                name: customerName,
+                address: {
+                    country: 'DE'
+                }
+            } : undefined
         });
 
         console.log('PaymentIntent created:', paymentIntent.id);
