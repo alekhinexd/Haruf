@@ -663,7 +663,7 @@ function displayProduct(product) {
         });
 
         checkoutBtn.addEventListener('click', () => {
-            window.location.href = '/pages/cart.html';
+            window.location.href = '/pages/checkout.html';
         });
     }
 
