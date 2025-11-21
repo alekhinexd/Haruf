@@ -64,36 +64,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.metaPixel.trackAddToCart(cartItem);
                 }
 
-                // Show notification using the dynamically created menu
-                let notificationMenu = document.querySelector('.cart-notification-menu');
-                
-                // Ensure menu exists (should be created by displayProduct)
-                if (!notificationMenu) {
-                    console.error('Notification menu not found');
-                    return;
-                }
-                
+                // Show notification menu
+                const notificationMenu = document.querySelector('.cart-notification-menu');
                 const productImage = notificationMenu.querySelector('.cart-notification-menu__product-image');
                 const productTitle = notificationMenu.querySelector('.cart-notification-menu__product-title');
                 const productPrice = notificationMenu.querySelector('.cart-notification-menu__product-price');
 
-                if (productImage) {
-                    productImage.src = currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src;
-                    productImage.alt = currentProduct.title;
-                }
+                productImage.src = currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src;
+                productImage.alt = currentProduct.title;
                 
                 // Titel mit Varianteninformation anzeigen, wenn vorhanden
                 let titleWithVariant = currentProduct.title;
                 if (currentProduct.selectedVariant.option1 && currentProduct.selectedVariant.option1 !== 'Default Title') {
                     titleWithVariant += ` - ${currentProduct.selectedVariant.option1}`;
                 }
-                if (productTitle) productTitle.textContent = titleWithVariant;
-                if (productPrice) productPrice.textContent = formatPrice(currentProduct.selectedVariant.price);
+                productTitle.textContent = titleWithVariant;
+                
+                productPrice.textContent = formatPrice(currentProduct.selectedVariant.price);
 
-                // Show the notification and overlay
-                const overlay = document.querySelector('.cart-notification-menu-overlay');
                 notificationMenu.classList.add('visible');
-                if (overlay) overlay.classList.add('visible');
 
                 // Show feedback with black color scheme
                 const originalText = newAddToCartButton.textContent;
@@ -635,103 +624,41 @@ function displayProduct(product) {
     // Initially show price with first variant
     updatePrice(currentProduct.selectedVariant);
 
-    // Update product details with black color scheme
-    // Add cart notification menu if it doesn't exist
-    if (!document.querySelector('.cart-notification-menu')) {
-        // Create overlay
-        const menuOverlay = document.createElement('div');
-        menuOverlay.className = 'cart-notification-menu-overlay';
-        document.body.appendChild(menuOverlay);
-        
-        const notificationMenu = document.createElement('div');
-        notificationMenu.className = 'cart-notification-menu';
-        notificationMenu.innerHTML = `
-            <div class="cart-notification-menu__header">
-                <h3 class="cart-notification-menu__title">Zum Warenkorb hinzugefügt</h3>
-                <button class="cart-notification-menu__close">&times;</button>
-            </div>
-            <div class="cart-notification-menu__product">
-                <img class="cart-notification-menu__product-image" src="" alt="">
-                <div class="cart-notification-menu__product-info">
-                    <h4 class="cart-notification-menu__product-title"></h4>
-                    <p class="cart-notification-menu__product-price"></p>
-                </div>
-            </div>
-            <div class="cart-notification-menu__buttons">
-                <button class="cart-notification-menu__button cart-notification-menu__button--secondary" style="pointer-events: auto !important; touch-action: manipulation !important;">Weiter einkaufen</button>
-                <button class="cart-notification-menu__button cart-notification-menu__button--primary" style="pointer-events: auto !important; touch-action: manipulation !important;">Zur Kasse</button>
-            </div>
-        `;
-        document.body.appendChild(notificationMenu);
-
-        // Add event listeners for the notification menu with mobile support
+    // Add event listeners to notification menu buttons
+    const notificationMenu = document.querySelector('.cart-notification-menu');
+    if (notificationMenu) {
         const closeBtn = notificationMenu.querySelector('.cart-notification-menu__close');
         const continueBtn = notificationMenu.querySelector('.cart-notification-menu__button--secondary');
         const checkoutBtn = notificationMenu.querySelector('.cart-notification-menu__button--primary');
 
-        // Style buttons for better touch interaction
-        if (continueBtn) {
-            continueBtn.style.pointerEvents = 'auto';
-            continueBtn.style.cursor = 'pointer';
-            continueBtn.style.touchAction = 'manipulation';
-        }
-        
-        if (checkoutBtn) {
-            checkoutBtn.style.pointerEvents = 'auto';
-            checkoutBtn.style.cursor = 'pointer';
-            checkoutBtn.style.touchAction = 'manipulation';
-        }
-
-        // Get overlay
-        const overlay = document.querySelector('.cart-notification-menu-overlay');
-        
-        // Close button
-        if (closeBtn) {
-            const closeNotification = (e) => {
-                if (e) e.preventDefault();
-                notificationMenu.classList.remove('visible');
-                if (overlay) overlay.classList.remove('visible');
-            };
-            closeBtn.addEventListener('click', closeNotification, { passive: false });
-            closeBtn.addEventListener('touchstart', closeNotification, { passive: false });
-        }
-        
         // Close on overlay click
-        if (overlay) {
-            overlay.addEventListener('click', () => {
+        notificationMenu.addEventListener('click', (e) => {
+            if (e.target === notificationMenu) {
                 notificationMenu.classList.remove('visible');
-                overlay.classList.remove('visible');
+            }
+        });
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notificationMenu.classList.remove('visible');
             });
         }
 
-        // Continue shopping button - goes to products page
         if (continueBtn) {
-            const goToProducts = (e) => {
-                e.preventDefault();
+            continueBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 notificationMenu.classList.remove('visible');
-                if (overlay) overlay.classList.remove('visible');
-                setTimeout(() => {
-                    window.location.href = '/pages/products.html';
-                }, 100);
-            };
-            continueBtn.addEventListener('click', goToProducts, { passive: false });
-            continueBtn.addEventListener('touchstart', goToProducts, { passive: false });
+                window.location.href = '/pages/products.html';
+            });
         }
 
-        // Checkout button - goes to checkout
         if (checkoutBtn) {
-            const goToCheckout = (e) => {
-                e.preventDefault();
+            checkoutBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 notificationMenu.classList.remove('visible');
-                if (overlay) overlay.classList.remove('visible');
-                setTimeout(() => {
-                    window.location.href = '/pages/checkout.html';
-                }, 100);
-            };
-            checkoutBtn.addEventListener('click', goToCheckout, { passive: false });
-            checkoutBtn.addEventListener('touchstart', goToCheckout, { passive: false });
+                window.location.href = '/pages/checkout.html';
+            });
         }
     }
 
