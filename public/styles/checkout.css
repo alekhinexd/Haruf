@@ -710,15 +710,24 @@
     margin-bottom: 1.5rem;
 }
 
+/* Summary Heading */
+.summary-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #202223;
+    margin: 2rem 0 0 0;
+    padding: 0;
+}
+
 /* Order Summary Inline with Payment */
 .order-summary-inline {
     background: transparent;
-    padding: 1.5rem 0 0 0;
+    padding: 1rem 0 0 0;
     border-radius: 0;
     border: none;
-    border-top: 1px solid #e1e3e5;
+    border-top: none;
     border-bottom: none;
-    margin-top: 2rem;
+    margin-top: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
