@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/components/header.html');
         const html = await response.text();
         headerContainer.innerHTML = html;
+        
+        // Initialize mobile menu after header is loaded
+        initializeMobileMenu();
+        
+        // Update cart count after header is loaded
+        updateCartCount();
     }
 
     // Sticky header on scroll up - only header, not announcement bar
@@ -45,21 +51,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
     }
 
-    // Update cart count
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-    
-    const cartCount = document.getElementById('cart-count');
-    if (cartCount) {
-        cartCount.textContent = totalItems;
-    }
-    
-    // Update mobile cart count
-    const mobileCartCounts = document.querySelectorAll('.mobile-cart-count');
-    mobileCartCounts.forEach(count => {
-        count.textContent = totalItems;
-    });
-
     // Prevent annoying double-tap zoom on mobile while keeping normal taps
     let lastTouchEnd = 0;
     document.addEventListener('touchend', function (event) {
@@ -70,3 +61,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         lastTouchEnd = now;
     }, { passive: false });
 });
+
+// Update cart count
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    
+    // Update all cart count elements
+    const cartCounts = document.querySelectorAll('.cart-count');
+    cartCounts.forEach(count => {
+        count.textContent = totalItems;
+    });
+}
+
+// Initialize mobile menu functionality
+function initializeMobileMenu() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const mobileMenuClose = document.querySelector('.mobile-menu__close');
+    const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+
+    if (mobileMenuToggle && mobileMenu) {
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+}
