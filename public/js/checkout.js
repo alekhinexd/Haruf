@@ -341,7 +341,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             };
             
-            elements = stripe.elements({ clientSecret, appearance });
+            elements = stripe.elements({ 
+                clientSecret, 
+                appearance,
+                loader: 'auto'
+            });
 
             // Create Express Checkout Element (Apple Pay & Google Pay)
             console.log('🔄 Creating express checkout element...');
@@ -355,7 +359,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                         applePay: 'buy',
                         googlePay: 'buy'
                     },
-                    buttonHeight: 48
+                    buttonHeight: 48,
+                    paymentMethods: {
+                        link: 'never',
+                        amazonPay: 'never'
+                    }
                 });
                 
                 // Mount express checkout
@@ -373,24 +381,30 @@ document.addEventListener('DOMContentLoaded', async function() {
                 
                 // Listen for express checkout events
                 expressCheckoutElement.on('confirm', async (event) => {
-                    console.log('🎯 Express checkout confirmed');
+                    console.log('🎯 Express checkout confirmed, processing payment...');
                     
-                    // Get cart and customer data
-                    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
-                    const formData = new FormData(checkoutForm);
-                    const customerData = Object.fromEntries(formData.entries());
+                    // Submit the payment to Stripe - this is required!
+                    const { error: submitError } = await elements.submit();
                     
-                    // Store for order confirmation
-                    localStorage.setItem('customerData', JSON.stringify(customerData));
+                    if (submitError) {
+                        console.error('❌ Submit error:', submitError);
+                        showMessage(submitError.message, true);
+                        return;
+                    }
                     
-                    // Complete the payment
-                    const { error } = await event.resolve();
+                    // Confirm the payment
+                    const { error } = await stripe.confirmPayment({
+                        elements,
+                        confirmParams: {
+                            return_url: `${window.location.origin}/pages/order-confirmation.html`
+                        }
+                    });
                     
                     if (error) {
-                        console.error('❌ Express checkout error:', error);
+                        console.error('❌ Payment error:', error);
                         showMessage(error.message, true);
                     }
-                    // Success redirects automatically to return_url
+                    // If no error, Stripe redirects automatically
                 });
                 
                 expressCheckoutElement.on('cancel', () => {
