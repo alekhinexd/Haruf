@@ -101,10 +101,18 @@
     max-width: 100%;
 }
 
+.checkout-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #202223;
+}
+
 .checkout-subtitle {
-    color: #6c757d;
+    color: #6d7175;
     font-size: 0.95rem;
-    margin-top: 0.5rem;
+    margin: 0;
+    font-weight: 400;
 }
 
 /* Form Styles */
@@ -144,12 +152,12 @@
 .section-header-simple h2 {
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     margin-top: 0;
     color: #202223;
-    padding-bottom: 0.75rem;
+    padding-bottom: 0;
     padding-top: 0;
-    border-bottom: 2px solid #5A3518;
+    border-bottom: none;
     border-top: none;
 }
 
@@ -221,19 +229,20 @@
 
 .shipping-option-name {
     font-size: 1rem;
-    font-weight: 600;
-    color: #5A3518;
+    font-weight: 500;
+    color: #202223;
     margin-bottom: 0.35rem;
 }
 
 .shipping-option-description {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: #6d7175;
+    font-weight: 400;
 }
 
 .shipping-option-price {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 600;
     color: #5A3518;
     padding-left: 1rem;
 }
@@ -704,12 +713,7 @@
 }
 
 .order-summary-inline h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #202223;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #5A3518;
+    display: none;
 }
 
 .payment-divider {
@@ -776,9 +780,11 @@
 .security-badges {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3rem;
     margin-top: 2rem;
-    padding: 1.5rem 0;
+    padding: 2rem 0;
     background-color: transparent;
     border-radius: 0;
     border-top: 1px solid #e1e3e5;
@@ -788,20 +794,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     text-align: center;
+    flex: 0 0 auto;
 }
 
 .security-badge i {
-    font-size: 1.5rem;
-    color: #4CAF50;
+    font-size: 2rem;
+    color: #5A3518;
+    margin-bottom: 0.25rem;
 }
 
 .security-badge span {
-    font-size: 0.75rem;
-    color: #6d7175;
-    font-weight: 500;
-    line-height: 1.3;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #6b7280;
 }
 
 .checkout-button i {
@@ -900,24 +908,23 @@
     
     /* Mobile Security Badges */
     .security-badges {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-        padding: 1rem;
+        gap: 1.5rem;
+        padding: 1.5rem 0;
     }
     
     .security-badge {
-        flex-direction: row;
-        justify-content: flex-start;
-        gap: 0.75rem;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.5rem;
     }
     
     .security-badge i {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
     
     .security-badge span {
-        font-size: 0.8rem;
-        text-align: left;
+        font-size: 0.75rem;
+        text-align: center;
     }
     
     /* Mobile Order Summary - Sticky on Payment Step */
