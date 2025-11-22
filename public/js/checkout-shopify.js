@@ -14,8 +14,26 @@ const DISCOUNT_CODES = {
 let appliedDiscount = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 Checkout page loaded');
+    
+    // Check if cart has items
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log('🛒 Cart items:', cart.length);
+    
+    if (cart.length === 0) {
+        console.warn('⚠️ Cart is empty, redirecting...');
+        // Don't redirect immediately, just warn
+    }
+    
     // Initialize Stripe
-    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+    console.log('🔑 Initializing Stripe with key:', STRIPE_PUBLISHABLE_KEY.substring(0, 20) + '...');
+    try {
+        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        console.log('✅ Stripe initialized');
+    } catch (error) {
+        console.error('❌ Failed to initialize Stripe:', error);
+        return;
+    }
     
     // Load cart and populate
     loadCartItems();
@@ -24,12 +42,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupEventListeners();
     
     // Track InitiateCheckout
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (window.metaPixel && typeof window.metaPixel.trackInitiateCheckout === 'function') {
         window.metaPixel.trackInitiateCheckout(cart);
     }
     
     // Initialize Stripe payment
+    console.log('💳 Starting Stripe payment initialization...');
     await initializeStripePayment();
 });
 
@@ -164,7 +182,11 @@ function applyDiscount(source) {
 async function initializeStripePayment() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     
+    console.log('💳 initializeStripePayment called, cart length:', cart.length);
+    
     if (cart.length === 0) {
+        console.warn('⚠️ Cart is empty in initializeStripePayment');
+        showMessage('Ihr Warenkorb ist leer', true);
         return;
     }
     
@@ -184,7 +206,10 @@ async function initializeStripePayment() {
         const total = Math.max(0, subtotal - discountAmount);
         const amountInCents = Math.round(total * 100);
         
+        console.log('💰 Total amount:', total, 'EUR (', amountInCents, 'cents)');
+        
         // Create PaymentIntent
+        console.log('📡 Creating PaymentIntent...');
         const response = await fetch('/api/payment-intents', {
             method: 'POST',
             headers: {
@@ -198,8 +223,24 @@ async function initializeStripePayment() {
             })
         });
         
+        console.log('📡 Response status:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ API Error:', errorText);
+            throw new Error(`API returned ${response.status}: ${errorText}`);
+        }
+        
         const data = await response.json();
+        console.log('📦 PaymentIntent data received:', data);
         clientSecret = data.clientSecret;
+        
+        if (!clientSecret) {
+            console.error('❌ No clientSecret in response');
+            throw new Error('No clientSecret received from server');
+        }
+        
+        console.log('🔑 ClientSecret:', clientSecret.substring(0, 20) + '...');
         
         // Initialize Stripe Elements with Shopify-like appearance
         const appearance = {
@@ -232,10 +273,12 @@ async function initializeStripePayment() {
             }
         };
         
+        console.log('🎨 Creating Stripe Elements with appearance...');
         elements = stripe.elements({
             clientSecret,
             appearance
         });
+        console.log('✅ Elements instance created:', elements);
         
         // Create Express Checkout Element (Apple Pay, Google Pay)
         console.log('🚀 Creating Express Checkout Element...');
@@ -315,8 +358,21 @@ async function initializeStripePayment() {
         });
         
     } catch (error) {
-        console.error('Error initializing payment:', error);
-        showMessage('Zahlung konnte nicht initialisiert werden. Bitte versuchen Sie es erneut.', true);
+        console.error('❌ Error initializing payment:', error);
+        console.error('❌ Error stack:', error.stack);
+        showMessage('Zahlung konnte nicht initialisiert werden. Bitte versuchen Sie es erneut. Fehler: ' + error.message, true);
+        
+        // Show error in payment element area
+        const paymentContainer = document.getElementById('payment-element');
+        if (paymentContainer) {
+            paymentContainer.innerHTML = `
+                <div style="padding: 20px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; color: #856404;">
+                    <p style="margin: 0; font-weight: 600;">⚠️ Fehler beim Laden der Zahlungsmethoden</p>
+                    <p style="margin: 8px 0 0 0; font-size: 14px;">${error.message}</p>
+                    <p style="margin: 8px 0 0 0; font-size: 12px;">Bitte aktualisieren Sie die Seite oder kontaktieren Sie den Support.</p>
+                </div>
+            `;
+        }
     }
 }
 

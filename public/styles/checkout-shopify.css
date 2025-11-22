@@ -18,7 +18,7 @@ body.shopify-checkout {
 /* ========== HEADER ========== */
 .shopify-header {
     border-bottom: 1px solid #e1e3e5;
-    padding: 16px 20px;
+    padding: 20px 20px;
     background: #fff;
 }
 
@@ -31,7 +31,7 @@ body.shopify-checkout {
 }
 
 .shopify-logo img {
-    height: 32px;
+    height: 42px;
     display: block;
 }
 
@@ -42,6 +42,7 @@ body.shopify-checkout {
     cursor: pointer;
     color: #202223;
     display: block;
+    position: relative;
 }
 
 /* ========== MOBILE ORDER SUMMARY ========== */
