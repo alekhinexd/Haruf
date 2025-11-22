@@ -432,11 +432,6 @@ async function initializeStripePayment() {
                 googlePay: 'auto'
             },
             paymentMethodOrder: ['card', 'klarna', 'paypal', 'sepa_debit'],
-            fields: {
-                billingDetails: {
-                    email: 'never'
-                }
-            },
             terms: {
                 card: 'never'
             },
