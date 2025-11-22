@@ -281,6 +281,7 @@ body.shopify-checkout {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    transition: all 0.3s ease;
 }
 
 .section-header {
@@ -509,34 +510,96 @@ body.shopify-checkout {
     text-decoration: underline;
 }
 
-/* ========== EXPRESS CHECKOUT ========== */
-.express-checkout-section {
+/* ========== CUSTOM EXPRESS BUTTONS ========== */
+.custom-express-section {
     margin-bottom: 24px;
 }
 
-.express-title {
-    font-size: 14px;
-    color: #6d7175;
-    text-align: center;
-    margin-bottom: 12px;
-    font-weight: 400;
-}
-
-.express-checkout-buttons {
+.custom-express-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 16px;
-    border: none !important;
 }
 
-#express-checkout-element {
-    border: none !important;
-    box-shadow: none !important;
+.express-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 48px;
+}
+
+.apple-pay-btn {
+    background: #000;
+    color: #fff;
+}
+
+.apple-pay-btn:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+.google-pay-btn {
+    background: #fff;
+    color: #5f6368;
+    border: 1px solid #dadce0;
+}
+
+.google-pay-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+}
+
+/* Express Checkout Message */
+.express-checkout-message {
+    padding: 20px;
+    background: #d4edda;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.express-message-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.express-message-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #155724;
+    margin: 0 0 4px 0;
+}
+
+.express-message-text {
+    font-size: 14px;
+    color: #155724;
+    margin: 0;
 }
 
 @media (max-width: 400px) {
-    .express-checkout-buttons {
+    .custom-express-buttons {
         grid-template-columns: 1fr;
     }
 }

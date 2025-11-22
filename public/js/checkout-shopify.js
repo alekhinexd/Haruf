@@ -350,61 +350,8 @@ async function initializeStripePayment() {
             throw elementsError;
         }
         
-        // Create Express Checkout Element (Apple Pay, Google Pay)
-        console.log('🚀 Creating Express Checkout Element...');
-        expressCheckoutElement = elements.create('expressCheckout', {
-            buttonType: {
-                applePay: 'buy',
-                googlePay: 'buy'
-            },
-            buttonHeight: 48,
-            layout: {
-                maxColumns: 2,
-                maxRows: 1
-            }
-        });
-        
-        try {
-            await expressCheckoutElement.mount('#express-checkout-element');
-            console.log('✅ Express Checkout Element mounted');
-            
-            // Force visibility check
-            setTimeout(() => {
-                const expressContainer = document.getElementById('express-checkout-element');
-                const expressIframe = expressContainer?.querySelector('iframe');
-                if (expressIframe) {
-                    console.log('✅ Express iframe found:', expressIframe);
-                    console.log('   Iframe height:', expressIframe.offsetHeight);
-                } else {
-                    console.warn('⚠️ Express iframe NOT found - may not be available for this browser');
-                }
-            }, 2000);
-        } catch (mountError) {
-            console.error('❌ Failed to mount express checkout:', mountError);
-            // Don't throw - express checkout may not be available
-        }
-        
-        // Handle express checkout confirm
-        expressCheckoutElement.on('confirm', async (event) => {
-            const formData = new FormData(document.getElementById('checkout-form'));
-            const customerData = Object.fromEntries(formData.entries());
-            
-            const { error } = await stripe.confirmPayment({
-                elements,
-                confirmParams: {
-                    return_url: `${window.location.origin}/pages/order-confirmation.html`,
-                    receipt_email: customerData.email || event.billingDetails?.email
-                },
-                redirect: 'if_required'
-            });
-            
-            if (error) {
-                showMessage(error.message, true);
-                event.complete('fail');
-            } else {
-                event.complete('success');
-            }
-        });
+        // Setup custom express buttons
+        setupCustomExpressButtons();
         
         // Create Payment Element  
         console.log('🚀 Creating Payment Element...');
@@ -488,9 +435,9 @@ async function initializeStripePayment() {
             }
         });
         
-        // Log when express checkout is ready
-        expressCheckoutElement.on('ready', function() {
-            console.log('✅ Express checkout buttons loaded');
+        // Monitor payment method selection
+        paymentElement.on('change', function(event) {
+            handlePaymentMethodChange(event);
         });
         
     } catch (error) {
