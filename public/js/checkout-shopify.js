@@ -335,7 +335,7 @@ async function initializeStripePayment() {
             elements = stripe.elements({
                 clientSecret,
                 appearance,
-                loader: 'auto'
+                loader: 'always'
             });
             console.log('✅ Elements instance created:', elements);
             
@@ -415,7 +415,11 @@ async function initializeStripePayment() {
                 radios: true,
                 spacedAccordionItems: false
             },
-            paymentMethodOrder: ['card', 'klarna', 'sepa_debit'],
+            wallets: {
+                applePay: 'auto',
+                googlePay: 'auto'
+            },
+            paymentMethodOrder: ['card', 'klarna', 'paypal', 'sepa_debit'],
             fields: {
                 billingDetails: {
                     email: 'never'

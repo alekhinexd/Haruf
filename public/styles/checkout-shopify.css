@@ -439,14 +439,18 @@ body.shopify-checkout {
     min-height: 300px;
     margin-top: 24px;
     margin-bottom: 16px;
+    border: none !important;
 }
 
 #payment-element {
     min-height: 250px;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 #payment-element iframe {
     min-height: 250px !important;
+    border: none !important;
 }
 
 #express-checkout-element {
@@ -523,6 +527,12 @@ body.shopify-checkout {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 16px;
+    border: none !important;
+}
+
+#express-checkout-element {
+    border: none !important;
+    box-shadow: none !important;
 }
 
 @media (max-width: 400px) {
@@ -646,9 +656,9 @@ body.shopify-checkout {
     border-radius: 8px !important;
 }
 
-/* Payment Element styling to match Shopify radio buttons */
+/* Payment Element styling - NO BORDER */
 .payment-element-wrapper {
-    border: 2px solid #d1d5db;
-    border-radius: 8px;
-    overflow: hidden;
+    border: none !important;
+    border-radius: 0;
+    overflow: visible;
 }
