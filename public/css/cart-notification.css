@@ -3,13 +3,19 @@
     top: -100%;
     right: 20px;
     width: 320px;
+    background: transparent !important;
+    border: none !important;
+    padding: 0;
+    transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10000 !important;
+}
+
+.cart-notification-menu__content {
     background-color: #ffffff !important;
     border: none !important;
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
-    transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000 !important;
 }
 
 .cart-notification-menu.visible {
@@ -148,6 +154,10 @@
         max-width: 450px;
         right: 20px;
         top: 80px !important;
+        padding: 0;
+    }
+    
+    .cart-notification-menu__content {
         padding: 20px;
     }
     
