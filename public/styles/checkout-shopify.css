@@ -180,7 +180,7 @@ body.shopify-checkout {
 .discount-input {
     flex: 1;
     padding: 11px 16px;
-    border: 1px solid #d1d5db;
+    border: 1px solid #e1e3e5;
     border-radius: 6px;
     font-size: 14px;
     color: #202223;
@@ -199,7 +199,7 @@ body.shopify-checkout {
 .apply-btn {
     padding: 11px 20px;
     background: #f6f6f7;
-    border: 1px solid #d1d5db;
+    border: 1px solid #e1e3e5;
     border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
@@ -267,7 +267,7 @@ body.shopify-checkout {
 }
 
 .checkout-main-content {
-    padding: 20px 8px;
+    padding: 20px;
 }
 
 /* ========== FORM SECTIONS ========== */
@@ -326,7 +326,7 @@ body.shopify-checkout {
 .shopify-select {
     width: 100%;
     padding: 13px 16px;
-    border: 2px solid #d1d5db;
+    border: 1px solid #e1e3e5;
     border-radius: 8px;
     font-size: 16px;
     color: #202223;
@@ -437,16 +437,16 @@ body.shopify-checkout {
     font-size: 13px;
     color: #6d7175;
     line-height: 1.6;
-    margin-bottom: 4px;
+    margin-bottom: 0px;
 }
 
 /* Payment Element Wrapper */
 .payment-element-wrapper {
     min-height: 300px;
-    margin-top: 0px;
+    margin-top: -8px;
     margin-bottom: 16px;
-    margin-left: -8px;
-    margin-right: -8px;
+    margin-left: -20px;
+    margin-right: -20px;
     border: none !important;
 }
 
