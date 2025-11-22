@@ -24,7 +24,7 @@ const DISCOUNT_CODES = {
     'WELCOME10': { type: 'percentage', value: 10 },
     'SAVE20': { type: 'percentage', value: 20 },
     'FREESHIP': { type: 'fixed', value: 0 },
-    'test95': { type: 'percentage', value: 95 }
+    'TEST95': { type: 'percentage', value: 95 }
 };
 
 let appliedDiscount = null;
