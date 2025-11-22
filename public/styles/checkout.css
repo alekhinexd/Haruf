@@ -273,6 +273,17 @@
 
 #payment-element {
     margin-bottom: 1.5rem;
+    min-height: 200px;
+}
+
+/* Ensure payment methods are visible on mobile */
+@media (max-width: 768px) {
+    #payment-element {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 250px;
+    }
 }
 
 /* Custom styling for expanded payment methods */

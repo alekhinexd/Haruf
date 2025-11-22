@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
 
         // Display shipping details
-        if (customerData) {
+        if (customerData && customerData.firstName) {
             shippingDetails.innerHTML = `
                 <p><strong>${customerData.firstName || ''} ${customerData.lastName || ''}</strong></p>
                 <p>${customerData.address || ''}</p>
@@ -80,6 +80,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 <p>${customerData.city || ''}, ${customerData.postalCode || ''}</p>
                 <p>${customerData.country || ''}</p>
                 <p>Email: ${customerData.email || ''}</p>
+            `;
+        } else {
+            // Express checkout was used (Apple Pay, Google Pay, Klarna)
+            shippingDetails.innerHTML = `
+                <p><strong>✅ Customer information provided via express checkout</strong></p>
+                <p>Your order details have been sent to your email.</p>
             `;
         }
 

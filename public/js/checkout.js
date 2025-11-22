@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 expressCheckoutElement.mount('#express-checkout-element');
                 console.log('✅ Express checkout element mounted');
                 
-                // Prevent hiding on ready and remove loading animation
+                // Prevent hiding on ready and remove loading animation with delay
                 expressCheckoutElement.on('ready', () => {
                     console.log('✅ Express checkout ready and visible');
                     const expressSection = document.querySelector('.express-checkout-top');
@@ -382,32 +382,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                     if (expressSection) {
                         expressSection.style.display = 'block';
                     }
-                    if (expressElement) {
-                        expressElement.classList.add('loaded');
-                    }
+                    // Delay hiding the loader to ensure buttons are visible
+                    setTimeout(() => {
+                        if (expressElement) {
+                            expressElement.classList.add('loaded');
+                        }
+                    }, 500);
                 });
                 
                 // Listen for express checkout events
+                // Express checkout (Apple Pay, Google Pay, Klarna) handles customer data collection automatically
                 expressCheckoutElement.on('confirm', async (event) => {
                     console.log('🎯 Express checkout confirmed, processing payment...');
+                    console.log('💡 Payment method will collect customer info automatically');
                     
                     // Store order data for confirmation page
                     const cart = JSON.parse(localStorage.getItem('cart')) || [];
                     const orderNumber = localStorage.getItem('orderNumber') || 'DP' + Date.now().toString().slice(-6);
                     localStorage.setItem('orderNumber', orderNumber);
-                    
-                    // Get basic customer data from form if available, otherwise use placeholder
-                    const formData = new FormData(checkoutForm);
-                    const customerData = {
-                        email: formData.get('email') || 'customer@example.com',
-                        firstName: formData.get('firstName') || 'Customer',
-                        lastName: formData.get('lastName') || '',
-                        address: formData.get('address') || '',
-                        city: formData.get('city') || '',
-                        postalCode: formData.get('postalCode') || '',
-                        country: formData.get('country') || 'DE'
-                    };
-                    localStorage.setItem('customerData', JSON.stringify(customerData));
                     
                     // Track InitiateCheckout for express
                     if (window.metaPixel && typeof window.metaPixel.trackInitiateCheckout === 'function') {
@@ -415,16 +407,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                         window.metaPixel.trackInitiateCheckout(cart);
                     }
                     
-                    // Submit the payment to Stripe - this is required!
-                    const { error: submitError } = await elements.submit();
-                    
-                    if (submitError) {
-                        console.error('❌ Submit error:', submitError);
-                        showMessage(submitError.message, true);
-                        return;
-                    }
-                    
-                    // Confirm the payment
+                    // Express checkout handles everything - just confirm payment
+                    // Klarna/Apple Pay/Google Pay will collect and send customer info automatically
                     const { error } = await stripe.confirmPayment({
                         elements,
                         confirmParams: {
@@ -433,7 +417,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     });
                     
                     if (error) {
-                        console.error('❌ Payment error:', error);
+                        console.error('❌ Express payment error:', error);
                         showMessage(error.message, true);
                     }
                     // If no error, Stripe redirects automatically to confirmation page
@@ -448,7 +432,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
 
             // Create and mount the Payment Element with accordion layout for better mobile support
-            // Include ALL payment methods including Apple Pay and Klarna
+            // Include ALL payment methods including Apple Pay and Klarna - FORCE on mobile
             paymentElement = elements.create('payment', {
                 layout: {
                     type: 'accordion',
@@ -460,26 +444,35 @@ document.addEventListener('DOMContentLoaded', async function() {
                     applePay: 'auto',  // Show Apple Pay in both express and bottom
                     googlePay: 'auto'  // Show Google Pay in both express and bottom
                 },
-                paymentMethodOrder: ['apple_pay', 'google_pay', 'card', 'klarna', 'sepa_debit']
+                paymentMethodOrder: ['card', 'klarna', 'apple_pay', 'google_pay', 'sepa_debit'],
+                // Force display on mobile
+                readOnly: false
             });
             paymentElement.mount('#payment-element');
 
             console.log('✅ Stripe Payment Element mounted successfully');
             console.log('✅ Payment methods loaded - user can now select payment method');
+            console.log('📋 Requested payment methods:', ['card', 'klarna', 'apple_pay', 'google_pay', 'sepa_debit']);
 
-            // Track AddPaymentInfo when payment element is ready and remove loading animation
+            // Track AddPaymentInfo when payment element is ready and remove loading animation with delay
             paymentElement.on('ready', function() {
                 console.log('💳 Payment Element ready - tracking AddPaymentInfo');
+                console.log('📱 User Agent:', navigator.userAgent);
+                console.log('📱 Is Mobile:', /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+                
                 const cartData = JSON.parse(localStorage.getItem('cart')) || [];
                 if (window.metaPixel && typeof window.metaPixel.trackAddPaymentInfo === 'function') {
                     window.metaPixel.trackAddPaymentInfo(cartData);
                 }
                 
-                // Remove loading animation
-                const paymentContainer = document.getElementById('payment-element');
-                if (paymentContainer) {
-                    paymentContainer.classList.add('payment-element-ready');
-                }
+                // Remove loading animation with delay to ensure payment methods are visible
+                setTimeout(() => {
+                    const paymentContainer = document.getElementById('payment-element');
+                    if (paymentContainer) {
+                        paymentContainer.classList.add('payment-element-ready');
+                        console.log('✅ Payment methods should now be visible');
+                    }
+                }, 500);
             });
             
             // Hide the initializing message
