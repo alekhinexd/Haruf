@@ -157,15 +157,41 @@
 }
 
 .section-header-simple h2 {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
-    margin-top: 0;
     color: #202223;
-    padding-bottom: 0;
-    padding-top: 0;
-    border-bottom: none;
-    border-top: none;
+    margin: 0 0 1rem 0;
+}
+
+/* Payment method badges */
+.payment-methods-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e1e3e5;
+    margin-bottom: 1rem;
+}
+
+.payment-badge {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #e1e3e5;
+    padding: 0.25rem 0.5rem;
+    background: white;
+}
+
+@media (max-width: 768px) {
+    .payment-badge {
+        height: 28px;
+    }
+    
+    .payment-methods-badges {
+        gap: 0.5rem;
+    }
 }
 
 .form-section:first-child .section-header-simple {

@@ -264,9 +264,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        // Get form data if available, otherwise use defaults
-        const formData = new FormData(checkoutForm);
-        const customerData = Object.fromEntries(formData.entries());
+        // Don't wait for form data - start immediately for express checkout speed
+        const customerData = {};
 
         try {
             console.log('Creating payment intent...');
@@ -458,7 +457,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
 
             // Create and mount the Payment Element with accordion layout for better mobile support
-            // Include ALL payment methods including Apple Pay and Klarna
+            // DO NOT hide wallets - force them to appear even if in express checkout
             paymentElement = elements.create('payment', {
                 layout: {
                     type: 'accordion',
@@ -466,15 +465,15 @@ document.addEventListener('DOMContentLoaded', async function() {
                     radios: true,
                     spacedAccordionItems: false
                 },
-                wallets: {
-                    applePay: 'auto',
-                    googlePay: 'auto'
-                },
-                paymentMethodOrder: ['card', 'klarna', 'apple_pay', 'google_pay', 'sepa_debit'],
+                // Remove wallet restrictions entirely - show everything
+                paymentMethodOrder: ['card', 'klarna', 'sepa_debit'],
                 fields: {
                     billingDetails: {
                         email: 'never'  // Already have from form
                     }
+                },
+                terms: {
+                    card: 'never'
                 }
             });
             paymentElement.mount('#payment-element');
@@ -483,11 +482,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('✅ Payment methods loaded - user can now select payment method');
             console.log('📋 Requested payment methods:', ['card', 'klarna', 'apple_pay', 'google_pay', 'sepa_debit']);
 
-            // Track AddPaymentInfo when payment element is ready and remove loading animation with delay
+            // Track AddPaymentInfo when payment element is ready and remove loading animation
             paymentElement.on('ready', function() {
                 console.log('💳 Payment Element ready - tracking AddPaymentInfo');
-                console.log('📱 User Agent:', navigator.userAgent);
-                console.log('📱 Is Mobile:', /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+                console.log('📱 Device Info:');
+                console.log('  - User Agent:', navigator.userAgent);
+                console.log('  - Is Mobile:', /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+                console.log('  - Is iOS:', /iPhone|iPad|iPod/i.test(navigator.userAgent));
+                console.log('  - Is Android:', /Android/i.test(navigator.userAgent));
+                console.log('  - Browser:', navigator.userAgent.match(/(Chrome|Safari|Firefox|Edge)/i)?.[0] || 'Unknown');
                 
                 const cartData = JSON.parse(localStorage.getItem('cart')) || [];
                 if (window.metaPixel && typeof window.metaPixel.trackAddPaymentInfo === 'function') {
@@ -499,6 +502,13 @@ document.addEventListener('DOMContentLoaded', async function() {
                 if (paymentContainer) {
                     paymentContainer.classList.add('payment-element-ready');
                     console.log('✅ Payment methods should now be visible');
+                    
+                    // Log what's actually rendered in the DOM
+                    setTimeout(() => {
+                        const paymentMethodElements = paymentContainer.querySelectorAll('[role="radio"], [role="button"], button');
+                        console.log('🔍 Found payment method elements:', paymentMethodElements.length);
+                        console.log('🔍 Payment Element HTML length:', paymentContainer.innerHTML.length);
+                    }, 500);
                 }
             });
             
