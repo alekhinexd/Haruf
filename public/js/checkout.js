@@ -458,8 +458,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
 
             // Create and mount the Payment Element with ALL methods
-            // Since wallets are in express checkout above, Stripe may hide them here
-            // But we FORCE them to show by setting wallets to 'auto'
+            // CRITICAL: Don't restrict wallets at all - let Stripe show everything available
+            console.log('🔧 Creating Payment Element with NO wallet restrictions...');
             paymentElement = elements.create('payment', {
                 layout: {
                     type: 'accordion',
@@ -467,11 +467,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                     radios: true,
                     spacedAccordionItems: false
                 },
-                wallets: {
-                    applePay: 'auto',  // Show even though in express
-                    googlePay: 'auto'  // Show even though in express
-                },
-                paymentMethodOrder: ['card', 'klarna', 'apple_pay', 'google_pay', 'sepa_debit'],
+                // DO NOT specify wallets at all - this lets Stripe show all available methods
+                paymentMethodOrder: ['card', 'klarna', 'sepa_debit'],
                 fields: {
                     billingDetails: {
                         email: 'never'  // Already have from form
@@ -485,7 +482,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             console.log('✅ Stripe Payment Element mounted successfully');
             console.log('✅ Payment methods loaded - user can now select payment method');
-            console.log('📋 Requested payment methods:', ['card', 'klarna', 'apple_pay', 'google_pay', 'sepa_debit']);
+            console.log('📋 Requested payment methods:', ['card', 'klarna', 'sepa_debit']);
+            console.log('💡 Wallets (Apple Pay, Google Pay) should auto-appear if device supports them');
 
             // Track AddPaymentInfo when payment element is ready and remove loading animation
             paymentElement.on('ready', function() {
@@ -508,12 +506,19 @@ document.addEventListener('DOMContentLoaded', async function() {
                     paymentContainer.classList.add('payment-element-ready');
                     console.log('✅ Payment methods should now be visible');
                     
-                    // Log what's actually rendered in the DOM
+                    // Log what's actually rendered in the DOM - DETAILED
                     setTimeout(() => {
-                        const paymentMethodElements = paymentContainer.querySelectorAll('[role="radio"], [role="button"], button');
+                        const paymentMethodElements = paymentContainer.querySelectorAll('[role="radio"], [role="button"], button, label');
                         console.log('🔍 Found payment method elements:', paymentMethodElements.length);
                         console.log('🔍 Payment Element HTML length:', paymentContainer.innerHTML.length);
-                    }, 500);
+                        
+                        // Log visible text to see what payment methods are rendered
+                        const visibleText = paymentContainer.innerText;
+                        console.log('🔍 Visible payment methods text:', visibleText);
+                        console.log('📱 Contains "Klarna"?', visibleText.includes('Klarna'));
+                        console.log('📱 Contains "Apple"?', visibleText.includes('Apple'));
+                        console.log('📱 Contains "Google"?', visibleText.includes('Google'));
+                    }, 1000);
                 }
             });
             
