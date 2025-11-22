@@ -284,11 +284,6 @@ function showCartNotification(product) {
             };
         }
         
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            notification.classList.remove('visible');
-        }, 5000);
-        
         return;
     }
 

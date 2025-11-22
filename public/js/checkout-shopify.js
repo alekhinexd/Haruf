@@ -223,11 +223,12 @@ async function initializeStripePayment() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                amount: amountInCents,
-                finalTotal: total,
                 cartItems: cart,
+                customerName: '',
+                customerEmail: '',
                 discountCode: appliedDiscount ? Object.keys(DISCOUNT_CODES).find(key => DISCOUNT_CODES[key] === appliedDiscount) : null,
-                discountAmount: discountAmount
+                discountAmount: discountAmount,
+                finalTotal: total
             })
         });
         
