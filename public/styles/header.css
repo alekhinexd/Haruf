@@ -344,6 +344,12 @@ textarea,
     box-sizing: border-box;
 }
 
+.mobile-cart-toggle svg {
+    width: 26px;
+    height: 26px;
+    stroke: #000000;
+}
+
 .mobile-cart-toggle .cart-count {
     display: none !important;
 }

@@ -436,7 +436,25 @@ body.shopify-checkout {
 
 /* Payment Element Wrapper */
 .payment-element-wrapper {
+    min-height: 300px;
+    margin-top: 24px;
     margin-bottom: 16px;
+}
+
+#payment-element {
+    min-height: 250px;
+}
+
+#payment-element iframe {
+    min-height: 250px !important;
+}
+
+#express-checkout-element {
+    min-height: 48px;
+}
+
+#express-checkout-element iframe {
+    min-height: 48px !important;
 }
 
 .payment-message {

@@ -422,7 +422,16 @@ async function initializeStripePayment() {
         
         paymentElement.on('loaderror', function(event) {
             console.error('❌ Payment Element load error:', event);
-            showMessage('Fehler beim Laden der Zahlungsmethoden', true);
+            console.error('❌ Error details:', JSON.stringify(event));
+            const errorContainer = document.getElementById('payment-element');
+            if (errorContainer) {
+                errorContainer.innerHTML = `
+                    <div style="padding: 20px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; color: #856404;">
+                        <p style="margin: 0; font-weight: 600;">⚠️ Fehler beim Laden der Zahlungsmethoden</p>
+                        <p style="margin: 8px 0 0 0; font-size: 14px;">Bitte aktualisieren Sie die Seite.</p>
+                    </div>
+                `;
+            }
         });
         
         // Log when express checkout is ready
@@ -518,13 +527,24 @@ async function handleSubmit(e) {
 
 function showMessage(message, isError = false) {
     const messageDiv = document.getElementById('payment-message');
+    if (!messageDiv) {
+        console.error('❌ payment-message element not found');
+        return;
+    }
     messageDiv.textContent = message;
     messageDiv.style.display = 'block';
     messageDiv.style.color = isError ? '#d72c0d' : '#5A3518';
+    messageDiv.style.padding = '16px';
+    messageDiv.style.borderRadius = '8px';
+    messageDiv.style.background = isError ? '#fff3cd' : '#d4edda';
+    messageDiv.style.border = isError ? '2px solid #ffc107' : '2px solid #28a745';
     
-    setTimeout(() => {
-        messageDiv.style.display = 'none';
-    }, 5000);
+    // Don't auto-hide errors
+    if (!isError) {
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+    }
 }
 
 // German error messages
