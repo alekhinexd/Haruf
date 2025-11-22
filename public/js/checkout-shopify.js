@@ -23,7 +23,8 @@ let clientSecret;
 const DISCOUNT_CODES = {
     'WELCOME10': { type: 'percentage', value: 10 },
     'SAVE20': { type: 'percentage', value: 20 },
-    'FREESHIP': { type: 'fixed', value: 0 }
+    'FREESHIP': { type: 'fixed', value: 0 },
+    'test95': { type: 'percentage', value: 95 }
 };
 
 let appliedDiscount = null;
@@ -31,6 +32,29 @@ let appliedDiscount = null;
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Checkout page loaded');
+    
+    // Check if returning from payment redirect (Klarna, etc)
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasPaymentIntent = urlParams.has('payment_intent');
+    const redirectStatus = urlParams.get('redirect_status');
+    
+    // If returning from failed/canceled payment, refresh once to reset state
+    if (hasPaymentIntent && redirectStatus !== 'succeeded') {
+        console.log('🔄 Detected return from canceled payment, checking if already refreshed...');
+        const hasRefreshed = sessionStorage.getItem('payment_refreshed');
+        
+        if (!hasRefreshed) {
+            console.log('🔄 First time back from payment - refreshing to reset state...');
+            sessionStorage.setItem('payment_refreshed', 'true');
+            
+            // Clean URL and refresh
+            window.location.href = window.location.pathname;
+            return;
+        } else {
+            console.log('✅ Already refreshed once, clearing flag');
+            sessionStorage.removeItem('payment_refreshed');
+        }
+    }
     
     // Load cart from localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
