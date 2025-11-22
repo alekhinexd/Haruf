@@ -236,7 +236,7 @@ function updateTotals() {
     if (miniTotal) miniTotal.textContent = `€${total.toFixed(2)}`;
 }
 
-function applyDiscount(source) {
+async function applyDiscount(source) {
     const input = document.getElementById(`${source}-discount-input`);
     const code = input.value.trim().toUpperCase();
     
@@ -250,6 +250,10 @@ function applyDiscount(source) {
         updateTotals();
         showMessage(`Rabattcode "${code}" angewendet!`, false);
         input.value = '';
+        
+        // Reinitialize payment intent with new discounted amount
+        console.log('🔄 Reinitializing payment intent with discount...');
+        await initializeStripePayment();
     } else {
         showMessage('Ungültiger Rabattcode', true);
     }
@@ -264,6 +268,17 @@ async function initializeStripePayment() {
         console.warn('⚠️ Cart is empty in initializeStripePayment');
         showMessage('Ihr Warenkorb ist leer', true);
         return;
+    }
+    
+    // Unmount existing payment element if it exists
+    if (paymentElement) {
+        console.log('🔄 Unmounting existing payment element...');
+        try {
+            paymentElement.unmount();
+            paymentElement = null;
+        } catch (unmountError) {
+            console.warn('⚠️ Error unmounting payment element:', unmountError);
+        }
     }
     
     try {
