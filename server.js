@@ -249,13 +249,13 @@ app.post('/api/payment-intents', async (req, res) => {
         const orderNumber = 'DP' + Date.now().toString().slice(-6);
 
         // Create PaymentIntent
+        // NOTE: Cannot use both automatic_payment_methods AND payment_method_types
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amountInCents,
             currency: 'eur',
             automatic_payment_methods: {
                 enabled: true,
             },
-            payment_method_types: ['card', 'klarna', 'sepa_debit'],
             description: `Order ${orderNumber} - ${cartItems.length} item(s)`,
             metadata: {
                 order_number: orderNumber,
@@ -276,9 +276,14 @@ app.post('/api/payment-intents', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Payment Intent creation failed:', error);
+        console.error('❌ Payment Intent creation failed:', error);
+        console.error('❌ Error message:', error.message);
+        console.error('❌ Error type:', error.type);
+        console.error('❌ Error stack:', error.stack);
         res.status(500).json({
-            error: 'Payment processing failed. Please try again or contact support.'
+            error: 'Payment processing failed',
+            message: error.message,
+            details: error.type || 'server_error'
         });
     }
 });
