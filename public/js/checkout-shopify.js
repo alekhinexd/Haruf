@@ -38,23 +38,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const hasPaymentIntent = urlParams.has('payment_intent');
     const redirectStatus = urlParams.get('redirect_status');
     
-    // If returning from payment (with payment_intent in URL) but NOT succeeded, refresh once to reset state
-    // This handles: canceled, failed, or when user clicks back without completing
-    if (hasPaymentIntent && (!redirectStatus || redirectStatus !== 'succeeded')) {
-        console.log('🔄 Detected return from payment (status:', redirectStatus || 'none', '), checking if already refreshed...');
-        const hasRefreshed = sessionStorage.getItem('payment_refreshed');
-        
-        if (!hasRefreshed) {
-            console.log('🔄 First time back from payment - refreshing to reset state...');
-            sessionStorage.setItem('payment_refreshed', 'true');
-            
-            // Clean URL and refresh
-            window.location.href = window.location.pathname;
-            return;
-        } else {
-            console.log('✅ Already refreshed once, clearing flag');
-            sessionStorage.removeItem('payment_refreshed');
-        }
+    console.log('🔍 URL check - hasPaymentIntent:', hasPaymentIntent, 'redirectStatus:', redirectStatus);
+    
+    // Only redirect to order confirmation if payment succeeded
+    if (hasPaymentIntent && redirectStatus === 'succeeded') {
+        console.log('✅ Payment succeeded, redirecting to order confirmation...');
+        window.location.href = '/pages/order-confirmation.html' + window.location.search;
+        return;
+    }
+    
+    // If returning from failed/canceled payment with payment_intent in URL, clean the URL
+    if (hasPaymentIntent && redirectStatus && redirectStatus !== 'succeeded') {
+        console.log('🔄 Cleaning URL after failed payment...');
+        // Just clean URL, don't refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
     
     // Load cart from localStorage
@@ -147,7 +144,11 @@ function setupEventListeners() {
     
     // Form submission
     const form = document.getElementById('checkout-form');
-    form.addEventListener('submit', handleSubmit);
+    if (form) {
+        form.addEventListener('submit', handleSubmit);
+    } else {
+        console.error('❌ checkout-form not found!');
+    }
 }
 
 function loadCartItems() {
@@ -541,9 +542,27 @@ async function handleSubmit(event) {
     // Disable submit button
     const submitBtn = document.getElementById('submit-btn');
     
+    if (!submitBtn) {
+        console.error('❌ Submit button not found!');
+        return;
+    }
+    
     // Check if already processing
     if (submitBtn.disabled) {
         console.warn('⚠️ Already processing, ignoring duplicate submit');
+        return;
+    }
+    
+    // Check if stripe and elements are initialized
+    if (!stripe) {
+        console.error('❌ Stripe not initialized!');
+        showMessage('Stripe nicht initialisiert. Bitte Seite neu laden.', true);
+        return;
+    }
+    
+    if (!elements) {
+        console.error('❌ Elements not initialized!');
+        showMessage('Zahlungsmethoden nicht geladen. Bitte Seite neu laden.', true);
         return;
     }
     
@@ -563,7 +582,7 @@ async function handleSubmit(event) {
         country: document.getElementById('country')?.value || 'DE'
     };
     
-    console.log('📝 Collected customer data:', customerData);
+    console.log('📏 Collected customer data:', customerData);
     
     // Generate order number
     const orderNumber = 'ORD-' + Date.now();
@@ -602,40 +621,22 @@ async function handleSubmit(event) {
             
             // Better error messages based on error type
             let errorMessage = error.message;
-            let shouldReinit = false;
             
-            if (error.type === 'validation_error' && error.code === 'incomplete_payment_details') {
-                errorMessage = 'Zahlung abgebrochen';
-                shouldReinit = false; // Form is still valid, don't reinit
+            if (error.type === 'validation_error') {
+                if (error.code === 'incomplete_payment_details') {
+                    errorMessage = 'Zahlung abgebrochen';
+                } else {
+                    errorMessage = 'Bitte füllen Sie alle erforderlichen Felder aus';
+                }
             } else if (error.message && (error.message.includes('canceled') || error.message.includes('cancelled'))) {
                 errorMessage = 'Zahlung abgebrochen';
-                shouldReinit = false; // User canceled, don't reinit
             } else if (error.type === 'card_error') {
                 errorMessage = error.message;
-                shouldReinit = false; // Card error, user can retry
             } else {
-                // Unknown error, might need to reinit
                 errorMessage = error.message || 'Ein Fehler ist aufgetreten';
-                shouldReinit = true;
             }
             
             showMessage(errorMessage, true);
-            
-            // Only reinitialize if needed
-            if (shouldReinit) {
-                console.log('🔄 Reinitializing payment element after critical error...');
-                setTimeout(async () => {
-                    try {
-                        await initializeStripePayment();
-                        console.log('✅ Payment element reinitialized');
-                    } catch (reinitError) {
-                        console.error('❌ Failed to reinitialize:', reinitError);
-                        showMessage('Bitte laden Sie die Seite neu', true);
-                    }
-                }, 500);
-            } else {
-                console.log('ℹ️ No reinitialization needed, user can retry');
-            }
         } else {
             console.log('✅ Payment confirmed, redirecting...');
         }
@@ -643,21 +644,10 @@ async function handleSubmit(event) {
         
     } catch (error) {
         console.error('❌ Submit error:', error);
+        console.error('❌ Stack:', error.stack);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
-        showMessage("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.", true);
-        
-        // For catch block errors, always try to reinitialize
-        console.log('🔄 Reinitializing after exception...');
-        setTimeout(async () => {
-            try {
-                await initializeStripePayment();
-                console.log('✅ Payment element reinitialized after exception');
-            } catch (reinitError) {
-                console.error('❌ Failed to reinitialize:', reinitError);
-                showMessage('Bitte laden Sie die Seite neu', true);
-            }
-        }, 500);
+        showMessage("Ein Fehler ist aufgetreten: " + error.message, true);
     }
 }
 
