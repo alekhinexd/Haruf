@@ -274,11 +274,23 @@ async function initializeStripePayment() {
         };
         
         console.log('🎨 Creating Stripe Elements with appearance...');
+        
+        if (!clientSecret || clientSecret === 'undefined') {
+            console.error('❌ Invalid clientSecret:', clientSecret);
+            throw new Error('Invalid clientSecret received from API');
+        }
+        
         elements = stripe.elements({
             clientSecret,
             appearance
         });
         console.log('✅ Elements instance created:', elements);
+        
+        // Verify elements object
+        if (!elements || typeof elements.create !== 'function') {
+            console.error('❌ Elements object is invalid!', elements);
+            throw new Error('Stripe Elements failed to initialize');
+        }
         
         // Create Express Checkout Element (Apple Pay, Google Pay)
         console.log('🚀 Creating Express Checkout Element...');

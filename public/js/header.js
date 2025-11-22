@@ -92,7 +92,7 @@ window.addEventListener('cartUpdated', function() {
 });
 
 // Update cart count periodically as fallback
-setInterval(updateCartCount, 1000);
+setInterval(updateCartCount, 500);
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {

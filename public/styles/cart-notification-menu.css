@@ -97,6 +97,8 @@
     font-weight: 600;
     margin: 0 0 8px 0;
     color: #202223;
+    line-height: 1.4;
+    word-wrap: break-word;
 }
 
 .cart-notification-menu__product-price {
@@ -104,6 +106,7 @@
     font-weight: 700;
     color: #5A3518;
     margin: 0;
+    white-space: nowrap;
 }
 
 .cart-notification-menu__buttons {
@@ -157,8 +160,9 @@
 /* Mobile Styles */
 @media (max-width: 768px) {
     .cart-notification-menu {
-        max-width: 95%;
-        width: auto;
+        max-width: 90%;
+        min-width: 340px;
+        width: 90%;
     }
     
     .cart-notification-menu__buttons {
