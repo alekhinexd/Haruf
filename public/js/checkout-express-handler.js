@@ -7,23 +7,39 @@ function setupCustomExpressButtons() {
     
     if (applePayBtn) {
         applePayBtn.addEventListener('click', () => {
-            console.log('🍎 Apple Pay button clicked - scrolling to payment section');
+            console.log('🍎 Apple Pay button clicked - triggering express checkout');
             // Scroll to payment section
-            document.getElementById('payment-element').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
+            const paymentSection = document.getElementById('payment-element');
+            if (paymentSection) {
+                paymentSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+                // Simulate express payment method selection
+                setTimeout(() => {
+                    handlePaymentMethodChange({ value: { type: 'apple_pay' } });
+                }, 500);
+            }
         });
     }
     
     if (klarnaBtn) {
         klarnaBtn.addEventListener('click', () => {
-            console.log('💳 Klarna button clicked - scrolling to payment section');
+            console.log('💳 Klarna button clicked - triggering express checkout');
             // Scroll to payment section
-            document.getElementById('payment-element').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
+            const paymentSection = document.getElementById('payment-element');
+            if (paymentSection) {
+                paymentSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+                // Simulate express payment method selection
+                setTimeout(() => {
+                    handlePaymentMethodChange({ value: { type: 'klarna' } });
+                }, 500);
+            }
         });
     }
 }
