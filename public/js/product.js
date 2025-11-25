@@ -51,10 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cartItem = {
                     handle: currentProduct.handle,
                     title: currentProduct.title,
-                    price: currentProduct.selectedVariant.price,
+                    price: parseFloat(currentProduct.selectedVariant.price),
                     image: currentProduct.selectedVariant.image ? currentProduct.selectedVariant.image.src : currentProduct.image.src,
                     quantity,
-                    variant: currentProduct.selectedVariant.option1 || 'Default'
+                    variant: currentProduct.selectedVariant.option1 || 'Default',
+                    selectedVariant: currentProduct.selectedVariant
                 };
                 
                 window.addToCart(cartItem);

@@ -17,11 +17,26 @@ function addToCart(product) {
     
     // Check if this exact variant is already in the cart
     const existingItem = cart.find(item => {
+        // Must match by handle first
+        if (item.handle !== product.handle) return false;
+        
+        // If both have selectedVariant, compare them
         if (item.selectedVariant && product.selectedVariant) {
-            return item.handle === product.handle && 
-                   JSON.stringify(item.selectedVariant.options) === JSON.stringify(product.selectedVariant.options);
+            return item.selectedVariant.option1 === product.selectedVariant.option1;
         }
-        return item.handle === product.handle;
+        
+        // If both have variant string, compare them
+        if (item.variant && product.variant) {
+            return item.variant === product.variant;
+        }
+        
+        // If neither has variant info, they match (same product, no variant)
+        if (!item.selectedVariant && !product.selectedVariant && !item.variant && !product.variant) {
+            return true;
+        }
+        
+        // Otherwise, don't match (one has variant, other doesn't)
+        return false;
     });
     
     if (existingItem) {
