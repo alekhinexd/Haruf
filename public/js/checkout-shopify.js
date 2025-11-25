@@ -668,6 +668,24 @@ function showMessage(message, isError = false) {
     }
 }
 
+// Handle payment method selection for Meta Pixel tracking
+function handlePaymentMethodChange(event) {
+    console.log('💳 Payment method changed:', event);
+    
+    if (event.complete) {
+        console.log('✅ Payment method complete');
+        
+        // Track AddPaymentInfo event with Meta Pixel
+        if (window.metaPixel && typeof window.metaPixel.trackAddPaymentInfo === 'function') {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            console.log('🎯 Tracking AddPaymentInfo with Meta Pixel...');
+            window.metaPixel.trackAddPaymentInfo(cart);
+        } else {
+            console.warn('⚠️ Meta Pixel trackAddPaymentInfo not available');
+        }
+    }
+}
+
 // German error messages
 function getGermanMessage(englishMessage) {
     const translations = {
