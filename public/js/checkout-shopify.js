@@ -98,6 +98,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initializeStripePayment();
 });
 
+// Handle BFCache (Back/Forward Cache) restoration
+// This fixes the bug where returning from Klarna leaves the button disabled
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        // Page was restored from BFCache (browser back button from Klarna)
+        const submitBtn = document.getElementById('submit-btn');
+        if (submitBtn && submitBtn.disabled) {
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Bestellung überprüfen';
+        }
+    }
+});
+
 function setupEventListeners() {
     // Mobile summary toggle
     const summaryToggle = document.getElementById('summary-toggle-btn');
