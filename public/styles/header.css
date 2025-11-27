@@ -323,9 +323,18 @@ textarea,
     transform: translateY(0);
 }
 
-/* Hide old notification on mobile */
+/* Hide old notifications on mobile */
 @media (max-width: 767px) {
     .cart-notification:not(.cart-notification-overlay .cart-notification) {
+        display: none !important;
+    }
+    
+    .cart-notification-menu {
+        display: none !important;
+    }
+    
+    /* Also hide any standalone cart notifications */
+    body > .cart-notification {
         display: none !important;
     }
 }
