@@ -109,6 +109,7 @@ body.shopify-checkout {
 .summary-total {
     font-size: 16px;
     font-weight: 600;
+    color: #5A3518;
 }
 
 .summary-content {
@@ -161,7 +162,7 @@ body.shopify-checkout {
     position: absolute;
     top: -6px;
     right: -6px;
-    background: #6d7175;
+    background: #5A3518;
     color: #fff;
     width: 20px;
     height: 20px;
@@ -250,7 +251,8 @@ body.shopify-checkout {
 }
 
 .shipping-free {
-    color: #6d7175;
+    color: #5A3518;
+    font-weight: 600;
 }
 
 .total-row {
@@ -258,6 +260,10 @@ body.shopify-checkout {
     border-top: 1px solid #e1e3e5;
     margin-top: 4px;
     font-size: 16px;
+}
+
+.total-row strong {
+    color: #5A3518;
 }
 
 .total-price {
@@ -422,9 +428,9 @@ body.shopify-checkout {
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    background: #f6f6f7;
+    background: #faf9f8;
     border-radius: 8px;
-    border: 1px solid #e1e3e5;
+    border: 1px solid #d4c4b8;
 }
 
 .shipping-info {
@@ -716,7 +722,7 @@ body.shopify-checkout {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: #6d7175;
+    background: #5A3518;
     color: white;
     border-radius: 50%;
     width: 20px;
