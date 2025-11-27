@@ -827,7 +827,6 @@ function displayRelatedProducts(products) {
                 <div class="bestseller-card__content">
                     <a href="/pages/product.html?handle=${encodeURIComponent(product.handle)}" class="bestseller-card__link">
                         <div class="bestseller-card__image">
-                            ${hasDiscount ? '<span class="sale-badge">Sale</span>' : ''}
                             <img src="${product.image.src}" alt="${product.title}" loading="lazy">
                         </div>
                         <div class="bestseller-card__info">
