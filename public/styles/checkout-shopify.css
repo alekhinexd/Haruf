@@ -46,10 +46,16 @@ body.shopify-checkout {
 }
 
 .cart-summary-toggle .cart-icon-img {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     display: block;
+}
+
+/* Ensure no cart badge appears on checkout */
+.cart-summary-toggle .cart-badge,
+.shopify-checkout .cart-badge {
+    display: none !important;
 }
 
 /* ========== MOBILE ORDER SUMMARY ========== */
