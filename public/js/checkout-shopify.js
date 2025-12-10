@@ -8,11 +8,14 @@ async function getStripePublishableKey() {
     try {
         const response = await fetch('/api/stripe-config');
         const data = await response.json();
+        if (!data.publishableKey) {
+            throw new Error('No publishable key received from server');
+        }
         return data.publishableKey;
     } catch (error) {
         console.error('❌ Failed to fetch Stripe config:', error);
-        // Fallback to hardcoded key (replace with your current valid key)
-        return 'pk_live_51QP1AvP5oV0KyDJtaMLHSRTmLiIQN6VDM5Z3DFtKzgkXTlqZNP9O7OXAVHoRhRPSlxHc5bwMxAIMWdK8Xj4qcG6I00fHUyfcxE';
+        // DO NOT USE HARDCODED KEYS - This causes security issues and account bans
+        throw new Error('Payment system configuration error. Please contact support.');
     }
 }
 

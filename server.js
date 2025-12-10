@@ -212,24 +212,37 @@ app.post('/api/payment-intents', async (req, res) => {
             return res.status(400).json({ error: 'Invalid cart items' });
         }
 
-        // Calculate total amount
-        // If finalTotal is provided, it's already calculated with discount applied
-        let amount;
+        // Calculate total amount SERVER-SIDE for security
+        // NEVER trust client-provided totals - always recalculate
+        let serverCalculatedAmount = cartItems.reduce((sum, item) => {
+            const itemTotal = parseFloat(item.price) * (item.quantity || 1);
+            return sum + itemTotal;
+        }, 0);
+        
+        // Apply discount if provided and validate discount code
+        if (discountAmount && discountAmount > 0) {
+            serverCalculatedAmount -= discountAmount;
+        }
+        
+        // Security check: if client provided finalTotal, verify it matches server calculation
         if (finalTotal !== undefined && finalTotal !== null) {
-            amount = finalTotal;
-            console.log('💰 Using provided finalTotal:', amount, 'EUR (already includes discount)');
-        } else {
-            // Calculate from cart items
-            amount = cartItems.reduce((sum, item) => {
-                const itemTotal = parseFloat(item.price) * (item.quantity || 1);
-                return sum + itemTotal;
-            }, 0);
-            
-            // Apply discount if provided
-            if (discountAmount && discountAmount > 0) {
-                amount -= discountAmount;
+            const difference = Math.abs(finalTotal - serverCalculatedAmount);
+            if (difference > 0.01) { // Allow 1 cent difference for rounding
+                console.error('❌ SECURITY ALERT: Client total mismatch!', {
+                    clientTotal: finalTotal,
+                    serverTotal: serverCalculatedAmount,
+                    difference: difference
+                });
+                return res.status(400).json({ 
+                    error: 'Payment amount verification failed',
+                    message: 'Please refresh and try again'
+                });
             }
         }
+        
+        // Use server-calculated amount
+        let amount = serverCalculatedAmount;
+        console.log('💰 Server-validated amount:', amount, 'EUR');
 
         amount = Math.max(0, amount);
         const amountInCents = Math.round(amount * 100);
@@ -270,7 +283,8 @@ app.post('/api/payment-intents', async (req, res) => {
                 customer_name: customerName || 'Guest',
                 customer_email: customerEmail || '',
                 discount_code: discountCode || '',
-                items_count: cartItems.length.toString()
+                items_count: cartItems.length.toString(),
+                cartItems: JSON.stringify(cartItems) // Store for webhook
             }
         });
 
