@@ -501,7 +501,7 @@ const products = [
         "handle": "prada-re-edition-2005-mini-bag",
         "title": "Prada Re-Edition 2005 Mini Bag",
         "body_html": "<p>Premium 1:1 designer bag with original packaging, dust bag, and authentication materials. Indistinguishable from the authentic version.</p>",
-        "vendor": "Alovre Atelier",
+        "vendor": "Maison-Palessi Atelier",
         "product_category": "Apparel & Accessories > Handbags, Wallets & Cases > Handbags > Shoulder Bags",
         "type": "",
         "tags": "",
