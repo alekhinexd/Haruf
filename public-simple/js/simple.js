@@ -2,8 +2,8 @@
 function addToCart() {
     // Save product to localStorage with structure matching server expectations
     const product = {
-        handle: 'palessi-atelier-bag',
-        title: 'Palessi-Atelier Bag - Premium Women\'s Handbag',
+        handle: 'alovreatelier-bag',
+        title: 'alovreatelier Bag - Premium Women\'s Handbag',
         price: 20,
         image: '/images/logo/Logo.png',
         quantity: 1
